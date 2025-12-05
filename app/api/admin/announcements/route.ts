@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
         isActive: validated.isActive,
         startDate: validated.startDate ? new Date(validated.startDate) : new Date(),
         endDate: validated.endDate ? new Date(validated.endDate) : null,
-        createdBy: admin.id,
+        createdBy: admin.user.id,
       },
       include: {
         creator: {
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }

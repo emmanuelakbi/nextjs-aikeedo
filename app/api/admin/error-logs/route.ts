@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '50');
-    const type = searchParams.get('type'); // generation, system
+    // const type = searchParams.get('type'); // generation, system - TODO: implement filtering
     const userId = searchParams.get('userId');
     const workspaceId = searchParams.get('workspaceId');
     const startDate = searchParams.get('startDate');
