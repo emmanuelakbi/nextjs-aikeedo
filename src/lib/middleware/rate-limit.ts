@@ -142,3 +142,14 @@ export async function withAIRateLimit(
 ): Promise<NextResponse | null> {
   return withRateLimit(request, aiRateLimiter, identifier);
 }
+
+// Legacy exports for backward compatibility
+export const rateLimit = withRateLimit;
+
+export const RATE_LIMITS = {
+  auth: authRateLimiter,
+  api: apiRateLimiter,
+  checkout: checkoutRateLimiter,
+  verification: verificationRateLimiter,
+  ai: aiRateLimiter,
+};
