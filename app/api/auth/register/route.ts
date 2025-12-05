@@ -123,7 +123,7 @@ async function handler(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   // Apply rate limiting
-  const rateLimitResponse = rateLimit(request, RATE_LIMITS.REGISTER);
+  const rateLimitResponse = await rateLimit(request, RATE_LIMITS.auth);
   if (rateLimitResponse) {
     return rateLimitResponse;
   }

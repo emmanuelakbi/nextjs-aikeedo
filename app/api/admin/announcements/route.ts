@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     // Log the action
     await logAdminAction({
-      adminId: admin.id,
+      adminId: admin.user.id,
       action: 'announcement.create',
       targetType: 'announcement',
       targetId: announcement.id,

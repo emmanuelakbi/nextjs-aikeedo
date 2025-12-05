@@ -108,7 +108,7 @@ export async function PATCH(
 
     // Log the action
     await logAdminAction({
-      adminId: admin.id,
+      adminId: admin.user.id,
       action: 'announcement.update',
       targetType: 'announcement',
       targetId: announcement.id,
@@ -121,7 +121,7 @@ export async function PATCH(
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }
@@ -158,7 +158,7 @@ export async function DELETE(
 
     // Log the action
     await logAdminAction({
-      adminId: admin.id,
+      adminId: admin.user.id,
       action: 'announcement.delete',
       targetType: 'announcement',
       targetId: params.id,

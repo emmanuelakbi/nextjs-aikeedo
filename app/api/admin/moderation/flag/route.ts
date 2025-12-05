@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     // Log the moderation action
     await logAdminAction({
-      adminId: admin.id,
+      adminId: admin.user.id,
       action: `moderation.${validated.action}`,
       targetType: 'generation',
       targetId: validated.generationId,
