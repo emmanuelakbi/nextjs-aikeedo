@@ -26,6 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
 
 # vercel
@@ -34,3 +35,52 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# development notes (keep locally, don't commit)
+# Note: Keep KIROWEEN_SUBMISSION.md, SUBMISSION_CHECKLIST.md, 
+# DEPLOYMENT_GUIDE.md for hackathon submission
+*_SUMMARY.md
+*_IMPLEMENTATION.md
+*_FIXES.md
+*_COMPLETE.md
+*_SETUP.md
+*_ANALYSIS.md
+*_NOTES.md
+*_RESULTS.md
+*_REPORT.md
+*_SUCCESS.md
+TASK_*.md
+AFFILIATE_*.md
+BILLING_*.md
+COMMISSION_*.md
+CREDIT_*.md
+CHECKOUT_*.md
+FILE_UPLOAD_*.md
+INVOICE_*.md
+PAYMENT_METHOD_*.md
+PAYOUT_SYSTEM_*.md
+RATE_LIMITING_*.md
+REFERRAL_TRACKING_*.md
+TRIAL_PERIOD_*.md
+USAGE_TRACKING_*.md
+OPENROUTER_*.md
+CONFIGURATION_*.md
+PERFORMANCE_*.md
+SECURITY_FIXES_*.md
+REUSABLE_CODEBASE_*.md
+DONE.md
+APPLY_REMAINING_FIXES.md
+BUILD_FIXES_SUMMARY.md
+CRITICAL_BUGS_FIXES_SUMMARY.md
+DEV_UTILITIES.md
+DEPLOYMENT_SUCCESS.md
+ENV_SETUP.md
+QUICK_START_ENV.md
+ENVIRONMENT_SETUP_SUMMARY.md
+TEST_DATABASE.md
+TESTING_NOTES.md
+TEST_RESULTS.md
+SETUP_COMPLETE.md
+MIGRATION_SETUP.md
+CRITICAL_BUGS_ANALYSIS.md
+DEMO_SCRIPT.md

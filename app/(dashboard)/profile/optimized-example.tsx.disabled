@@ -1,0 +1,223 @@
+/**
+ * Optimized Profile Page Example
+ *
+ * Demonstrates performance optimizations:
+ * - React Query for client-side caching
+ * - Lazy loading for heavy components
+ * - Image optimization
+ * - Component preloading
+ *
+ * This is an example file showing how to use the performance utilities.
+ * Requirements: Performance considerations
+ */
+
+'use client';
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryKeys, invalidateQueries } from '@/lib/query-client';
+import { apiClient } from '@/lib/api-client';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { lazyLoad, LazyLoadOnView } from '@/lib/lazy-loading';
+import { usePreloadOnHover } from '@/lib/component-preloader';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import { useState } from 'react';
+
+// Lazy load heavy components
+const HeavyChart = lazyLoad(
+  () => import('@/components/charts/ProfileChart'),
+  <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+);
+
+const ActivityFeed = lazyLoad(
+  () => import('@/components/activity/ActivityFeed'),
+  <div className="space-y-4">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="h-20 bg-gray-100 animate-pulse rounded-lg" />
+    ))}
+  </div>
+);
+
+interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+}
+
+/**
+ * Optimized Profile Page Component
+ */
+export function OptimizedProfilePage() {
+  const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Fetch user data with React Query (automatic caching)
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: queryKeys.user.me(),
+    queryFn: async () => {
+      return apiClient.get<User>('/api/users/me');
+    },
+    // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: async (data: Partial<User>) => {
+      return apiClient.patch<User>('/api/users/me', data);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch user data
+      invalidateQueries.users(queryClient);
+      setIsEditing(false);
+    },
+  });
+
+  // Preload settings page on hover
+  const settingsPreloadProps = usePreloadOnHover(
+    () => import('@/app/(dashboard)/settings/page')
+  );
+
+  if (isLoading) {
+    return <ProfileSkeleton />;
+  }
+
+  if (error) {
+    return <div>Error loading profile</div>;
+  }
+
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      {/* Profile Header - Above the fold, loads immediately */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex items-center space-x-4">
+          {/* Optimized avatar image */}
+          {user.avatarUrl && (
+            <OptimizedImage
+              src={user.avatarUrl}
+              alt={`${user.firstName} ${user.lastName}`}
+              width={96}
+              height={96}
+              className="rounded-full"
+              priority // Load immediately since it's above the fold
+            />
+          )}
+
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold">
+              {user.firstName} {user.lastName}
+            </h1>
+            <p className="text-gray-600">{user.email}</p>
+          </div>
+
+          {/* Preload settings page on hover */}
+          <Button {...settingsPreloadProps}>Settings</Button>
+        </div>
+
+        {/* Edit form */}
+        {isEditing && (
+          <div className="mt-6 space-y-4">
+            <Input
+              label="First Name"
+              defaultValue={user.firstName}
+              name="firstName"
+            />
+            <Input
+              label="Last Name"
+              defaultValue={user.lastName}
+              name="lastName"
+            />
+            <div className="flex space-x-2">
+              <Button
+                onClick={() => {
+                  // Handle form submission
+                  updateUserMutation.mutate({
+                    firstName: 'Updated',
+                    lastName: 'Name',
+                  });
+                }}
+                disabled={updateUserMutation.isPending}
+              >
+                {updateUserMutation.isPending ? 'Saving...' : 'Save'}
+              </Button>
+              <Button variant="secondary" onClick={() => setIsEditing(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {!isEditing && (
+          <Button className="mt-4" onClick={() => setIsEditing(true)}>
+            Edit Profile
+          </Button>
+        )}
+      </div>
+
+      {/* Statistics Chart - Lazy loaded when visible */}
+      <LazyLoadOnView
+        fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />}
+      >
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Activity Statistics</h2>
+          <HeavyChart userId={user.id} />
+        </div>
+      </LazyLoadOnView>
+
+      {/* Activity Feed - Lazy loaded when visible */}
+      <LazyLoadOnView
+        fallback={
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-20 bg-gray-100 animate-pulse rounded-lg"
+              />
+            ))}
+          </div>
+        }
+      >
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
+          <ActivityFeed userId={user.id} />
+        </div>
+      </LazyLoadOnView>
+    </div>
+  );
+}
+
+/**
+ * Loading skeleton for profile page
+ */
+function ProfileSkeleton() {
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex items-center space-x-4">
+          <div className="w-24 h-24 bg-gray-200 rounded-full animate-pulse" />
+          <div className="flex-1 space-y-2">
+            <div className="h-8 bg-gray-200 rounded w-48 animate-pulse" />
+            <div className="h-4 bg-gray-200 rounded w-64 animate-pulse" />
+          </div>
+        </div>
+      </div>
+      <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-20 bg-gray-100 animate-pulse rounded-lg" />
+        ))}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,6 @@
+# Ignore custom configuration
+custom.config.ts
+custom.config.js
+
+# Keep example files
+!custom.config.example.ts
