@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
-import { UserRole, UserStatus } from '@prisma/client';
+import { UserRole, UserStatus } from '@/domain/user';
 import { z } from 'zod';
 
 /**

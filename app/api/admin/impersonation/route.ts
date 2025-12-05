@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin-guard';
 import { getAdminImpersonationSessions } from '@/lib/admin/impersonation';
 import prisma from '@/lib/db/prisma';
@@ -10,7 +10,7 @@ import prisma from '@/lib/db/prisma';
  *
  * Gets all active impersonation sessions for the current admin.
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Verify admin access
     const session = await requireAdmin();

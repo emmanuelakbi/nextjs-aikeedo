@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { UserRole, UserStatus } from '@prisma/client';
+import { UserRole, UserStatus } from '@/domain/user/types';
 
 /**
  * User Detail Client Component
@@ -395,17 +395,17 @@ export function UserDetailClient({ userId }: UserDetailClientProps) {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
           <div className="flex gap-2">
-            {user.status === 'ACTIVE' && (
+            {user.status === UserStatus.ACTIVE && (
               <button
-                onClick={() => handleStatusChange('SUSPENDED')}
+                onClick={() => handleStatusChange(UserStatus.SUSPENDED)}
                 className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
               >
                 Suspend User
               </button>
             )}
-            {user.status === 'SUSPENDED' && (
+            {user.status === UserStatus.SUSPENDED && (
               <button
-                onClick={() => handleStatusChange('ACTIVE')}
+                onClick={() => handleStatusChange(UserStatus.ACTIVE)}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
               >
                 Activate User

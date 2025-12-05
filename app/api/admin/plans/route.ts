@@ -20,7 +20,7 @@ const planSchema = z.object({
   currency: z.string().length(3).default('usd'),
   interval: z.enum(['MONTH', 'YEAR']),
   creditCount: z.number().int().min(0),
-  features: z.record(z.boolean()).optional(),
+  features: z.record(z.string(), z.boolean()).optional(),
   isActive: z.boolean().default(true),
   stripePriceId: z.string().optional(),
 });

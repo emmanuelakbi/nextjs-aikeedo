@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { GenerationType } from '@prisma/client';
+import { GenerationType } from '@/domain/types';
 
 /**
  * Usage Dashboard Page

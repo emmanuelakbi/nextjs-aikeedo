@@ -3,6 +3,7 @@ import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { getStripeClient } from '@/lib/stripe';
 import { z } from 'zod';
+import type Stripe from 'stripe';
 
 /**
  * Admin Refunds API
@@ -68,13 +69,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Process refund in Stripe
-    const stripe = getStripeClient();
+    const stripeService = getStripeClient();
+    const stripe = stripeService.getClient();
     const refundAmount = amount || invoice.amount;
 
     // Get the payment intent from the invoice
-    const stripeInvoice = await stripe.invoices.retrieve(invoice.stripeInvoiceId);
+    const stripeInvoice = await stripe.invoices.retrieve(invoice.stripeInvoiceId, {
+      expand: ['payment_intent'],
+    }) as Stripe.Invoice & { payment_intent?: Stripe.PaymentIntent | string };
     
-    if (!stripeInvoice.payment_intent) {
+    if (!stripeInvoice.payment_intent || typeof stripeInvoice.payment_intent === 'string') {
       return NextResponse.json(
         { error: 'Invoice has no payment intent' },
         { status: 400 }
@@ -82,7 +86,9 @@ export async function POST(request: NextRequest) {
     }
 
     const refund = await stripe.refunds.create({
-      payment_intent: stripeInvoice.payment_intent as string,
+      payment_intent: typeof stripeInvoice.payment_intent === 'string' 
+        ? stripeInvoice.payment_intent 
+        : stripeInvoice.payment_intent.id,
       amount: Math.round(refundAmount * 100), // Convert to cents
       reason: 'requested_by_customer',
       metadata: {

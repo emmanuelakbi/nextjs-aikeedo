@@ -113,10 +113,11 @@ export async function GET(request: NextRequest) {
 
     // Count error occurrences
     const errorCounts: Record<string, number> = {};
-    errorMessages.forEach((gen) => {
+    errorMessages.forEach((gen: { error: string | null }) => {
       if (gen.error) {
         // Extract first line of error for grouping
-        const errorKey = gen.error.split('\n')[0].substring(0, 100);
+        const firstLine = gen.error.split('\n')[0];
+        const errorKey = firstLine ? firstLine.substring(0, 100) : 'Unknown error';
         errorCounts[errorKey] = (errorCounts[errorKey] || 0) + 1;
       }
     });

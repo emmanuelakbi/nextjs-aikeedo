@@ -19,12 +19,12 @@ const updatePlanSchema = z.object({
   description: z.string().optional(),
   price: z.number().min(0).optional(),
   creditCount: z.number().int().min(0).optional(),
-  features: z.record(z.boolean()).optional(),
+  features: z.record(z.string(), z.boolean()).optional(),
   isActive: z.boolean().optional(),
 });
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

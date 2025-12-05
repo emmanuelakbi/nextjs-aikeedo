@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UserRole, UserStatus } from '@prisma/client';
+import { UserRole, UserStatus } from '@/domain/user/types';
 
 /**
  * User Management Client Component
@@ -131,11 +131,11 @@ export function UserManagementClient() {
 
   const getStatusBadgeClass = (status: UserStatus) => {
     switch (status) {
-      case 'ACTIVE':
+      case UserStatus.ACTIVE:
         return 'bg-green-100 text-green-800';
-      case 'INACTIVE':
+      case UserStatus.INACTIVE:
         return 'bg-gray-100 text-gray-800';
-      case 'SUSPENDED':
+      case UserStatus.SUSPENDED:
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -315,20 +315,20 @@ export function UserManagementClient() {
                           >
                             View
                           </a>
-                          {user.status === 'ACTIVE' && (
+                          {user.status === UserStatus.ACTIVE && (
                             <button
                               onClick={() =>
-                                handleStatusChange(user.id, 'SUSPENDED')
+                                handleStatusChange(user.id, UserStatus.SUSPENDED)
                               }
                               className="text-orange-600 hover:text-orange-900"
                             >
                               Suspend
                             </button>
                           )}
-                          {user.status === 'SUSPENDED' && (
+                          {user.status === UserStatus.SUSPENDED && (
                             <button
                               onClick={() =>
-                                handleStatusChange(user.id, 'ACTIVE')
+                                handleStatusChange(user.id, UserStatus.ACTIVE)
                               }
                               className="text-green-600 hover:text-green-900"
                             >

@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate revenue
     const totalRevenue = subscriptionRevenue.reduce(
-      (sum, sub) => sum + sub.plan.price,
+      (sum: number, sub: { plan: { price: number } }) => sum + sub.plan.price,
       0
     );
 

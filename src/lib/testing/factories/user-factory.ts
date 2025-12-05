@@ -7,7 +7,8 @@
  * Requirements: 2.5
  */
 
-import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { UserRole, UserStatus } from '@/domain/user';
 import * as bcrypt from 'bcrypt';
 
 export interface CreateUserOptions {

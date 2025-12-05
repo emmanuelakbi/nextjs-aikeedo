@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     // Filter by date range if provided
     let filteredLogs = logs;
     if (startDate || endDate) {
-      filteredLogs = logs.filter((log) => {
+      filteredLogs = logs.filter((log: { createdAt: Date }) => {
         const logDate = new Date(log.createdAt);
         if (startDate && logDate < new Date(startDate)) return false;
         if (endDate && logDate > new Date(endDate)) return false;

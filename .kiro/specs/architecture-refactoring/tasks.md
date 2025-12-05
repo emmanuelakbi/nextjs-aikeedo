@@ -1,5 +1,62 @@
 # Implementation Plan
 
+## Phase 0: Critical Build Fixes (URGENT - Do First)
+
+- [ ] 0.1 Export domain types from User repository interface
+  - Export UserRole and UserStatus enums from `src/domain/user/repositories/IUserRepository.ts`
+  - Create barrel export in `src/domain/user/index.ts` to re-export these types
+  - Update all files importing from `@prisma/client` to import from domain layer instead
+  - _Requirements: 2.1, 2.2 - Remove Prisma dependencies from presentation layer_
+
+- [ ] 0.2 Fix UserRole and UserStatus imports across codebase
+  - Find all files importing `UserRole` or `UserStatus` from `@prisma/client`
+  - Update imports to use domain types: `import { UserRole, UserStatus } from '@/domain/user'`
+  - Files to update: All admin routes, client components, API routes
+  - _Requirements: 2.1 - Domain layer purity_
+
+- [ ] 0.3 Create domain types for all Prisma enums
+  - Create `src/domain/types/index.ts` with all enums (GenerationType, InvoiceStatus, etc.)
+  - Export from domain layer barrel exports
+  - Document which Prisma enums map to which domain types
+  - _Requirements: 2.1, 2.2_
+
+- [ ] 0.4 Update type imports in infrastructure layer
+  - Update `src/types/billing.ts` to re-export domain types instead of Prisma types
+  - Update `src/types/affiliate.ts` to re-export domain types
+  - Ensure backward compatibility for existing imports
+  - _Requirements: 2.3 - Type mapping in infrastructure_
+
+- [ ] 0.5 Run build and fix remaining type errors
+  - Execute `npm run build`
+  - Fix any remaining TypeScript errors
+  - Verify zero build errors
+  - _Requirements: All - Build must succeed_
+
+- [ ] 0.6 Handle Voice entity (if missing from schema)
+  - Check if Voice entity exists in `prisma/schema.prisma`
+  - If missing: Remove voice-related routes and repository references
+  - If present: Create domain interface for Voice repository
+  - Update imports and ensure consistency
+  - _Requirements: 1.1 - Repository interfaces for all entities_
+
+- [ ] 0.7 Fix error.error vs error.issues in Zod error handling
+  - Find all Zod error handling that uses `error.errors`
+  - Update to use `error.issues` (correct Zod property)
+  - Verify error handling works correctly
+  - _Requirements: Error Handling_
+
+- [ ] 0.8 Fix session property access in admin routes
+  - Find all `session.admin.id` references
+  - Update to `session.admin.user.id` or correct property path
+  - Verify admin authentication works
+  - _Requirements: Authentication_
+
+- [ ] 0.9 Checkpoint - Verify build succeeds
+  - Run `npm run build` - must complete successfully
+  - Run `npm run type-check` - must have zero errors
+  - Run `npm run lint` - fix critical errors
+  - Ensure all tests pass, ask the user if questions arise.
+
 ## Phase 1: Foundation - Core Domain Interfaces
 
 - [ ] 1. Create User domain repository interface
