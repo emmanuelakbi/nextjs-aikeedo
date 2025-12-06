@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin, logAdminAction } from '@/lib/admin';
+import { requireAdmin } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { UserStatus } from '@/domain/user';
 
@@ -14,7 +14,7 @@ import { UserStatus } from '@/domain/user';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await requireAdmin();
+    await requireAdmin();
     const { searchParams } = new URL(request.url);
 
     // Parse query parameters

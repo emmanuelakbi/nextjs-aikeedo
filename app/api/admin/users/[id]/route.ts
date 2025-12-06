@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
-import { UserRole, UserStatus } from '@/domain/user';
 import { z } from 'zod';
 
 /**
@@ -25,11 +24,11 @@ const updateUserSchema = z.object({
 });
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await requireAdmin();
+    await requireAdmin();
     const userId = params.id;
 
     const user = await prisma.user.findUnique({

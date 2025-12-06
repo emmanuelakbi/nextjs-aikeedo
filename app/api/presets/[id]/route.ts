@@ -29,7 +29,7 @@ export async function GET(
 ) {
   try {
     // Require authentication
-    const currentUser = await getCurrentUser();
+    const _currentUser = await getCurrentUser();
 
     // Get workspace ID from header
     const workspaceId = request.headers.get('x-workspace-id');
@@ -153,7 +153,7 @@ export async function PUT(
 ) {
   try {
     // Require authentication
-    const currentUser = await getCurrentUser();
+    const _currentUser = await getCurrentUser();
 
     // Parse request body
     const body = await request.json();
@@ -281,7 +281,7 @@ export async function DELETE(
 ) {
   try {
     // Require authentication
-    const currentUser = await getCurrentUser();
+    const _currentUser = await getCurrentUser();
 
     // Get workspace ID from header
     const workspaceId = request.headers.get('x-workspace-id');

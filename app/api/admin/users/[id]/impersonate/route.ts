@@ -79,7 +79,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  _params: { params: { id: string } }
 ) {
   try {
     // Verify admin access

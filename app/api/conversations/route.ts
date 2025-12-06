@@ -25,7 +25,7 @@ import { ZodError } from 'zod';
 export async function GET(request: NextRequest) {
   try {
     // Require authentication
-    const currentUser = await getCurrentUser();
+    const _currentUser = await getCurrentUser();
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Require authentication
-    const currentUser = await getCurrentUser();
+    const _currentUser = await getCurrentUser();
 
     // Parse request body
     const body = await request.json();
