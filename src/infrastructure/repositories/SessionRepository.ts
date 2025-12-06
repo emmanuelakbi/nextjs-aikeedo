@@ -1,7 +1,7 @@
-import { 
+import {
   ISessionRepository,
   Session,
-  CreateSessionData
+  CreateSessionData,
 } from '../../domain/auth/repositories/ISessionRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';

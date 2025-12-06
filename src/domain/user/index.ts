@@ -1,6 +1,6 @@
 /**
  * User Domain Barrel Export
- * 
+ *
  * Exports all public interfaces, types, and entities from the user domain.
  */
 

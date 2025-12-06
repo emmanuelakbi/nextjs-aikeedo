@@ -70,9 +70,8 @@ export function ModerationClient() {
   const [stats, setStats] = useState<ModerationStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedGeneration, setSelectedGeneration] = useState<Generation | null>(
-    null
-  );
+  const [selectedGeneration, setSelectedGeneration] =
+    useState<Generation | null>(null);
   const [moderationReason, setModerationReason] = useState('');
   const [moderationAction, setModerationAction] = useState<
     'flag' | 'remove' | 'ban_user'
@@ -129,7 +128,9 @@ export function ModerationClient() {
       setStats(data);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'Failed to fetch moderation statistics'
+        err instanceof Error
+          ? err.message
+          : 'Failed to fetch moderation statistics'
       );
     } finally {
       setLoading(false);
@@ -159,13 +160,15 @@ export function ModerationClient() {
 
       // Refresh the queue
       await fetchQueue();
-      
+
       // Close modal
       setSelectedGeneration(null);
       setModerationReason('');
       setModerationAction('flag');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to moderate content');
+      setError(
+        err instanceof Error ? err.message : 'Failed to moderate content'
+      );
     }
   };
 
@@ -288,7 +291,11 @@ export function ModerationClient() {
               </div>
 
               <div className="flex items-end">
-                <Button onClick={fetchQueue} disabled={loading} className="w-full">
+                <Button
+                  onClick={fetchQueue}
+                  disabled={loading}
+                  className="w-full"
+                >
                   {loading ? 'Loading...' : 'Refresh'}
                 </Button>
               </div>
@@ -450,10 +457,15 @@ export function ModerationClient() {
 
               {/* Generations by Type */}
               <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <h3 className="text-lg font-semibold mb-4">Generations by Type</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Generations by Type
+                </h3>
                 <div className="space-y-3">
                   {stats.generationsByType.map((item) => (
-                    <div key={item.type} className="flex justify-between items-center">
+                    <div
+                      key={item.type}
+                      className="flex justify-between items-center"
+                    >
                       <span className="font-medium">{item.type}</span>
                       <span className="text-gray-600">
                         {item._count.toLocaleString()} generations
@@ -465,7 +477,9 @@ export function ModerationClient() {
 
               {/* Top Flagged Users */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Top Flagged Users</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Top Flagged Users
+                </h3>
                 {stats.topFlaggedUsers.length === 0 ? (
                   <p className="text-gray-500 text-center py-4">
                     No flagged users in this period
@@ -552,8 +566,12 @@ export function ModerationClient() {
               {/* Generation Details */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Type</label>
-                  <p className="mt-1 text-sm text-gray-900">{selectedGeneration.type}</p>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Type
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {selectedGeneration.type}
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -568,9 +586,12 @@ export function ModerationClient() {
                   </span>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">User</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    User
+                  </label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {selectedGeneration.user.firstName} {selectedGeneration.user.lastName} (
+                    {selectedGeneration.user.firstName}{' '}
+                    {selectedGeneration.user.lastName} (
                     {selectedGeneration.user.email})
                   </p>
                   <p
@@ -624,7 +645,9 @@ export function ModerationClient() {
                     Error
                   </label>
                   <div className="bg-red-50 p-4 rounded-md">
-                    <p className="text-sm text-red-900">{selectedGeneration.error}</p>
+                    <p className="text-sm text-red-900">
+                      {selectedGeneration.error}
+                    </p>
                   </div>
                 </div>
               )}
@@ -632,7 +655,7 @@ export function ModerationClient() {
               {/* Moderation Form */}
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-4">Moderation Action</h4>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -641,13 +664,17 @@ export function ModerationClient() {
                     <select
                       value={moderationAction}
                       onChange={(e) =>
-                        setModerationAction(e.target.value as 'flag' | 'remove' | 'ban_user')
+                        setModerationAction(
+                          e.target.value as 'flag' | 'remove' | 'ban_user'
+                        )
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="flag">Flag for Review</option>
                       <option value="remove">Remove Content</option>
-                      <option value="ban_user">Remove Content & Ban User</option>
+                      <option value="ban_user">
+                        Remove Content & Ban User
+                      </option>
                     </select>
                   </div>
 

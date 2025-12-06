@@ -1,9 +1,9 @@
 #!/usr/bin/env ts-node
 /**
  * Configuration Manager CLI
- * 
+ *
  * Utility to view, validate, and manage application configuration
- * 
+ *
  * Usage:
  *   npm run config:view              # View current configuration
  *   npm run config:view credits      # View specific section
@@ -25,7 +25,7 @@ const EXAMPLE_CONFIG_PATH = path.join(CONFIG_DIR, 'custom.config.example.ts');
 function viewConfig(section?: string) {
   try {
     const { config } = require('../config/config-loader');
-    
+
     if (section) {
       if (section in config) {
         console.log(`\n📋 Configuration: ${section}\n`);
@@ -33,7 +33,7 @@ function viewConfig(section?: string) {
       } else {
         console.error(`❌ Section '${section}' not found`);
         console.log('\nAvailable sections:');
-        Object.keys(config).forEach(key => console.log(`  - ${key}`));
+        Object.keys(config).forEach((key) => console.log(`  - ${key}`));
         process.exit(1);
       }
     } else {
@@ -51,16 +51,18 @@ function viewConfig(section?: string) {
  */
 function validateConfig() {
   console.log('🔍 Validating configuration...\n');
-  
+
   try {
     const { config } = require('../config/config-loader');
-    
+
     const checks = [
       {
         name: 'Credit rates are positive',
         test: () => {
           const rates = Object.values(config.credits.text);
-          return rates.every((rate: any) => typeof rate === 'number' && rate > 0);
+          return rates.every(
+            (rate: any) => typeof rate === 'number' && rate > 0
+          );
         },
       },
       {
@@ -74,7 +76,9 @@ function validateConfig() {
         name: 'Rate limits are positive',
         test: () => {
           const limits = Object.values(config.rateLimits.api);
-          return limits.every((limit: any) => typeof limit === 'number' && limit > 0);
+          return limits.every(
+            (limit: any) => typeof limit === 'number' && limit > 0
+          );
         },
       },
       {
@@ -89,11 +93,11 @@ function validateConfig() {
         },
       },
     ];
-    
+
     let passed = 0;
     let failed = 0;
-    
-    checks.forEach(check => {
+
+    checks.forEach((check) => {
       try {
         if (check.test()) {
           console.log(`✅ ${check.name}`);
@@ -107,9 +111,9 @@ function validateConfig() {
         failed++;
       }
     });
-    
+
     console.log(`\n📊 Results: ${passed} passed, ${failed} failed\n`);
-    
+
     if (failed > 0) {
       console.error('❌ Configuration validation failed');
       process.exit(1);
@@ -131,11 +135,13 @@ function initConfig() {
     console.log('   Delete it first if you want to reinitialize');
     process.exit(1);
   }
-  
+
   try {
     fs.copyFileSync(EXAMPLE_CONFIG_PATH, CUSTOM_CONFIG_PATH);
     console.log('✅ Created custom.config.ts from example');
-    console.log('   Edit config/custom.config.ts to customize your configuration');
+    console.log(
+      '   Edit config/custom.config.ts to customize your configuration'
+    );
   } catch (error) {
     console.error('❌ Error creating custom config:', error);
     process.exit(1);
@@ -149,16 +155,20 @@ function showDiff() {
   try {
     const { appConfig } = require('../config/app.config');
     const { config } = require('../config/config-loader');
-    
+
     console.log('🔍 Configuration differences from default:\n');
-    
+
     const differences: string[] = [];
-    
+
     function findDifferences(obj1: any, obj2: any, path: string = '') {
       for (const key in obj2) {
         const newPath = path ? `${path}.${key}` : key;
-        
-        if (typeof obj2[key] === 'object' && !Array.isArray(obj2[key]) && obj2[key] !== null) {
+
+        if (
+          typeof obj2[key] === 'object' &&
+          !Array.isArray(obj2[key]) &&
+          obj2[key] !== null
+        ) {
           if (obj1[key]) {
             findDifferences(obj1[key], obj2[key], newPath);
           }
@@ -169,9 +179,9 @@ function showDiff() {
         }
       }
     }
-    
+
     findDifferences(appConfig, config);
-    
+
     if (differences.length === 0) {
       console.log('  No differences found - using default configuration');
     } else {
@@ -233,7 +243,7 @@ Available sections:
 function main() {
   const args = process.argv.slice(2);
   const command = args[0];
-  
+
   switch (command) {
     case 'view':
       viewConfig(args[1]);

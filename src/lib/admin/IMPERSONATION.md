@@ -12,7 +12,7 @@ The impersonation feature allows administrators to temporarily access the applic
 
 - **Time-Limited Sessions**: Impersonation sessions automatically expire after 1 hour
 - **Audit Logging**: All impersonation actions are logged with admin ID, target user, timestamps, and IP addresses
-- **Security Restrictions**: 
+- **Security Restrictions**:
   - Only admins can impersonate users
   - Cannot impersonate other admin users
   - Cannot impersonate inactive users
@@ -122,11 +122,13 @@ function AdminDashboard() {
 Starts an impersonation session.
 
 **Request:**
+
 - Method: `POST`
 - Path: `/api/admin/users/:id/impersonate`
 - Auth: Admin required
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -150,11 +152,13 @@ Starts an impersonation session.
 Ends an impersonation session.
 
 **Request:**
+
 - Method: `DELETE`
 - Path: `/api/admin/users/:id/impersonate?sessionId=imp_...`
 - Auth: Admin required
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -167,11 +171,13 @@ Ends an impersonation session.
 Gets all active impersonation sessions for the current admin.
 
 **Request:**
+
 - Method: `GET`
 - Path: `/api/admin/impersonation`
 - Auth: Admin required
 
 **Response:**
+
 ```json
 {
   "sessions": [
@@ -212,6 +218,7 @@ Gets all active impersonation sessions for the current admin.
 ## Audit Log Examples
 
 ### Impersonation Start
+
 ```json
 {
   "adminId": "admin123",
@@ -228,6 +235,7 @@ Gets all active impersonation sessions for the current admin.
 ```
 
 ### Impersonation End
+
 ```json
 {
   "adminId": "admin123",

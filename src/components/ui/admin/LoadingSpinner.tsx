@@ -20,29 +20,25 @@ const sizeClasses = {
   lg: 'h-12 w-12',
 };
 
-export function LoadingSpinner({ 
-  message = 'Loading...', 
+export function LoadingSpinner({
+  message = 'Loading...',
   size = 'md',
-  fullScreen = false 
+  fullScreen = false,
 }: LoadingSpinnerProps) {
   const content = (
     <>
-      <div className={`inline-block animate-spin rounded-full border-b-2 border-blue-600 ${sizeClasses[size]}`}></div>
+      <div
+        className={`inline-block animate-spin rounded-full border-b-2 border-blue-600 ${sizeClasses[size]}`}
+      ></div>
       {message && <p className="mt-2 text-gray-600">{message}</p>}
     </>
   );
 
   if (fullScreen) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        {content}
-      </div>
+      <div className="flex justify-center items-center h-screen">{content}</div>
     );
   }
 
-  return (
-    <div className="p-8 text-center">
-      {content}
-    </div>
-  );
+  return <div className="p-8 text-center">{content}</div>;
 }

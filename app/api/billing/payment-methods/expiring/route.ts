@@ -5,7 +5,7 @@ import { createPaymentMethodService } from '@/infrastructure/services/PaymentMet
 
 /**
  * Expiring Payment Methods API Route
- * 
+ *
  * Checks for payment methods that are expiring soon
  * Requirements: 6.4
  */
@@ -20,10 +20,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -84,4 +81,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

@@ -3,13 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Input,
-  Button,
-  Form,
-  FormError,
-  useToast,
-} from '@/components/ui';
+import { Input, Button, Form, FormError, useToast } from '@/components/ui';
 
 /**
  * Register Page

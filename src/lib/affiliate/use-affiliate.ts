@@ -74,7 +74,9 @@ export function useAffiliate(): UseAffiliateReturn {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create affiliate account');
+        throw new Error(
+          errorData.error || 'Failed to create affiliate account'
+        );
       }
 
       const result = await response.json();

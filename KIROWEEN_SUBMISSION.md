@@ -31,32 +31,38 @@ The true horror (and beauty) of this project is making incompatible technologies
 ## Tech Stack (The Laboratory) 🧪
 
 ### Core Framework
+
 - Next.js 14 (App Router, Server Components, API Routes)
 - TypeScript 5 (Strict mode)
 - React 18
 
 ### Database & Caching
+
 - PostgreSQL (Neon serverless)
 - Prisma 7 (Type-safe ORM)
 - Redis (Session caching, rate limiting)
 
 ### AI Providers (The Four Brains)
+
 - OpenAI SDK (GPT models, DALL-E)
 - Anthropic SDK (Claude models)
 - Google Generative AI (Gemini)
 - Mistral AI SDK
 
 ### Payment & Billing
+
 - Stripe (Subscriptions, invoicing, payouts)
 - Custom credit system
 - Affiliate commission tracking
 
 ### Infrastructure
+
 - AWS S3 (File storage)
 - Nodemailer (Email)
 - NextAuth v5 (Authentication)
 
 ### Testing
+
 - Vitest (Unit/Integration)
 - Playwright (E2E)
 - fast-check (Property-based testing)
@@ -68,35 +74,41 @@ The true horror (and beauty) of this project is making incompatible technologies
 Kiro's spec-driven approach was essential for managing this complex system. We created **6 major specs** that Kiro used to systematically build each subsystem:
 
 #### Foundation Spec (`nextjs-foundation`)
+
 - Established Clean Architecture with DDD patterns
 - Set up authentication, database, and core infrastructure
 - Created the skeleton that everything else would attach to
 
 #### AI Services Spec (`nextjs-ai-services`)
+
 - Unified interface for 4 different AI providers
 - Circuit breaker pattern for resilience
 - Token counting and usage tracking
 - Automatic failover between providers
 
 #### Billing Spec (`nextjs-billing`)
+
 - Credit-based system with Stripe integration
 - Subscription management with automatic renewals
 - Invoice generation and payment tracking
 - Usage metering and credit allocation
 
 #### Affiliate Spec (`nextjs-affiliate`)
+
 - Referral tracking with cookie-based attribution
 - Commission calculation engine
 - Payout system with Stripe Connect
 - Performance analytics dashboard
 
 #### Content Management Spec (`nextjs-content-management`)
+
 - Document creation and management
 - File upload with S3 integration
 - Voice cloning capabilities
 - Multi-workspace content isolation
 
 #### Admin Dashboard Spec (`nextjs-admin-dashboard`)
+
 - User impersonation for support
 - Content moderation tools
 - System-wide analytics and reporting
@@ -109,18 +121,21 @@ Kiro's spec-driven approach was essential for managing this complex system. We c
 We created **3 steering documents** that guided Kiro throughout development:
 
 #### `tech.md` - Technology Standards
+
 - Enforced consistent use of TypeScript strict mode
 - Standardized testing approaches (Vitest + Playwright + fast-check)
 - Defined common commands and workflows
 - Ensured proper environment variable handling
 
 #### `structure.md` - Architecture Rules
+
 - Enforced Clean Architecture boundaries
 - Defined import order conventions
 - Standardized file naming and organization
 - Maintained DDD patterns across all features
 
 #### `product.md` - Business Context
+
 - Kept Kiro aligned with business goals
 - Ensured credit system consistency
 - Maintained multi-tenant isolation rules
@@ -133,7 +148,9 @@ We created **3 steering documents** that guided Kiro throughout development:
 While specs provided structure, vibe coding with Kiro enabled rapid iteration on complex problems:
 
 #### Most Impressive Code Generation:
+
 **AI Provider Factory with Circuit Breaker** - We described the problem: "We need to support multiple AI providers with automatic failover and circuit breaking to prevent cascading failures." Kiro generated:
+
 - Abstract base classes for each AI service type (text, image, speech)
 - Factory pattern with provider selection logic
 - Circuit breaker implementation with exponential backoff
@@ -143,6 +160,7 @@ While specs provided structure, vibe coding with Kiro enabled rapid iteration on
 This would have taken days to implement manually. Kiro generated production-ready code in minutes.
 
 #### Conversation Strategy:
+
 1. **Start with architecture**: Described the overall system structure and constraints
 2. **Iterate on patterns**: Discussed trade-offs (e.g., repository pattern vs direct Prisma access)
 3. **Refine implementations**: Asked Kiro to optimize specific functions or add edge case handling
@@ -151,12 +169,14 @@ This would have taken days to implement manually. Kiro generated production-read
 ### 4. Comparison: Specs vs Vibe Coding
 
 **Specs were better for**:
+
 - Large, well-defined subsystems (billing, authentication)
 - Features requiring multiple coordinated changes
 - Maintaining consistency across related files
 - Complex business logic with clear requirements
 
 **Vibe coding was better for**:
+
 - Exploratory work (trying different AI provider integrations)
 - Quick fixes and optimizations
 - Generating test cases
@@ -167,6 +187,7 @@ This would have taken days to implement manually. Kiro generated production-read
 ## Key Features Demonstrating "Frankenstein" Nature
 
 ### 1. Unified AI Provider Interface
+
 Four different AI SDKs with completely different APIs, unified behind a single interface:
 
 ```typescript
@@ -177,21 +198,27 @@ const result = await provider.generateText(prompt);
 ```
 
 ### 2. Credit System + Stripe Subscriptions
+
 Traditional subscription billing stitched together with a custom credit system:
+
 - Subscriptions allocate monthly credits
 - One-time purchases add credits
 - Usage deducts credits in real-time
 - Stripe webhooks keep everything synchronized
 
 ### 3. Multi-Tenant Architecture
+
 Workspace isolation with shared infrastructure:
+
 - Each workspace has its own credits, documents, and settings
 - Users can belong to multiple workspaces
 - Billing is per-workspace but users are global
 - Database queries automatically scope to workspace context
 
 ### 4. Domain-Driven Design in Next.js
+
 Enterprise patterns in a modern web framework:
+
 - Domain entities with business logic
 - Repository interfaces implemented by Prisma
 - Use cases orchestrating domain operations
@@ -202,6 +229,7 @@ Enterprise patterns in a modern web framework:
 **URL**: [Your deployed URL here]
 
 **Test Credentials**:
+
 ```
 Email: demo@aikeedo.com
 Password: Demo123!
@@ -212,6 +240,7 @@ Password: Demo123!
 **YouTube URL**: [Your 3-minute demo video]
 
 The video demonstrates:
+
 1. Multi-workspace management
 2. AI service integration (text, image, speech)
 3. Credit purchase and usage tracking
@@ -223,6 +252,7 @@ The video demonstrates:
 **GitHub**: [Your repo URL]
 
 The `.kiro` directory contains:
+
 - 6 comprehensive specs with requirements, design, and tasks
 - 3 steering documents enforcing standards
 - Complete development history showing Kiro's involvement
@@ -287,4 +317,4 @@ Built with Kiro during Kiroween 2025. This project demonstrates how Kiro's combi
 
 ---
 
-*"It's alive! IT'S ALIVE!"* - Dr. Frankenstein (and us, after Kiro helped us debug the Stripe webhook handler)
+_"It's alive! IT'S ALIVE!"_ - Dr. Frankenstein (and us, after Kiro helped us debug the Stripe webhook handler)

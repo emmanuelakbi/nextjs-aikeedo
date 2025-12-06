@@ -151,14 +151,14 @@ export class Workspace {
       // Log the issue but release what we can instead of throwing
       console.warn(
         `[Workspace] Attempting to release ${amount} credits but only ${this.props.allocatedCredits} are allocated. ` +
-        `Releasing ${this.props.allocatedCredits} instead. Workspace: ${this.props.id.getValue()}`
+          `Releasing ${this.props.allocatedCredits} instead. Workspace: ${this.props.id.getValue()}`
       );
       // Release all allocated credits instead of throwing
       this.props.allocatedCredits = 0;
     } else {
       this.props.allocatedCredits -= amount;
     }
-    
+
     this.props.updatedAt = new Date();
   }
 

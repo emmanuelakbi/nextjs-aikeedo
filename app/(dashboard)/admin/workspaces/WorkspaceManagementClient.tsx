@@ -120,7 +120,7 @@ export function WorkspaceManagementClient() {
 
   const getSubscriptionBadgeClass = (status: string | undefined) => {
     if (!status) return 'bg-gray-100 text-gray-800';
-    
+
     switch (status) {
       case 'ACTIVE':
         return 'bg-green-100 text-green-800';
@@ -259,7 +259,8 @@ export function WorkspaceManagementClient() {
                             {workspace.creditCount.toLocaleString()}
                           </div>
                           <div className="text-xs text-gray-500">
-                            Allocated: {workspace.allocatedCredits.toLocaleString()}
+                            Allocated:{' '}
+                            {workspace.allocatedCredits.toLocaleString()}
                           </div>
                         </div>
                       </td>
@@ -286,7 +287,9 @@ export function WorkspaceManagementClient() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="space-y-1">
                           <div>{workspace._count.members} members</div>
-                          <div>{workspace._count.conversations} conversations</div>
+                          <div>
+                            {workspace._count.conversations} conversations
+                          </div>
                           <div>{workspace._count.generations} generations</div>
                         </div>
                       </td>
@@ -303,7 +306,10 @@ export function WorkspaceManagementClient() {
                           </a>
                           <button
                             onClick={() =>
-                              handleDeleteWorkspace(workspace.id, workspace.name)
+                              handleDeleteWorkspace(
+                                workspace.id,
+                                workspace.name
+                              )
                             }
                             className="text-red-600 hover:text-red-900"
                           >

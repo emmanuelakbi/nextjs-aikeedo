@@ -44,9 +44,7 @@ export default async function AdminAffiliatePage() {
           <p className="text-gray-600 mb-4">
             Review and process affiliate payout requests
           </p>
-          <span className="text-blue-600 font-medium">
-            Manage Payouts →
-          </span>
+          <span className="text-blue-600 font-medium">Manage Payouts →</span>
         </Link>
 
         {/* Affiliate List */}
@@ -59,9 +57,7 @@ export default async function AdminAffiliatePage() {
           <p className="text-gray-600 mb-4">
             View and manage all affiliate accounts
           </p>
-          <span className="text-blue-600 font-medium">
-            View Affiliates →
-          </span>
+          <span className="text-blue-600 font-medium">View Affiliates →</span>
         </Link>
 
         {/* Fraud Detection */}
@@ -74,9 +70,7 @@ export default async function AdminAffiliatePage() {
           <p className="text-gray-600 mb-4">
             Monitor suspicious activity and patterns
           </p>
-          <span className="text-blue-600 font-medium">
-            View Alerts →
-          </span>
+          <span className="text-blue-600 font-medium">View Alerts →</span>
         </Link>
 
         {/* Reports */}
@@ -89,9 +83,7 @@ export default async function AdminAffiliatePage() {
           <p className="text-gray-600 mb-4">
             Generate and view affiliate program reports
           </p>
-          <span className="text-blue-600 font-medium">
-            View Reports →
-          </span>
+          <span className="text-blue-600 font-medium">View Reports →</span>
         </Link>
 
         {/* Leaderboard */}
@@ -101,12 +93,8 @@ export default async function AdminAffiliatePage() {
         >
           <div className="text-4xl mb-4">🏆</div>
           <h2 className="text-xl font-semibold mb-2">Leaderboard</h2>
-          <p className="text-gray-600 mb-4">
-            View top performing affiliates
-          </p>
-          <span className="text-blue-600 font-medium">
-            View Leaderboard →
-          </span>
+          <p className="text-gray-600 mb-4">View top performing affiliates</p>
+          <span className="text-blue-600 font-medium">View Leaderboard →</span>
         </Link>
 
         {/* Settings */}
@@ -119,9 +107,7 @@ export default async function AdminAffiliatePage() {
           <p className="text-gray-600 mb-4">
             Configure affiliate program settings
           </p>
-          <span className="text-blue-600 font-medium">
-            Manage Settings →
-          </span>
+          <span className="text-blue-600 font-medium">Manage Settings →</span>
         </Link>
       </div>
     </div>

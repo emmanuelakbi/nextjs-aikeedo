@@ -6,21 +6,24 @@ import { z } from 'zod';
 
 /**
  * Refund API Routes
- * 
+ *
  * Handles refund requests for subscriptions and credit purchases
  * Requirements: 11.1, 11.2, 11.3, 11.4, 11.5
  */
 
-const createRefundSchema = z.object({
-  paymentIntentId: z.string().optional(),
-  chargeId: z.string().optional(),
-  amount: z.number().positive().optional(),
-  reason: z.enum(['duplicate', 'fraudulent', 'requested_by_customer']).optional(),
-  workspaceId: z.string().uuid(),
-}).refine(
-  (data) => data.paymentIntentId || data.chargeId,
-  { message: 'Either paymentIntentId or chargeId must be provided' }
-);
+const createRefundSchema = z
+  .object({
+    paymentIntentId: z.string().optional(),
+    chargeId: z.string().optional(),
+    amount: z.number().positive().optional(),
+    reason: z
+      .enum(['duplicate', 'fraudulent', 'requested_by_customer'])
+      .optional(),
+    workspaceId: z.string().uuid(),
+  })
+  .refine((data) => data.paymentIntentId || data.chargeId, {
+    message: 'Either paymentIntentId or chargeId must be provided',
+  });
 
 /**
  * POST /api/billing/refunds
@@ -32,10 +35,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -70,7 +70,9 @@ export async function POST(request: NextRequest) {
     const refund = await stripeService.createRefund({
       payment_intent: validatedData.paymentIntentId,
       charge: validatedData.chargeId,
-      amount: validatedData.amount ? Math.round(validatedData.amount * 100) : undefined,
+      amount: validatedData.amount
+        ? Math.round(validatedData.amount * 100)
+        : undefined,
       reason: validatedData.reason,
       metadata: {
         workspaceId: validatedData.workspaceId,
@@ -95,10 +97,10 @@ export async function POST(request: NextRequest) {
         // Calculate proportional credit deduction
         const refundAmount = refund.amount / 100; // Convert from cents
         const originalAmount = creditTransaction.amount;
-        const refundPercentage = validatedData.amount 
-          ? (validatedData.amount / (refund.amount / 100))
+        const refundPercentage = validatedData.amount
+          ? validatedData.amount / (refund.amount / 100)
           : 1;
-        
+
         const creditsToDeduct = Math.floor(originalAmount * refundPercentage);
 
         // Deduct credits from workspace
@@ -208,10 +210,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);

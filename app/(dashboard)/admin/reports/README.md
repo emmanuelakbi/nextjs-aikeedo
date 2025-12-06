@@ -59,6 +59,7 @@ The Admin Reporting System provides comprehensive reporting and data export capa
 Generate and export reports with flexible parameters.
 
 **Query Parameters:**
+
 - `type` (required): Report type (`revenue`, `user-growth`, `ai-usage`, `financial`, `subscription`)
 - `startDate` (required): Start date in ISO format (YYYY-MM-DD)
 - `endDate` (required): End date in ISO format (YYYY-MM-DD)
@@ -191,6 +192,7 @@ npm test src/app/api/admin/reports/route.test.ts
 ```
 
 Tests cover:
+
 - Report generation for all types
 - CSV export functionality
 - Error handling (missing dates, invalid types)
@@ -201,5 +203,5 @@ Tests cover:
 
 - [Admin Dashboard Requirements](/.kiro/specs/nextjs-admin-dashboard/requirements.md)
 - [Admin Dashboard Design](/.kiro/specs/nextjs-admin-dashboard/design.md)
-- [Analytics Dashboard](/src/app/(dashboard)/admin/AnalyticsDashboard.tsx)
+- [Analytics Dashboard](</src/app/(dashboard)/admin/AnalyticsDashboard.tsx>)
 - [API Documentation](/docs/API.md)

@@ -147,7 +147,9 @@ export function checkReferralVelocity(
 
   // Check for suspicious velocity
   if (referralsPerHour > 10) {
-    reasons.push(`Suspicious referral velocity: ${referralsPerHour.toFixed(1)} per hour`);
+    reasons.push(
+      `Suspicious referral velocity: ${referralsPerHour.toFixed(1)} per hour`
+    );
     riskScore += 40;
   }
 
@@ -194,7 +196,10 @@ export function checkEmailPattern(
   const affiliateBase = affiliateUsername.split('+')[0];
   const referredBase = referredUsername.split('+')[0];
 
-  if (affiliateBase === referredBase && affiliateUsername !== referredUsername) {
+  if (
+    affiliateBase === referredBase &&
+    affiliateUsername !== referredUsername
+  ) {
     reasons.push('Email plus addressing detected');
     riskScore += 50;
   }

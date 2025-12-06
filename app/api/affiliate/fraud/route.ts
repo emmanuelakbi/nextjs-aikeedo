@@ -69,24 +69,28 @@ export async function POST(request: NextRequest) {
     }
 
     if (!['SUSPEND', 'BAN', 'REVIEW'].includes(action)) {
-      return NextResponse.json(
-        { error: 'Invalid action' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
     // Update affiliate status
     const affiliate = await prisma.affiliate.update({
       where: { id: affiliateId },
       data: {
-        status: action === 'BAN' ? 'SUSPENDED' : action === 'SUSPEND' ? 'SUSPENDED' : 'ACTIVE',
+        status:
+          action === 'BAN'
+            ? 'SUSPENDED'
+            : action === 'SUSPEND'
+              ? 'SUSPENDED'
+              : 'ACTIVE',
         updatedAt: new Date(),
       },
     });
 
     // Log fraud action
     // TODO: Create a separate FraudLog model for better tracking
-    console.log(`Fraud action: ${action} for affiliate ${affiliateId}. Reason: ${reason}`);
+    console.log(
+      `Fraud action: ${action} for affiliate ${affiliateId}. Reason: ${reason}`
+    );
 
     return NextResponse.json({
       success: true,
@@ -147,17 +151,21 @@ async function detectSuspiciousPatterns(affiliateId?: string | null) {
 
     // Check for same IP referrals (would need IP tracking)
     // This is a placeholder for IP-based detection
-    
+
     // Check for rapid conversions (all conversions within 24 hours)
-    const conversions = affiliate.referrals.filter((r) => r.status === 'CONVERTED' && r.convertedAt);
+    const conversions = affiliate.referrals.filter(
+      (r) => r.status === 'CONVERTED' && r.convertedAt
+    );
     if (conversions.length > 5) {
       const timeSpan =
         conversions[conversions.length - 1].convertedAt!.getTime() -
         conversions[0].convertedAt!.getTime();
       const hoursSpan = timeSpan / (1000 * 60 * 60);
-      
+
       if (hoursSpan < 24) {
-        flags.push(`Rapid conversions: ${conversions.length} in ${hoursSpan.toFixed(1)} hours`);
+        flags.push(
+          `Rapid conversions: ${conversions.length} in ${hoursSpan.toFixed(1)} hours`
+        );
         riskScore += 30;
       }
     }
@@ -165,10 +173,13 @@ async function detectSuspiciousPatterns(affiliateId?: string | null) {
     // Check for unusual conversion rate (>80%)
     const totalReferrals = affiliate.referrals.length;
     const convertedReferrals = conversions.length;
-    const conversionRate = totalReferrals > 0 ? (convertedReferrals / totalReferrals) * 100 : 0;
-    
+    const conversionRate =
+      totalReferrals > 0 ? (convertedReferrals / totalReferrals) * 100 : 0;
+
     if (conversionRate > 80 && totalReferrals > 10) {
-      flags.push(`Unusually high conversion rate: ${conversionRate.toFixed(1)}%`);
+      flags.push(
+        `Unusually high conversion rate: ${conversionRate.toFixed(1)}%`
+      );
       riskScore += 20;
     }
 
@@ -176,9 +187,11 @@ async function detectSuspiciousPatterns(affiliateId?: string | null) {
     const emails = affiliate.referrals.map((r) => r.referredUser.email);
     const emailDomains = emails.map((e) => e.split('@')[1]);
     const uniqueDomains = new Set(emailDomains);
-    
+
     if (uniqueDomains.size === 1 && emails.length > 5) {
-      flags.push(`All referrals from same email domain: ${Array.from(uniqueDomains)[0]}`);
+      flags.push(
+        `All referrals from same email domain: ${Array.from(uniqueDomains)[0]}`
+      );
       riskScore += 25;
     }
 
@@ -187,7 +200,9 @@ async function detectSuspiciousPatterns(affiliateId?: string | null) {
       (r) => r.status === 'CANCELED' && r.convertedAt
     );
     if (canceledAfterPayout.length > 2) {
-      flags.push(`Referrals canceled after conversion: ${canceledAfterPayout.length}`);
+      flags.push(
+        `Referrals canceled after conversion: ${canceledAfterPayout.length}`
+      );
       riskScore += 40;
     }
 

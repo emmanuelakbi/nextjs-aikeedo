@@ -15,7 +15,9 @@ interface BillingDashboardProps {
   workspaceId: string;
 }
 
-export default async function BillingDashboard({ workspaceId }: BillingDashboardProps) {
+export default async function BillingDashboard({
+  workspaceId,
+}: BillingDashboardProps) {
   // Fetch dashboard data from API
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/billing/dashboard?workspaceId=${workspaceId}`,
@@ -27,7 +29,9 @@ export default async function BillingDashboard({ workspaceId }: BillingDashboard
   if (!response.ok) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-        <p className="text-red-800">Failed to load billing dashboard. Please try again later.</p>
+        <p className="text-red-800">
+          Failed to load billing dashboard. Please try again later.
+        </p>
       </div>
     );
   }
@@ -38,15 +42,12 @@ export default async function BillingDashboard({ workspaceId }: BillingDashboard
     <div className="space-y-6">
       {/* Requirements: 12.1 - Current plan and usage, 12.5 - Remaining quota */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <CurrentPlanCard 
+        <CurrentPlanCard
           plan={data.currentPlan}
           subscription={data.subscription}
         />
-        <UsageCard 
-          credits={data.credits}
-          currentPeriod={data.currentPeriod}
-        />
-        <CurrentPeriodCard 
+        <UsageCard credits={data.credits} currentPeriod={data.currentPeriod} />
+        <CurrentPeriodCard
           currentPeriod={data.currentPeriod}
           subscription={data.subscription}
         />
@@ -64,7 +65,7 @@ export default async function BillingDashboard({ workspaceId }: BillingDashboard
       {data.billingHistory.invoices.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">Billing History</h2>
-          <BillingHistoryChart 
+          <BillingHistoryChart
             monthlySpending={data.billingHistory.monthlySpending}
             totalSpent={data.billingHistory.totalSpent}
           />
@@ -73,7 +74,9 @@ export default async function BillingDashboard({ workspaceId }: BillingDashboard
 
       {/* Credit Purchase */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Purchase Additional Credits</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Purchase Additional Credits
+        </h2>
         <p className="text-gray-600 mb-6">
           Need more credits? Purchase additional credits for your AI services.
         </p>
@@ -94,7 +97,10 @@ export default async function BillingDashboard({ workspaceId }: BillingDashboard
           <h2 className="text-xl font-semibold mb-4">Payment Methods</h2>
           <div className="space-y-3">
             {data.paymentMethods.map((pm: any) => (
-              <div key={pm.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div
+                key={pm.id}
+                className="flex items-center justify-between p-4 border rounded-lg"
+              >
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">💳</div>
                   <div>

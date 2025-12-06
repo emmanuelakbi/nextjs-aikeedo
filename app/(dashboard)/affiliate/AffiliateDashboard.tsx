@@ -15,14 +15,16 @@ interface AffiliateDashboardProps {
   userId: string;
 }
 
-export default async function AffiliateDashboard({ userId: _userId }: AffiliateDashboardProps) {
+export default async function AffiliateDashboard({
+  userId: _userId,
+}: AffiliateDashboardProps) {
   // Fetch affiliate account
   const affiliateResponse = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/affiliate`,
     {
       cache: 'no-store',
       headers: {
-        'Cookie': '', // Session will be handled by NextAuth
+        Cookie: '', // Session will be handled by NextAuth
       },
     }
   );

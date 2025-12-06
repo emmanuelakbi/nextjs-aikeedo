@@ -20,13 +20,16 @@ interface EmptyStateProps {
   };
 }
 
-export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+}: EmptyStateProps) {
   return (
     <div className="p-12 text-center">
       {icon && (
-        <div className="mx-auto h-12 w-12 text-gray-400 mb-4">
-          {icon}
-        </div>
+        <div className="mx-auto h-12 w-12 text-gray-400 mb-4">{icon}</div>
       )}
       <h3 className="text-sm font-medium text-gray-900">{title}</h3>
       {description && (

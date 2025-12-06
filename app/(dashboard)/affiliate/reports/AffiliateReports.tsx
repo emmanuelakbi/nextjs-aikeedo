@@ -17,9 +17,15 @@ interface AffiliateReportsProps {
   userId: string;
 }
 
-export default function AffiliateReports({ userId: _userId }: AffiliateReportsProps) {
-  const [reportType, setReportType] = useState<'summary' | 'earnings' | 'conversions' | 'detailed'>('summary');
-  const [period, setPeriod] = useState<'7d' | '30d' | '90d' | '1y' | 'all'>('30d');
+export default function AffiliateReports({
+  userId: _userId,
+}: AffiliateReportsProps) {
+  const [reportType, setReportType] = useState<
+    'summary' | 'earnings' | 'conversions' | 'detailed'
+  >('summary');
+  const [period, setPeriod] = useState<'7d' | '30d' | '90d' | '1y' | 'all'>(
+    '30d'
+  );
   const [reportData, setReportData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,8 +39,10 @@ export default function AffiliateReports({ userId: _userId }: AffiliateReportsPr
     setError(null);
 
     try {
-      const response = await fetch(`/api/affiliate/reports?type=${reportType}&period=${period}`);
-      
+      const response = await fetch(
+        `/api/affiliate/reports?type=${reportType}&period=${period}`
+      );
+
       if (!response.ok) {
         throw new Error('Failed to fetch report');
       }
@@ -59,7 +67,11 @@ export default function AffiliateReports({ userId: _userId }: AffiliateReportsPr
             onReportTypeChange={setReportType}
             onPeriodChange={setPeriod}
           />
-          <ExportButton reportData={reportData} reportType={reportType} period={period} />
+          <ExportButton
+            reportData={reportData}
+            reportType={reportType}
+            period={period}
+          />
         </div>
       </div>
 
@@ -79,7 +91,9 @@ export default function AffiliateReports({ userId: _userId }: AffiliateReportsPr
         <>
           {reportType === 'summary' && <SummaryReport data={reportData} />}
           {reportType === 'earnings' && <EarningsReport data={reportData} />}
-          {reportType === 'conversions' && <ConversionsReport data={reportData} />}
+          {reportType === 'conversions' && (
+            <ConversionsReport data={reportData} />
+          )}
           {reportType === 'detailed' && <DetailedReport data={reportData} />}
         </>
       )}

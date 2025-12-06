@@ -55,7 +55,8 @@ export class PrismaPayoutRepository implements PayoutRepository {
       where: { id },
       data: {
         status,
-        processedAt: processedAt || (status === 'PAID' ? new Date() : undefined),
+        processedAt:
+          processedAt || (status === 'PAID' ? new Date() : undefined),
         notes,
       },
     });

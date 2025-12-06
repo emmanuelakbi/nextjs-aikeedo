@@ -33,10 +33,10 @@ async function main() {
     } else {
       console.log('❌ Admin user not found');
       console.log('\nCreating admin user...');
-      
+
       const bcrypt = await import('bcrypt');
       const passwordHash = await bcrypt.hash('password123', 12);
-      
+
       const newUser = await prisma.user.create({
         data: {
           email: 'admin@aikeedo.com',
@@ -49,7 +49,7 @@ async function main() {
           language: 'en-US',
         },
       });
-      
+
       console.log('✅ Admin user created:', newUser.id);
     }
   } catch (error) {

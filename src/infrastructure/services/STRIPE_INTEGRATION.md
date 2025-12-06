@@ -5,6 +5,7 @@ This document describes the Stripe integration setup for the AIKEEDO billing mod
 ## Overview
 
 The Stripe integration provides a complete payment processing solution for:
+
 - Subscription management
 - One-time credit purchases
 - Payment method management

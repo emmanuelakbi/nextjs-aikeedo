@@ -1,6 +1,6 @@
 /**
  * useCheckout Hook
- * 
+ *
  * React hook for managing Stripe checkout flows
  * Requirements: 2.1, 2.3, 4.1, 4.3
  */
@@ -21,14 +21,16 @@ interface UseCheckoutState {
 interface UseCheckoutReturn {
   isLoading: boolean;
   error: string | null;
-  startSubscriptionCheckout: (params: CreateSubscriptionCheckoutParams) => Promise<void>;
+  startSubscriptionCheckout: (
+    params: CreateSubscriptionCheckoutParams
+  ) => Promise<void>;
   startCreditCheckout: (params: CreateCreditCheckoutParams) => Promise<void>;
   clearError: () => void;
 }
 
 /**
  * Hook for managing checkout flows
- * 
+ *
  * @returns Checkout state and functions
  */
 export function useCheckout(): UseCheckoutReturn {
@@ -47,14 +49,13 @@ export function useCheckout(): UseCheckoutReturn {
 
       try {
         const session = await createSubscriptionCheckout(params);
-        
+
         // Redirect to Stripe checkout
         window.location.href = session.url;
       } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'Failed to start checkout';
-        
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to start checkout';
+
         setState({ isLoading: false, error: errorMessage });
         throw error;
       }
@@ -68,14 +69,15 @@ export function useCheckout(): UseCheckoutReturn {
 
       try {
         const session = await createCreditCheckout(params);
-        
+
         // Redirect to Stripe checkout
         window.location.href = session.url;
       } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'Failed to start credit checkout';
-        
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'Failed to start credit checkout';
+
         setState({ isLoading: false, error: errorMessage });
         throw error;
       }

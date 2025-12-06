@@ -38,9 +38,13 @@ export async function POST(
     });
   } catch (error) {
     console.error('Error deprecating plan:', error);
-    const status = error instanceof Error && error.message === 'Plan not found' ? 404 : 400;
+    const status =
+      error instanceof Error && error.message === 'Plan not found' ? 404 : 400;
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to deprecate plan' },
+      {
+        error:
+          error instanceof Error ? error.message : 'Failed to deprecate plan',
+      },
       { status }
     );
   }

@@ -67,56 +67,59 @@ User Action → API Route → Service Layer → Stripe API
 ### Key Entities
 
 #### Plan
+
 ```typescript
 {
-  id: string
-  name: string
-  description: string
-  price: number              // in cents
-  currency: string           // e.g., 'usd'
-  interval: 'MONTH' | 'YEAR'
-  creditCount: number | null // null = unlimited
-  features: Json             // plan features
-  limits: Json               // usage limits
-  stripeProductId: string
-  stripePriceId: string
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  name: string;
+  description: string;
+  price: number; // in cents
+  currency: string; // e.g., 'usd'
+  interval: 'MONTH' | 'YEAR';
+  creditCount: number | null; // null = unlimited
+  features: Json; // plan features
+  limits: Json; // usage limits
+  stripeProductId: string;
+  stripePriceId: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
 #### Subscription
+
 ```typescript
 {
-  id: string
-  workspaceId: string
-  planId: string
-  stripeSubscriptionId: string
-  stripeCustomerId: string
-  status: 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'TRIALING'
-  currentPeriodStart: Date
-  currentPeriodEnd: Date
-  cancelAtPeriodEnd: boolean
-  canceledAt: Date | null
-  trialEnd: Date | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  workspaceId: string;
+  planId: string;
+  stripeSubscriptionId: string;
+  stripeCustomerId: string;
+  status: 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'TRIALING';
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  cancelAtPeriodEnd: boolean;
+  canceledAt: Date | null;
+  trialEnd: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
 #### Invoice
+
 ```typescript
 {
-  id: string
-  workspaceId: string
-  stripeInvoiceId: string
-  amount: number
-  currency: string
-  status: 'PAID' | 'OPEN' | 'VOID'
-  paidAt: Date | null
-  invoiceUrl: string
-  createdAt: Date
+  id: string;
+  workspaceId: string;
+  stripeInvoiceId: string;
+  amount: number;
+  currency: string;
+  status: 'PAID' | 'OPEN' | 'VOID';
+  paidAt: Date | null;
+  invoiceUrl: string;
+  createdAt: Date;
 }
 ```
 
@@ -156,6 +159,7 @@ npm run db:migrate
 #### 1. Create Products and Prices
 
 In Stripe Dashboard:
+
 1. Go to Products → Add Product
 2. Create products for each plan tier
 3. Add pricing (monthly/annual)
@@ -223,8 +227,8 @@ const response = await fetch('/api/billing/checkout', {
   body: JSON.stringify({
     planId: 'plan_123',
     successUrl: 'https://yourdomain.com/billing/success',
-    cancelUrl: 'https://yourdomain.com/billing/cancel'
-  })
+    cancelUrl: 'https://yourdomain.com/billing/cancel',
+  }),
 });
 
 const { url } = await response.json();
@@ -249,11 +253,12 @@ console.log(`Immediate charge: $${proration.immediateCharge / 100}`);
 const response = await fetch('/api/billing/subscriptions/change-plan', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ newPlanId })
+  body: JSON.stringify({ newPlanId }),
 });
 ```
 
 **Behavior:**
+
 - New plan limits apply immediately
 - Credits allocated based on new plan
 - Prorated charge for remaining period
@@ -267,7 +272,7 @@ Downgrades are scheduled for the next billing cycle:
 const response = await fetch('/api/billing/subscriptions/change-plan', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ newPlanId: 'basic_plan_id' })
+  body: JSON.stringify({ newPlanId: 'basic_plan_id' }),
 });
 
 const { message } = await response.json();
@@ -275,6 +280,7 @@ const { message } = await response.json();
 ```
 
 **Behavior:**
+
 - Current plan remains active until period end
 - No immediate charge
 - Credits remain at current level
@@ -289,8 +295,8 @@ await fetch('/api/billing/subscriptions/cancel', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     cancelAtPeriodEnd: true,
-    reason: 'No longer needed'
-  })
+    reason: 'No longer needed',
+  }),
 });
 
 // Immediate cancellation
@@ -298,8 +304,8 @@ await fetch('/api/billing/subscriptions/cancel', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    cancelAtPeriodEnd: false
-  })
+    cancelAtPeriodEnd: false,
+  }),
 });
 ```
 
@@ -307,11 +313,12 @@ await fetch('/api/billing/subscriptions/cancel', {
 
 ```typescript
 await fetch('/api/billing/subscriptions/reactivate', {
-  method: 'POST'
+  method: 'POST',
 });
 ```
 
 **Requirements:**
+
 - Subscription must be scheduled for cancellation
 - Cannot reactivate already canceled subscriptions
 
@@ -349,6 +356,7 @@ if (!eligible) {
 ```
 
 **Rules:**
+
 - One trial per workspace
 - Tracked by workspace ID
 - Cannot reuse trial with new account
@@ -358,6 +366,7 @@ if (!eligible) {
 ### Overview
 
 Credits are the internal currency for AI service usage. They are:
+
 - Allocated via subscription plans
 - Purchased separately
 - Deducted based on actual usage
@@ -368,6 +377,7 @@ Credits are the internal currency for AI service usage. They are:
 #### Via Subscription
 
 Credits are automatically allocated when:
+
 - Subscription is created
 - Subscription renews
 - Plan is upgraded
@@ -387,8 +397,8 @@ const response = await fetch('/api/billing/credits/checkout', {
   body: JSON.stringify({
     amount: 10000, // 10,000 credits
     successUrl: 'https://yourdomain.com/credits/success',
-    cancelUrl: 'https://yourdomain.com/credits/cancel'
-  })
+    cancelUrl: 'https://yourdomain.com/credits/cancel',
+  }),
 });
 
 const { url } = await response.json();
@@ -427,7 +437,7 @@ View credit transaction history:
 const response = await fetch('/api/billing/credits/transactions');
 const { transactions } = await response.json();
 
-transactions.forEach(tx => {
+transactions.forEach((tx) => {
   console.log(`${tx.type}: ${tx.amount} credits - ${tx.reason}`);
 });
 ```
@@ -435,6 +445,7 @@ transactions.forEach(tx => {
 ### Credit Refunds
 
 Credits are automatically refunded when:
+
 - AI generation fails
 - Provider returns error
 - Request times out
@@ -464,7 +475,7 @@ const { paymentMethods } = await response.json();
 await fetch(`/api/billing/payment-methods/${methodId}`, {
   method: 'PATCH',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ isDefault: true })
+  body: JSON.stringify({ isDefault: true }),
 });
 ```
 
@@ -472,7 +483,7 @@ await fetch(`/api/billing/payment-methods/${methodId}`, {
 
 ```typescript
 await fetch(`/api/billing/payment-methods/${methodId}`, {
-  method: 'DELETE'
+  method: 'DELETE',
 });
 ```
 
@@ -507,8 +518,10 @@ When a payment fails:
 const response = await fetch('/api/billing/invoices');
 const { invoices } = await response.json();
 
-invoices.forEach(invoice => {
-  console.log(`${invoice.amount / 100} ${invoice.currency} - ${invoice.status}`);
+invoices.forEach((invoice) => {
+  console.log(
+    `${invoice.amount / 100} ${invoice.currency} - ${invoice.status}`
+  );
 });
 ```
 
@@ -539,8 +552,8 @@ await fetch(`/api/billing/invoices/${invoiceId}/send`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    email: 'billing@company.com'
-  })
+    email: 'billing@company.com',
+  }),
 });
 ```
 
@@ -550,13 +563,13 @@ await fetch(`/api/billing/invoices/${invoiceId}/send`, {
 
 The webhook handler processes these Stripe events:
 
-| Event | Action |
-|-------|--------|
-| `checkout.session.completed` | Create subscription |
-| `invoice.payment_succeeded` | Activate subscription, allocate credits |
-| `invoice.payment_failed` | Update status to PAST_DUE |
-| `customer.subscription.updated` | Sync subscription changes |
-| `customer.subscription.deleted` | Mark subscription as canceled |
+| Event                           | Action                                  |
+| ------------------------------- | --------------------------------------- |
+| `checkout.session.completed`    | Create subscription                     |
+| `invoice.payment_succeeded`     | Activate subscription, allocate credits |
+| `invoice.payment_failed`        | Update status to PAST_DUE               |
+| `customer.subscription.updated` | Sync subscription changes               |
+| `customer.subscription.deleted` | Mark subscription as canceled           |
 
 ### Security
 
@@ -695,11 +708,11 @@ npm run test:e2e -- tests/e2e/billing
 
 Use Stripe test cards for testing:
 
-| Card Number | Scenario |
-|-------------|----------|
-| 4242 4242 4242 4242 | Success |
-| 4000 0000 0000 0002 | Decline |
-| 4000 0000 0000 9995 | Insufficient funds |
+| Card Number         | Scenario                |
+| ------------------- | ----------------------- |
+| 4242 4242 4242 4242 | Success                 |
+| 4000 0000 0000 0002 | Decline                 |
+| 4000 0000 0000 9995 | Insufficient funds      |
 | 4000 0025 0000 3155 | Requires authentication |
 
 ## Troubleshooting
@@ -709,10 +722,12 @@ Use Stripe test cards for testing:
 #### Webhook Not Receiving Events
 
 **Symptoms:**
+
 - Subscriptions not created after checkout
 - Credits not allocated after payment
 
 **Solutions:**
+
 1. Verify webhook endpoint is publicly accessible
 2. Check `STRIPE_WEBHOOK_SECRET` is correct
 3. Verify webhook events are selected in Stripe Dashboard
@@ -722,10 +737,12 @@ Use Stripe test cards for testing:
 #### Payment Fails but Subscription Created
 
 **Symptoms:**
+
 - Subscription exists but status is PAST_DUE
 - No credits allocated
 
 **Solutions:**
+
 1. Check Stripe Dashboard for payment status
 2. Verify webhook processed `invoice.payment_succeeded`
 3. Manually trigger credit allocation if needed
@@ -734,10 +751,12 @@ Use Stripe test cards for testing:
 #### Proration Calculation Incorrect
 
 **Symptoms:**
+
 - Unexpected charges on plan upgrade
 - Wrong amount shown in preview
 
 **Solutions:**
+
 1. Verify plan prices are correct in database
 2. Check Stripe subscription period dates
 3. Ensure timezone handling is correct
@@ -746,10 +765,12 @@ Use Stripe test cards for testing:
 #### Credits Not Deducted
 
 **Symptoms:**
+
 - AI services used but credits unchanged
 - Credit balance incorrect
 
 **Solutions:**
+
 1. Check AI service integration
 2. Verify credit deduction logic
 3. Review credit transaction logs
@@ -758,10 +779,12 @@ Use Stripe test cards for testing:
 #### Trial Not Working
 
 **Symptoms:**
+
 - User charged immediately
 - Trial period not showing
 
 **Solutions:**
+
 1. Verify trial period configured in Stripe
 2. Check plan has trial enabled
 3. Verify workspace hasn't used trial before

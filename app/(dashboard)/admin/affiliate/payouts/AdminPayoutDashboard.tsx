@@ -17,19 +17,21 @@ export default async function AdminPayoutDashboard() {
     }
   );
 
-  const pendingPayouts = pendingResponse.ok ? (await pendingResponse.json()).data : [];
+  const pendingPayouts = pendingResponse.ok
+    ? (await pendingResponse.json()).data
+    : [];
 
   // Calculate stats
-  const totalPending = pendingPayouts.reduce((sum: number, p: any) => sum + p.amount, 0);
+  const totalPending = pendingPayouts.reduce(
+    (sum: number, p: any) => sum + p.amount,
+    0
+  );
   const pendingCount = pendingPayouts.length;
 
   return (
     <div className="space-y-6">
       {/* Stats Overview */}
-      <PayoutStats 
-        pendingCount={pendingCount}
-        totalPending={totalPending}
-      />
+      <PayoutStats pendingCount={pendingCount} totalPending={totalPending} />
 
       {/* Fraud Alerts */}
       <FraudAlerts />

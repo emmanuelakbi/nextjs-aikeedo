@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 /**
  * Overage Billing API Routes
- * 
+ *
  * Handles overage fee calculations and charging
  * Requirements: 10.1, 10.2, 10.3, 10.5
  */
@@ -27,10 +27,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -79,7 +76,7 @@ export async function POST(request: NextRequest) {
     const periodStart = validatedData.billingPeriodStart
       ? new Date(validatedData.billingPeriodStart)
       : workspace.subscription.currentPeriodStart;
-    
+
     const periodEnd = validatedData.billingPeriodEnd
       ? new Date(validatedData.billingPeriodEnd)
       : workspace.subscription.currentPeriodEnd;
@@ -103,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     // Get plan limits
     const planLimits = workspace.subscription.plan.creditCount;
-    
+
     if (planLimits === null) {
       return NextResponse.json({
         message: 'Plan has unlimited credits, no overage charges',
@@ -126,11 +123,11 @@ export async function POST(request: NextRequest) {
 
     // Calculate overage
     const overage = totalUsage - planLimits;
-    
+
     // Get overage rate from plan limits
     const planLimitsData = workspace.subscription.plan.limits as any;
     const overageRate = planLimitsData?.overageRate || 0.01; // Default $0.01 per credit
-    
+
     // Requirements: 10.2 - Use per-unit pricing
     const overageCharges = overage * overageRate;
 
@@ -191,7 +188,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error: 'Failed to charge overage fees',
-            details: stripeError instanceof Error ? stripeError.message : 'Unknown error',
+            details:
+              stripeError instanceof Error
+                ? stripeError.message
+                : 'Unknown error',
           },
           { status: 500 }
         );
@@ -236,10 +236,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -308,7 +305,7 @@ export async function GET(request: NextRequest) {
     );
 
     const planLimits = workspace.subscription.plan.creditCount;
-    
+
     if (planLimits === null) {
       return NextResponse.json({
         hasOverage: false,
@@ -320,7 +317,7 @@ export async function GET(request: NextRequest) {
 
     const hasOverage = totalUsage > planLimits;
     const overage = hasOverage ? totalUsage - planLimits : 0;
-    
+
     const planLimitsData = workspace.subscription.plan.limits as any;
     const overageRate = planLimitsData?.overageRate || 0.01;
     const overageCharges = overage * overageRate;

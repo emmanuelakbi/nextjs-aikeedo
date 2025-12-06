@@ -4,13 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Input,
-  Button,
-  Form,
-  FormError,
-  useToast,
-} from '@/components/ui';
+import { Input, Button, Form, FormError, useToast } from '@/components/ui';
 
 /**
  * Login Page

@@ -12,7 +12,10 @@ import type { ProrationCalculation } from '../../types/billing';
  */
 
 export class ProrationServiceError extends Error {
-  constructor(message: string, public readonly code?: string) {
+  constructor(
+    message: string,
+    public readonly code?: string
+  ) {
     super(message);
     this.name = 'ProrationServiceError';
   }
@@ -283,21 +286,26 @@ export class ProrationService {
     summary: string;
     items: Array<{ label: string; amount: number; description: string }>;
   } {
-    const items: Array<{ label: string; amount: number; description: string }> = [];
+    const items: Array<{ label: string; amount: number; description: string }> =
+      [];
 
     if (details.isUpgrade) {
       // Upgrade breakdown
       items.push({
         label: 'Current Plan (Unused)',
-        amount: -details.calculation.currentPlanPrice *
-          (details.calculation.daysRemaining / details.calculation.totalDaysInPeriod),
+        amount:
+          -details.calculation.currentPlanPrice *
+          (details.calculation.daysRemaining /
+            details.calculation.totalDaysInPeriod),
         description: `Credit for ${details.calculation.daysRemaining} unused days`,
       });
 
       items.push({
         label: 'New Plan (Prorated)',
-        amount: details.calculation.newPlanPrice *
-          (details.calculation.daysRemaining / details.calculation.totalDaysInPeriod),
+        amount:
+          details.calculation.newPlanPrice *
+          (details.calculation.daysRemaining /
+            details.calculation.totalDaysInPeriod),
         description: `Charge for ${details.calculation.daysRemaining} days at new rate`,
       });
 
@@ -310,8 +318,10 @@ export class ProrationService {
       // Downgrade breakdown
       items.push({
         label: 'Current Plan (Unused)',
-        amount: details.calculation.currentPlanPrice *
-          (details.calculation.daysRemaining / details.calculation.totalDaysInPeriod),
+        amount:
+          details.calculation.currentPlanPrice *
+          (details.calculation.daysRemaining /
+            details.calculation.totalDaysInPeriod),
         description: `Credit for ${details.calculation.daysRemaining} unused days`,
       });
 

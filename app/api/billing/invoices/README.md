@@ -5,6 +5,7 @@ This directory contains API routes for invoice management in the billing module.
 ## Requirements
 
 Implements the following requirements from the billing specification:
+
 - **5.1**: Generate invoice when payment occurs
 - **5.2**: Display all past invoices
 - **5.3**: Provide PDF format
@@ -18,12 +19,14 @@ Implements the following requirements from the billing specification:
 List invoices for a workspace.
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace ID
 - `limit` (optional): Number of invoices to return (default: 50)
 - `offset` (optional): Pagination offset (default: 0)
 - `status` (optional): Filter by invoice status (DRAFT, OPEN, PAID, VOID, UNCOLLECTIBLE)
 
 **Response:**
+
 ```json
 {
   "invoices": [
@@ -54,6 +57,7 @@ List invoices for a workspace.
 Get detailed invoice information including line items.
 
 **Response:**
+
 ```json
 {
   "invoice": {
@@ -92,6 +96,7 @@ Get detailed invoice information including line items.
 Get the PDF URL for an invoice.
 
 **Response:**
+
 ```json
 {
   "pdfUrl": "https://invoice.stripe.com/.../pdf"
@@ -103,6 +108,7 @@ Get the PDF URL for an invoice.
 Send invoice email to the workspace owner.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -177,6 +183,7 @@ All routes require authentication via NextAuth session. Users can only access in
 ## Error Handling
 
 All routes return appropriate HTTP status codes:
+
 - `200`: Success
 - `400`: Bad request (missing parameters)
 - `401`: Unauthorized (not authenticated)
@@ -185,6 +192,7 @@ All routes return appropriate HTTP status codes:
 - `500`: Internal server error
 
 Error responses include a descriptive message:
+
 ```json
 {
   "error": "Error message",
@@ -195,6 +203,7 @@ Error responses include a descriptive message:
 ## Integration with Stripe Webhooks
 
 Invoices are automatically created and updated via Stripe webhooks:
+
 - `invoice.created`: Creates invoice record
 - `invoice.finalized`: Updates invoice with final details
 - `invoice.payment_succeeded`: Marks invoice as paid and sends email

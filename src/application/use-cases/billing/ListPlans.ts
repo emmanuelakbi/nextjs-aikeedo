@@ -4,7 +4,7 @@ import { PlanInterval } from '@prisma/client';
 
 /**
  * List Plans Use Case
- * 
+ *
  * Retrieves a list of subscription plans.
  * Requirements: Billing 1.5
  */

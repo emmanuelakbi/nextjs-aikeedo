@@ -39,7 +39,9 @@ async function verifyAffiliateSchema() {
 
     console.log('\n✅ Affiliate schema verification complete!');
     console.log('\nSchema includes:');
-    console.log('  - Affiliate model (user affiliates with commission tracking)');
+    console.log(
+      '  - Affiliate model (user affiliates with commission tracking)'
+    );
     console.log('  - Referral model (tracks referred users and conversions)');
     console.log('  - Payout model (manages payout requests and processing)');
     console.log('  - 4 enums for status and method types');
@@ -50,7 +52,6 @@ async function verifyAffiliateSchema() {
     console.log('  4. Add fraud detection rules');
     console.log('  5. Create API routes');
     console.log('  6. Build affiliate dashboard UI');
-
   } catch (error) {
     console.error('❌ Schema verification failed:', error);
     process.exit(1);

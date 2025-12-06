@@ -7,42 +7,45 @@ The Admin Dashboard provides a comprehensive interface for system administrators
 ## Data Models
 
 **AdminAction**
+
 ```typescript
 type AdminAction = {
-  id: string
-  adminId: string
-  action: string
-  targetType: string
-  targetId: string
-  changes: Json
-  ipAddress: string
-  createdAt: Date
-}
+  id: string;
+  adminId: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  changes: Json;
+  ipAddress: string;
+  createdAt: Date;
+};
 ```
 
 **SystemSetting**
+
 ```typescript
 type SystemSetting = {
-  key: string
-  value: Json
-  description: string
-  updatedBy: string
-  updatedAt: Date
-}
+  key: string;
+  value: Json;
+  description: string;
+  updatedBy: string;
+  updatedAt: Date;
+};
 ```
 
 **Announcement**
+
 ```typescript
 type Announcement = {
-  id: string
-  title: string
-  content: string
-  type: 'info' | 'warning' | 'error'
-  isActive: boolean
-  startDate: Date
-  endDate: Date | null
-  createdAt: Date
-}
+  id: string;
+  title: string;
+  content: string;
+  type: 'info' | 'warning' | 'error';
+  isActive: boolean;
+  startDate: Date;
+  endDate: Date | null;
+  createdAt: Date;
+};
 ```
 
 ## Implementation

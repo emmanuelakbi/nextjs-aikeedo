@@ -122,7 +122,11 @@ export function UserDetailClient({ userId }: UserDetailClientProps) {
   };
 
   const handleStatusChange = async (status: UserStatus) => {
-    if (!confirm(`Are you sure you want to change this user's status to ${status}?`)) {
+    if (
+      !confirm(
+        `Are you sure you want to change this user's status to ${status}?`
+      )
+    ) {
       return;
     }
 
@@ -146,7 +150,11 @@ export function UserDetailClient({ userId }: UserDetailClientProps) {
   };
 
   const handleDelete = async () => {
-    if (!confirm(`Are you sure you want to delete this user? This action cannot be undone.`)) {
+    if (
+      !confirm(
+        `Are you sure you want to delete this user? This action cannot be undone.`
+      )
+    ) {
       return;
     }
 
@@ -292,7 +300,10 @@ export function UserDetailClient({ userId }: UserDetailClientProps) {
                 <select
                   value={formData.role}
                   onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value as UserRole })
+                    setFormData({
+                      ...formData,
+                      role: e.target.value as UserRole,
+                    })
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 >

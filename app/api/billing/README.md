@@ -5,6 +5,7 @@ Complete billing and subscription management API for AIKEEDO Next.js.
 ## Overview
 
 The Billing API provides comprehensive functionality for:
+
 - Subscription plan management
 - Stripe checkout and payment processing
 - Subscription lifecycle management (create, upgrade, downgrade, cancel)
@@ -81,6 +82,7 @@ The Billing API provides comprehensive functionality for:
 ## Requirements Coverage
 
 ### Requirement 1: Subscription Plan Management
+
 - ✅ 1.1: Multiple pricing tiers supported
 - ✅ 1.2: Plans specify credits, features, and price
 - ✅ 1.3: Plan updates apply to new subscriptions only
@@ -88,6 +90,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 1.5: Plans display features, limits, and pricing
 
 ### Requirement 2: Subscription Creation
+
 - ✅ 2.1: Redirect to Stripe checkout
 - ✅ 2.2: Create subscription on payment success
 - ✅ 2.3: Show error and allow retry on failure
@@ -95,6 +98,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 2.5: Send confirmation email
 
 ### Requirement 3: Subscription Management
+
 - ✅ 3.1: Upgrade with proration and immediate limits
 - ✅ 3.2: Downgrade at next billing cycle
 - ✅ 3.3: Cancel with access until period end
@@ -102,6 +106,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 3.5: Retry failed payments and notify user
 
 ### Requirement 4: Credit Purchase
+
 - ✅ 4.1: Process payment via Stripe
 - ✅ 4.2: Add credits immediately on success
 - ✅ 4.3: Show error without adding credits on failure
@@ -109,6 +114,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 4.5: Log transaction for auditing
 
 ### Requirement 5: Invoice Management
+
 - ✅ 5.1: Generate invoice on payment
 - ✅ 5.2: Display all past invoices
 - ✅ 5.3: Provide PDF format
@@ -116,6 +122,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 5.5: Email invoice to billing email
 
 ### Requirement 6: Payment Method Management
+
 - ✅ 6.1: Store payment method securely in Stripe
 - ✅ 6.2: Use new method for future charges
 - ✅ 6.3: Prevent removal of only payment method
@@ -123,6 +130,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 6.5: Never store full card details locally
 
 ### Requirement 7: Webhook Processing
+
 - ✅ 7.1: Verify webhook signature
 - ✅ 7.2: Activate subscription on payment success
 - ✅ 7.3: Update status on payment failure
@@ -130,6 +138,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 7.5: Log errors for manual review
 
 ### Requirement 8: Trial Period Management
+
 - ✅ 8.1: Activate features without charging
 - ✅ 8.2: Charge first payment after trial
 - ✅ 8.3: Don't charge if trial canceled
@@ -137,6 +146,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 8.5: Show remaining trial days
 
 ### Requirement 9: Proration and Billing Cycles
+
 - ✅ 9.1: Prorate charges on upgrade
 - ✅ 9.2: Apply credit on downgrade
 - ✅ 9.3: Charge on same day each month
@@ -144,6 +154,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 9.5: Show breakdown in invoice
 
 ### Requirement 10: Usage-Based Billing
+
 - ✅ 10.1: Charge overage fees when limits exceeded
 - ✅ 10.2: Use per-unit pricing for overage
 - ✅ 10.3: Calculate total usage charges at period end
@@ -151,6 +162,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 10.5: Notify user of overage
 
 ### Requirement 11: Refund Processing
+
 - ✅ 11.1: Process refund via Stripe
 - ✅ 11.2: Deduct credits proportionally
 - ✅ 11.3: Send confirmation email
@@ -158,6 +170,7 @@ The Billing API provides comprehensive functionality for:
 - ✅ 11.5: Adjust subscription for partial refund
 
 ### Requirement 12: Billing Dashboard
+
 - ✅ 12.1: Show current plan and usage
 - ✅ 12.2: Show current period charges
 - ✅ 12.3: Display past 12 months history
@@ -167,6 +180,7 @@ The Billing API provides comprehensive functionality for:
 ## Authentication
 
 All billing API routes require authentication via NextAuth session. Users must be:
+
 - Authenticated (have a valid session)
 - Have access to the workspace (owner or member)
 - Have appropriate role for admin operations (owner/admin)
@@ -174,6 +188,7 @@ All billing API routes require authentication via NextAuth session. Users must b
 ## Error Handling
 
 Standard HTTP status codes:
+
 - `200` - Success
 - `201` - Created
 - `400` - Bad Request (invalid data)
@@ -186,6 +201,7 @@ Standard HTTP status codes:
 ## Stripe Integration
 
 The billing API integrates with Stripe for:
+
 - Payment processing
 - Subscription management
 - Invoice generation
@@ -204,6 +220,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ## Testing
 
 See individual route README files for detailed testing information:
+
 - [Plans API](./plans/README.md)
 - [Subscriptions API](./subscriptions/README.md)
 - [Checkout API](./checkout/README.md)

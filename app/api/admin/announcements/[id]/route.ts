@@ -83,12 +83,15 @@ export async function PATCH(
     if (validated.title !== undefined) updateData.title = validated.title;
     if (validated.content !== undefined) updateData.content = validated.content;
     if (validated.type !== undefined) updateData.type = validated.type;
-    if (validated.isActive !== undefined) updateData.isActive = validated.isActive;
+    if (validated.isActive !== undefined)
+      updateData.isActive = validated.isActive;
     if (validated.startDate !== undefined) {
       updateData.startDate = new Date(validated.startDate);
     }
     if (validated.endDate !== undefined) {
-      updateData.endDate = validated.endDate ? new Date(validated.endDate) : null;
+      updateData.endDate = validated.endDate
+        ? new Date(validated.endDate)
+        : null;
     }
 
     const announcement = await prisma.announcement.update({

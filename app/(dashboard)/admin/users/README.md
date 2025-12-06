@@ -11,6 +11,7 @@ The User Management interface provides comprehensive tools for administrators to
 **Location**: `/admin/users`
 
 **Capabilities**:
+
 - View all users in a paginated table
 - Search by email or name
 - Filter by status (ACTIVE, INACTIVE, SUSPENDED)
@@ -19,6 +20,7 @@ The User Management interface provides comprehensive tools for administrators to
 - Pagination with configurable page size
 
 **Displayed Information**:
+
 - User name and email
 - Role badge (USER/ADMIN)
 - Status badge (ACTIVE/INACTIVE/SUSPENDED)
@@ -76,6 +78,7 @@ The User Management interface provides comprehensive tools for administrators to
 ### Edit User
 
 **Editable Fields**:
+
 - First name
 - Last name
 - Email address
@@ -85,6 +88,7 @@ The User Management interface provides comprehensive tools for administrators to
 - Status (ACTIVE, INACTIVE, SUSPENDED)
 
 **Validation**:
+
 - Email must be unique
 - Email must be valid format
 - Role must be USER or ADMIN
@@ -97,6 +101,7 @@ The User Management interface provides comprehensive tools for administrators to
 **Purpose**: Temporarily disable user account access
 
 **Effects**:
+
 - User cannot log in
 - Active sessions are invalidated
 - API access is blocked
@@ -107,6 +112,7 @@ The User Management interface provides comprehensive tools for administrators to
 **API Endpoint**: `POST /api/admin/users/:id/status`
 
 **Body**:
+
 ```json
 {
   "status": "SUSPENDED",
@@ -119,6 +125,7 @@ The User Management interface provides comprehensive tools for administrators to
 **Purpose**: Re-enable a suspended or inactive user account
 
 **Effects**:
+
 - User can log in again
 - Full platform access restored
 - Previous data and settings preserved
@@ -126,6 +133,7 @@ The User Management interface provides comprehensive tools for administrators to
 **API Endpoint**: `POST /api/admin/users/:id/status`
 
 **Body**:
+
 ```json
 {
   "status": "ACTIVE"
@@ -137,12 +145,14 @@ The User Management interface provides comprehensive tools for administrators to
 **Purpose**: Permanently remove user account and associated data
 
 **Effects**:
+
 - User account is deleted
 - All owned workspaces are deleted
 - All user data is removed (GDPR compliance)
 - Action is irreversible
 
 **Restrictions**:
+
 - Cannot delete yourself (current admin)
 - Confirmation required
 - All actions are logged
@@ -154,12 +164,14 @@ The User Management interface provides comprehensive tools for administrators to
 **Purpose**: Access platform as the user for support purposes
 
 **Use Cases**:
+
 - Troubleshoot user-reported issues
 - Verify user experience
 - Assist with account problems
 - Test user-specific configurations
 
 **Security**:
+
 - Time-limited session (default: 1 hour)
 - All actions logged with impersonation context
 - Cannot impersonate other admins
@@ -174,6 +186,7 @@ The User Management interface provides comprehensive tools for administrators to
 **Purpose**: Review user's platform activity and usage
 
 **Information Shown**:
+
 - Recent conversations and messages
 - Recent AI generations (text, image, speech)
 - Recent file uploads
@@ -188,11 +201,13 @@ The User Management interface provides comprehensive tools for administrators to
 ### Search
 
 Search users by:
+
 - Email address (partial match)
 - First name (partial match)
 - Last name (partial match)
 
 **Example**: Searching "john" will find:
+
 - john@example.com
 - John Doe
 - Johnny Smith
@@ -200,11 +215,13 @@ Search users by:
 ### Filters
 
 **Status Filter**:
+
 - ACTIVE - Users who can access the platform
 - INACTIVE - Users who haven't verified email or are disabled
 - SUSPENDED - Users who have been suspended by admin
 
 **Role Filter**:
+
 - USER - Regular users
 - ADMIN - Administrator users
 
@@ -213,6 +230,7 @@ Search users by:
 ### Sorting
 
 Sort users by:
+
 - Created date (newest/oldest first)
 - Last seen (most/least recent)
 - Name (A-Z, Z-A)
@@ -227,6 +245,7 @@ GET /api/admin/users
 ```
 
 **Query Parameters**:
+
 - `page` (number): Page number (default: 1)
 - `limit` (number): Results per page (default: 20)
 - `search` (string): Search term for email/name
@@ -236,6 +255,7 @@ GET /api/admin/users
 - `sortOrder` (string): Sort direction (asc, desc)
 
 **Response**:
+
 ```json
 {
   "users": [...],
@@ -255,6 +275,7 @@ GET /api/admin/users/:id
 ```
 
 **Response**:
+
 ```json
 {
   "id": "user-123",
@@ -276,6 +297,7 @@ PATCH /api/admin/users/:id
 ```
 
 **Body**:
+
 ```json
 {
   "firstName": "John",
@@ -293,6 +315,7 @@ DELETE /api/admin/users/:id
 ```
 
 **Response**:
+
 ```json
 {
   "message": "User deleted successfully"
@@ -302,12 +325,15 @@ DELETE /api/admin/users/:id
 ## Security Considerations
 
 ### Access Control
+
 - Only admins can access user management
 - All endpoints protected by `requireAdmin()` middleware
 - Admins cannot delete or suspend themselves
 
 ### Audit Logging
+
 All user management actions are logged:
+
 - User creation (via registration)
 - User updates (field changes)
 - Status changes (suspend, activate)
@@ -315,6 +341,7 @@ All user management actions are logged:
 - Impersonation sessions
 
 ### Data Privacy
+
 - Passwords are never exposed
 - Sensitive data is appropriately filtered
 - GDPR compliance for data deletion
@@ -369,6 +396,7 @@ npm test src/app/api/admin/users/route.test.ts
 ```
 
 **Test Coverage**:
+
 - List users with pagination
 - Search and filter functionality
 - User updates and validation

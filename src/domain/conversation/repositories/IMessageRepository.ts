@@ -1,10 +1,10 @@
 /**
  * Message Repository Interface
- * 
+ *
  * Domain-level contract for message data access operations.
  * This interface defines all operations needed to persist and retrieve messages
  * without exposing infrastructure implementation details.
- * 
+ *
  * @interface IMessageRepository
  */
 
@@ -23,14 +23,14 @@ export interface CreateMessageData {
 
 /**
  * Message Repository Interface
- * 
+ *
  * Defines the contract for message data access operations.
  * All implementations must provide these methods.
  */
 export interface IMessageRepository {
   /**
    * Create a new message
-   * 
+   *
    * @param data - The message data
    * @returns Promise resolving to the created message
    */
@@ -38,7 +38,7 @@ export interface IMessageRepository {
 
   /**
    * Persist a message entity (create or update)
-   * 
+   *
    * @param message - The message entity to save
    * @returns Promise resolving to the saved message
    */
@@ -46,7 +46,7 @@ export interface IMessageRepository {
 
   /**
    * Find a message by its unique identifier
-   * 
+   *
    * @param id - The message's unique identifier
    * @returns Promise resolving to the message or null if not found
    */
@@ -54,7 +54,7 @@ export interface IMessageRepository {
 
   /**
    * Find all messages in a conversation
-   * 
+   *
    * @param conversationId - The conversation's unique identifier
    * @returns Promise resolving to array of messages ordered by creation time
    */
@@ -62,7 +62,7 @@ export interface IMessageRepository {
 
   /**
    * Delete all messages in a conversation
-   * 
+   *
    * @param conversationId - The conversation's unique identifier
    * @returns Promise resolving when deletion is complete
    */

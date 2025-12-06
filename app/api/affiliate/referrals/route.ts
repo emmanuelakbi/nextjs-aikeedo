@@ -6,7 +6,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { PrismaAffiliateRepository, PrismaReferralRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
+import {
+  PrismaAffiliateRepository,
+  PrismaReferralRepository,
+} from '@/infrastructure/affiliate/prisma-affiliate-repository';
 
 export async function GET(_request: NextRequest) {
   try {

@@ -21,25 +21,20 @@ export async function GET(request: NextRequest) {
     startDate.setDate(startDate.getDate() - daysAgo);
 
     // Get user statistics
-    const [
-      totalUsers,
-      activeUsers,
-      newUsers,
-      suspendedUsers,
-      userGrowth,
-    ] = await Promise.all([
-      prisma.user.count(),
-      prisma.user.count({ where: { status: 'ACTIVE' } }),
-      prisma.user.count({
-        where: { createdAt: { gte: startDate } },
-      }),
-      prisma.user.count({ where: { status: 'SUSPENDED' } }),
-      prisma.user.groupBy({
-        by: ['createdAt'],
-        where: { createdAt: { gte: startDate } },
-        _count: true,
-      }),
-    ]);
+    const [totalUsers, activeUsers, newUsers, suspendedUsers, userGrowth] =
+      await Promise.all([
+        prisma.user.count(),
+        prisma.user.count({ where: { status: 'ACTIVE' } }),
+        prisma.user.count({
+          where: { createdAt: { gte: startDate } },
+        }),
+        prisma.user.count({ where: { status: 'SUSPENDED' } }),
+        prisma.user.groupBy({
+          by: ['createdAt'],
+          where: { createdAt: { gte: startDate } },
+          _count: true,
+        }),
+      ]);
 
     // Get workspace statistics
     const [totalWorkspaces, workspaceGrowth] = await Promise.all([

@@ -10,15 +10,16 @@ import {
   PrismaAffiliateRepository,
   PrismaReferralRepository,
 } from '@/infrastructure/affiliate/prisma-affiliate-repository';
-import { getReferralCookie, clearReferralCookie } from '@/domain/affiliate/services/referral-tracker';
+import {
+  getReferralCookie,
+  clearReferralCookie,
+} from '@/domain/affiliate/services/referral-tracker';
 
 /**
  * Process referral for a newly registered user
  * Call this after successful user registration
  */
-export async function processReferralForNewUser(
-  userId: string
-): Promise<void> {
+export async function processReferralForNewUser(userId: string): Promise<void> {
   try {
     // Get referral data from cookie
     const referralData = await getReferralCookie();

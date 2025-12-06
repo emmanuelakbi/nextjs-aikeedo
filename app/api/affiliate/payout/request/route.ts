@@ -7,9 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { RequestPayoutUseCase } from '@/application/use-cases/affiliate/request-payout';
-import {
-  PrismaAffiliateRepository,
-} from '@/infrastructure/affiliate/prisma-affiliate-repository';
+import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
 import { PrismaPayoutRepository } from '@/infrastructure/affiliate/prisma-payout-repository';
 
 export async function POST(request: NextRequest) {

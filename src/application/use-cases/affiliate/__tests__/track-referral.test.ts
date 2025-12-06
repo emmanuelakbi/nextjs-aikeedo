@@ -59,8 +59,12 @@ describe('TrackReferralUseCase', () => {
 
     // Assert
     expect(result).toEqual(mockReferral);
-    expect(mockAffiliateRepository.findByCode).toHaveBeenCalledWith(affiliateCode);
-    expect(mockReferralRepository.findByReferredUserId).toHaveBeenCalledWith(referredUserId);
+    expect(mockAffiliateRepository.findByCode).toHaveBeenCalledWith(
+      affiliateCode
+    );
+    expect(mockReferralRepository.findByReferredUserId).toHaveBeenCalledWith(
+      referredUserId
+    );
     expect(mockReferralRepository.create).toHaveBeenCalled();
   });
 

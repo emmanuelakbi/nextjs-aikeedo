@@ -32,7 +32,11 @@ export async function GET(request: NextRequest) {
     if (search) {
       where.OR = [
         { workspace: { name: { contains: search, mode: 'insensitive' } } },
-        { workspace: { owner: { email: { contains: search, mode: 'insensitive' } } } },
+        {
+          workspace: {
+            owner: { email: { contains: search, mode: 'insensitive' } },
+          },
+        },
         { stripeCustomerId: { contains: search, mode: 'insensitive' } },
       ];
     }

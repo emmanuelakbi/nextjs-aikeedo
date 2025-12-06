@@ -7,7 +7,10 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { FileRepository } from './FileRepository';
 import { FileEntity } from '../../domain/file/entities/File';
 import { prisma } from '../../lib/db';
-import { createTestFixtures, type TestFixtures } from '../../lib/testing/test-fixtures';
+import {
+  createTestFixtures,
+  type TestFixtures,
+} from '../../lib/testing/test-fixtures';
 
 describe('FileRepository', () => {
   let repository: FileRepository;

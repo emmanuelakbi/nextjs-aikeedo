@@ -7,6 +7,7 @@ This directory contains reusable UI components specifically designed for the adm
 ### Layout Components
 
 #### PageHeader
+
 Consistent page header with title, description, breadcrumbs, and action buttons.
 
 ```tsx
@@ -15,38 +16,31 @@ import { PageHeader } from '@/components/ui/admin';
 <PageHeader
   title="User Management"
   description="Manage all users in the system"
-  breadcrumbs={[
-    { label: 'Admin', href: '/admin' },
-    { label: 'Users' }
-  ]}
-  actions={
-    <Button onClick={handleAdd}>Add User</Button>
-  }
-/>
+  breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Users' }]}
+  actions={<Button onClick={handleAdd}>Add User</Button>}
+/>;
 ```
 
 #### Card
+
 Reusable card container with optional header and sections.
 
 ```tsx
 import { Card, CardHeader, CardSection } from '@/components/ui/admin';
 
 <Card>
-  <CardHeader 
-    title="Statistics" 
+  <CardHeader
+    title="Statistics"
     subtitle="Last 30 days"
     actions={<Button>Export</Button>}
   />
-  <CardSection>
-    Content here
-  </CardSection>
-  <CardSection divider>
-    More content
-  </CardSection>
-</Card>
+  <CardSection>Content here</CardSection>
+  <CardSection divider>More content</CardSection>
+</Card>;
 ```
 
 #### CardGrid
+
 Grid layout for cards.
 
 ```tsx
@@ -56,12 +50,13 @@ import { CardGrid, Card } from '@/components/ui/admin';
   <Card>Card 1</Card>
   <Card>Card 2</Card>
   <Card>Card 3</Card>
-</CardGrid>
+</CardGrid>;
 ```
 
 ### Data Display Components
 
 #### DataTable
+
 Comprehensive data table with loading states, empty states, and pagination.
 
 ```tsx
@@ -71,31 +66,40 @@ const columns: Column<User>[] = [
   {
     key: 'name',
     header: 'Name',
-    render: (user) => <TableCell.TwoLine 
-      primary={`${user.firstName} ${user.lastName}`}
-      secondary={user.email}
-    />
+    render: (user) => (
+      <TableCell.TwoLine
+        primary={`${user.firstName} ${user.lastName}`}
+        secondary={user.email}
+      />
+    ),
   },
   {
     key: 'status',
     header: 'Status',
-    render: (user) => <StatusBadge variant={getUserStatusVariant(user.status)}>
-      {user.status}
-    </StatusBadge>
+    render: (user) => (
+      <StatusBadge variant={getUserStatusVariant(user.status)}>
+        {user.status}
+      </StatusBadge>
+    ),
   },
   {
     key: 'actions',
     header: 'Actions',
     className: 'text-right',
-    render: (user) => <TableCell.Actions>
-      <TableCell.ActionLink href={`/admin/users/${user.id}`}>
-        View
-      </TableCell.ActionLink>
-      <TableCell.ActionLink onClick={() => handleDelete(user.id)} variant="danger">
-        Delete
-      </TableCell.ActionLink>
-    </TableCell.Actions>
-  }
+    render: (user) => (
+      <TableCell.Actions>
+        <TableCell.ActionLink href={`/admin/users/${user.id}`}>
+          View
+        </TableCell.ActionLink>
+        <TableCell.ActionLink
+          onClick={() => handleDelete(user.id)}
+          variant="danger"
+        >
+          Delete
+        </TableCell.ActionLink>
+      </TableCell.Actions>
+    ),
+  },
 ];
 
 <DataTable
@@ -106,19 +110,20 @@ const columns: Column<User>[] = [
   emptyState={{
     title: 'No users found',
     description: 'Try adjusting your filters',
-    icon: EmptyStateIcons.NoUsers
+    icon: EmptyStateIcons.NoUsers,
   }}
   pagination={{
     currentPage: 1,
     totalPages: 10,
     totalItems: 100,
     itemsPerPage: 10,
-    onPageChange: (page) => setPage(page)
+    onPageChange: (page) => setPage(page),
   }}
-/>
+/>;
 ```
 
 #### StatCard
+
 Metric cards for analytics dashboards.
 
 ```tsx
@@ -133,12 +138,13 @@ import { StatCard } from '@/components/ui/admin';
   iconColor="text-blue-600"
   trend={{
     value: '+12%',
-    isPositive: true
+    isPositive: true,
   }}
-/>
+/>;
 ```
 
 #### StatusBadge
+
 Colored status badges with helper functions.
 
 ```tsx
@@ -162,6 +168,7 @@ import { StatusBadge, getUserStatusVariant } from '@/components/ui/admin';
 ### Interaction Components
 
 #### Modal
+
 Reusable modal dialog with header, body, and footer.
 
 ```tsx
@@ -183,13 +190,12 @@ import { Modal } from '@/components/ui/admin';
     </>
   }
 >
-  <form>
-    {/* Form content */}
-  </form>
-</Modal>
+  <form>{/* Form content */}</form>
+</Modal>;
 ```
 
 #### ConfirmModal
+
 Specialized confirmation dialog.
 
 ```tsx
@@ -205,24 +211,22 @@ import { ConfirmModal } from '@/components/ui/admin';
   cancelLabel="Cancel"
   variant="danger"
   isLoading={deleting}
-/>
+/>;
 ```
 
 #### FilterBar
+
 Filter interface with inputs and actions.
 
 ```tsx
-import { 
-  FilterBar, 
-  FilterGrid, 
-  FilterInput, 
-  FilterSelect 
+import {
+  FilterBar,
+  FilterGrid,
+  FilterInput,
+  FilterSelect,
 } from '@/components/ui/admin';
 
-<FilterBar
-  onApply={handleApplyFilters}
-  onClear={handleClearFilters}
->
+<FilterBar onApply={handleApplyFilters} onClear={handleClearFilters}>
   <FilterGrid columns={4}>
     <FilterInput
       label="Search"
@@ -236,7 +240,7 @@ import {
       onChange={setStatusFilter}
       options={[
         { value: 'ACTIVE', label: 'Active' },
-        { value: 'SUSPENDED', label: 'Suspended' }
+        { value: 'SUSPENDED', label: 'Suspended' },
       ]}
     />
     <FilterSelect
@@ -245,7 +249,7 @@ import {
       onChange={setRoleFilter}
       options={[
         { value: 'USER', label: 'User' },
-        { value: 'ADMIN', label: 'Admin' }
+        { value: 'ADMIN', label: 'Admin' },
       ]}
     />
     <FilterInput
@@ -255,10 +259,11 @@ import {
       type="date"
     />
   </FilterGrid>
-</FilterBar>
+</FilterBar>;
 ```
 
 #### Pagination
+
 Pagination controls for tables and lists.
 
 ```tsx
@@ -271,10 +276,11 @@ import { Pagination } from '@/components/ui/admin';
   itemsPerPage={20}
   onPageChange={setPage}
   showItemRange={true}
-/>
+/>;
 ```
 
 #### SimplePagination
+
 Simpler pagination with just prev/next buttons.
 
 ```tsx
@@ -286,10 +292,11 @@ import { SimplePagination } from '@/components/ui/admin';
   onPrevious={handlePrevious}
   canGoPrevious={offset > 0}
   currentInfo={`Showing ${offset + 1} to ${offset + limit}`}
-/>
+/>;
 ```
 
 #### QuickAction
+
 Quick action cards for common tasks.
 
 ```tsx
@@ -307,12 +314,13 @@ import { QuickAction, QuickActionsGrid } from '@/components/ui/admin';
     description="Export data"
     onClick={handleExport}
   />
-</QuickActionsGrid>
+</QuickActionsGrid>;
 ```
 
 ### State Components
 
 #### LoadingSpinner
+
 Loading indicator with optional message.
 
 ```tsx
@@ -323,6 +331,7 @@ import { LoadingSpinner } from '@/components/ui/admin';
 ```
 
 #### EmptyState
+
 Empty state placeholder with icon and optional action.
 
 ```tsx
@@ -334,14 +343,15 @@ import { EmptyState, EmptyStateIcons } from '@/components/ui/admin';
   description="Try adjusting your filters or create a new user"
   action={{
     label: 'Create User',
-    onClick: handleCreate
+    onClick: handleCreate,
   }}
-/>
+/>;
 ```
 
 ### Impersonation Components
 
 #### ImpersonationButton
+
 Button to start impersonating a user.
 
 ```tsx
@@ -352,16 +362,17 @@ import { ImpersonationButton } from '@/components/ui/admin';
   userEmail={user.email}
   userName={`${user.firstName} ${user.lastName}`}
   onSuccess={() => console.log('Impersonation started')}
-/>
+/>;
 ```
 
 #### ActiveImpersonations
+
 Display active impersonation sessions.
 
 ```tsx
 import { ActiveImpersonations } from '@/components/ui/admin';
 
-<ActiveImpersonations />
+<ActiveImpersonations />;
 ```
 
 ## Design Principles
@@ -375,6 +386,7 @@ import { ActiveImpersonations } from '@/components/ui/admin';
 ## Color Palette
 
 ### Status Colors
+
 - Success: `bg-green-100 text-green-800`
 - Warning: `bg-orange-100 text-orange-800`
 - Error: `bg-red-100 text-red-800`
@@ -383,6 +395,7 @@ import { ActiveImpersonations } from '@/components/ui/admin';
 - Purple: `bg-purple-100 text-purple-800`
 
 ### Icon Background Colors
+
 - Blue: `bg-blue-100` with `text-blue-600`
 - Purple: `bg-purple-100` with `text-purple-600`
 - Green: `bg-green-100` with `text-green-600`

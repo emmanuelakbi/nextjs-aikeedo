@@ -8,11 +8,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  VoiceList,
-  VoiceUploadForm,
-  VoiceCard,
-} from '@/components/ui/voices';
+import { VoiceList, VoiceUploadForm, VoiceCard } from '@/components/ui/voices';
 import type { Voice } from '@/components/ui/voices';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';

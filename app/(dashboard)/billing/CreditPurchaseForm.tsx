@@ -13,7 +13,7 @@ interface CreditPurchaseFormProps {
 }
 
 const CREDIT_PACKAGES = [
-  { credits: 100, price: 10, pricePerCredit: 0.10 },
+  { credits: 100, price: 10, pricePerCredit: 0.1 },
   { credits: 500, price: 45, pricePerCredit: 0.09 },
   { credits: 1000, price: 80, pricePerCredit: 0.08 },
   { credits: 5000, price: 350, pricePerCredit: 0.07 },
@@ -21,8 +21,12 @@ const CREDIT_PACKAGES = [
 
 type CreditPackage = { credits: number; price: number; pricePerCredit: number };
 
-export default function CreditPurchaseForm({ workspaceId }: CreditPurchaseFormProps) {
-  const [selectedPackage, setSelectedPackage] = useState<CreditPackage>(CREDIT_PACKAGES[0]);
+export default function CreditPurchaseForm({
+  workspaceId,
+}: CreditPurchaseFormProps) {
+  const [selectedPackage, setSelectedPackage] = useState<CreditPackage>(
+    CREDIT_PACKAGES[0]
+  );
   const [customAmount, setCustomAmount] = useState<number | null>(null);
   const [isCustom, setIsCustom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +37,13 @@ export default function CreditPurchaseForm({ workspaceId }: CreditPurchaseFormPr
     setError(null);
 
     try {
-      const creditAmount = isCustom && customAmount ? customAmount : selectedPackage?.credits ?? 0;
-      const pricePerCredit = isCustom ? 0.10 : selectedPackage?.pricePerCredit ?? 0.10;
+      const creditAmount =
+        isCustom && customAmount
+          ? customAmount
+          : (selectedPackage?.credits ?? 0);
+      const pricePerCredit = isCustom
+        ? 0.1
+        : (selectedPackage?.pricePerCredit ?? 0.1);
 
       // Requirements: 4.1 - Process payment via Stripe
       await startCreditCheckout({
@@ -106,7 +115,9 @@ export default function CreditPurchaseForm({ workspaceId }: CreditPurchaseFormPr
               min="1"
               max="1000000"
               value={customAmount || ''}
-              onChange={(e) => setCustomAmount(parseInt(e.target.value) || null)}
+              onChange={(e) =>
+                setCustomAmount(parseInt(e.target.value) || null)
+              }
               placeholder="Enter credit amount"
               disabled={isLoading}
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -114,7 +125,7 @@ export default function CreditPurchaseForm({ workspaceId }: CreditPurchaseFormPr
             <div className="text-sm text-gray-600">
               {customAmount && (
                 <span className="font-medium">
-                  ${(customAmount * 0.10).toFixed(2)}
+                  ${(customAmount * 0.1).toFixed(2)}
                 </span>
               )}
             </div>
@@ -157,7 +168,7 @@ export default function CreditPurchaseForm({ workspaceId }: CreditPurchaseFormPr
             Processing...
           </span>
         ) : (
-          `Purchase ${isCustom && customAmount ? customAmount.toLocaleString() : selectedPackage?.credits.toLocaleString() ?? '0'} Credits`
+          `Purchase ${isCustom && customAmount ? customAmount.toLocaleString() : (selectedPackage?.credits.toLocaleString() ?? '0')} Credits`
         )}
       </button>
 

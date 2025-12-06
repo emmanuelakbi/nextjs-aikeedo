@@ -1,14 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { subscriptionService, SubscriptionServiceError } from '../SubscriptionService';
+import {
+  subscriptionService,
+  SubscriptionServiceError,
+} from '../SubscriptionService';
 import { prisma } from '../../../lib/db';
 import { PlanInterval, SubscriptionStatus } from '@prisma/client';
 
 /**
  * Unit Tests for SubscriptionService
- * 
+ *
  * Tests subscription lifecycle management including creation, updates,
  * cancellation, and synchronization with Stripe.
- * 
+ *
  * Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 7.2, 8.3, 8.4
  */
 
@@ -34,7 +37,10 @@ describe('SubscriptionService', () => {
   }
 
   // Helper to create a test workspace
-  async function createTestWorkspace(ownerId: string, isTrialed: boolean = false) {
+  async function createTestWorkspace(
+    ownerId: string,
+    isTrialed: boolean = false
+  ) {
     const workspace = await prisma.workspace.create({
       data: {
         name: `Test Workspace ${Date.now()}`,
@@ -49,7 +55,10 @@ describe('SubscriptionService', () => {
   }
 
   // Helper to create a test plan
-  async function createTestPlan(price: number = 999, creditCount: number | null = 1000) {
+  async function createTestPlan(
+    price: number = 999,
+    creditCount: number | null = 1000
+  ) {
     const plan = await prisma.plan.create({
       data: {
         name: `Test Plan ${Date.now()}`,
@@ -195,7 +204,9 @@ describe('SubscriptionService', () => {
         customer: `cus_test_${Date.now()}`,
         status: 'active' as const,
         current_period_start: Math.floor(Date.now() / 1000),
-        current_period_end: Math.floor((Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000),
+        current_period_end: Math.floor(
+          (Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000
+        ),
         cancel_at_period_end: false,
         canceled_at: null,
         trial_end: null,
@@ -205,7 +216,10 @@ describe('SubscriptionService', () => {
         },
       } as any;
 
-      const result = await subscriptionService.syncSubscriptionFromStripe(stripeSubscription);
+      const result =
+        await subscriptionService.syncSubscriptionFromStripe(
+          stripeSubscription
+        );
       testSubscriptionIds.push(result.id);
 
       expect(result.workspaceId).toBe(workspace.id);
@@ -242,7 +256,9 @@ describe('SubscriptionService', () => {
         customer: initial.stripeCustomerId,
         status: 'past_due' as const,
         current_period_start: Math.floor(Date.now() / 1000),
-        current_period_end: Math.floor((Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000),
+        current_period_end: Math.floor(
+          (Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000
+        ),
         cancel_at_period_end: true,
         canceled_at: Math.floor(Date.now() / 1000),
         trial_end: null,
@@ -252,7 +268,10 @@ describe('SubscriptionService', () => {
         },
       } as any;
 
-      const result = await subscriptionService.syncSubscriptionFromStripe(stripeSubscription);
+      const result =
+        await subscriptionService.syncSubscriptionFromStripe(
+          stripeSubscription
+        );
 
       expect(result.id).toBe(initial.id);
       expect(result.status).toBe(SubscriptionStatus.PAST_DUE);
@@ -269,7 +288,9 @@ describe('SubscriptionService', () => {
         customer: `cus_test_${Date.now()}`,
         status: 'active' as const,
         current_period_start: Math.floor(Date.now() / 1000),
-        current_period_end: Math.floor((Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000),
+        current_period_end: Math.floor(
+          (Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000
+        ),
         cancel_at_period_end: false,
         canceled_at: null,
         trial_end: null,
@@ -279,7 +300,10 @@ describe('SubscriptionService', () => {
         },
       } as any;
 
-      const result = await subscriptionService.syncSubscriptionFromStripe(stripeSubscription);
+      const result =
+        await subscriptionService.syncSubscriptionFromStripe(
+          stripeSubscription
+        );
       testSubscriptionIds.push(result.id);
 
       // Verify credits were allocated
@@ -296,14 +320,18 @@ describe('SubscriptionService', () => {
       const workspace = await createTestWorkspace(user.id, false);
       const plan = await createTestPlan();
 
-      const trialEnd = Math.floor((Date.now() + 14 * 24 * 60 * 60 * 1000) / 1000);
+      const trialEnd = Math.floor(
+        (Date.now() + 14 * 24 * 60 * 60 * 1000) / 1000
+      );
 
       const stripeSubscription = {
         id: `sub_test_${Date.now()}`,
         customer: `cus_test_${Date.now()}`,
         status: 'trialing' as const,
         current_period_start: Math.floor(Date.now() / 1000),
-        current_period_end: Math.floor((Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000),
+        current_period_end: Math.floor(
+          (Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000
+        ),
         cancel_at_period_end: false,
         canceled_at: null,
         trial_end: trialEnd,
@@ -313,7 +341,10 @@ describe('SubscriptionService', () => {
         },
       } as any;
 
-      const result = await subscriptionService.syncSubscriptionFromStripe(stripeSubscription);
+      const result =
+        await subscriptionService.syncSubscriptionFromStripe(
+          stripeSubscription
+        );
       testSubscriptionIds.push(result.id);
 
       // Verify workspace is marked as trialed
@@ -330,7 +361,9 @@ describe('SubscriptionService', () => {
         customer: `cus_test_${Date.now()}`,
         status: 'active' as const,
         current_period_start: Math.floor(Date.now() / 1000),
-        current_period_end: Math.floor((Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000),
+        current_period_end: Math.floor(
+          (Date.now() + 30 * 24 * 60 * 60 * 1000) / 1000
+        ),
         cancel_at_period_end: false,
         canceled_at: null,
         trial_end: null,
@@ -363,7 +396,9 @@ describe('SubscriptionService', () => {
       });
       testSubscriptionIds.push(subscription.id);
 
-      const hasActive = await subscriptionService.hasActiveSubscription(workspace.id);
+      const hasActive = await subscriptionService.hasActiveSubscription(
+        workspace.id
+      );
       expect(hasActive).toBe(true);
     });
 
@@ -387,7 +422,9 @@ describe('SubscriptionService', () => {
       });
       testSubscriptionIds.push(subscription.id);
 
-      const hasActive = await subscriptionService.hasActiveSubscription(workspace.id);
+      const hasActive = await subscriptionService.hasActiveSubscription(
+        workspace.id
+      );
       expect(hasActive).toBe(true);
     });
 
@@ -410,7 +447,9 @@ describe('SubscriptionService', () => {
       });
       testSubscriptionIds.push(subscription.id);
 
-      const hasActive = await subscriptionService.hasActiveSubscription(workspace.id);
+      const hasActive = await subscriptionService.hasActiveSubscription(
+        workspace.id
+      );
       expect(hasActive).toBe(false);
     });
 
@@ -418,7 +457,9 @@ describe('SubscriptionService', () => {
       const user = await createTestUser();
       const workspace = await createTestWorkspace(user.id);
 
-      const hasActive = await subscriptionService.hasActiveSubscription(workspace.id);
+      const hasActive = await subscriptionService.hasActiveSubscription(
+        workspace.id
+      );
       expect(hasActive).toBe(false);
     });
   });
@@ -443,7 +484,9 @@ describe('SubscriptionService', () => {
       });
       testSubscriptionIds.push(subscription.id);
 
-      const result = await subscriptionService.getSubscriptionByWorkspaceId(workspace.id);
+      const result = await subscriptionService.getSubscriptionByWorkspaceId(
+        workspace.id
+      );
 
       expect(result).not.toBeNull();
       expect(result?.id).toBe(subscription.id);
@@ -454,7 +497,9 @@ describe('SubscriptionService', () => {
       const user = await createTestUser();
       const workspace = await createTestWorkspace(user.id);
 
-      const result = await subscriptionService.getSubscriptionByWorkspaceId(workspace.id);
+      const result = await subscriptionService.getSubscriptionByWorkspaceId(
+        workspace.id
+      );
       expect(result).toBeNull();
     });
   });
@@ -481,7 +526,8 @@ describe('SubscriptionService', () => {
       });
       testSubscriptionIds.push(subscription.id);
 
-      const result = await subscriptionService.getSubscriptionByStripeId(stripeSubId);
+      const result =
+        await subscriptionService.getSubscriptionByStripeId(stripeSubId);
 
       expect(result).not.toBeNull();
       expect(result?.id).toBe(subscription.id);
@@ -489,7 +535,8 @@ describe('SubscriptionService', () => {
     });
 
     it('should return null for non-existent Stripe ID', async () => {
-      const result = await subscriptionService.getSubscriptionByStripeId('sub_nonexistent');
+      const result =
+        await subscriptionService.getSubscriptionByStripeId('sub_nonexistent');
       expect(result).toBeNull();
     });
   });

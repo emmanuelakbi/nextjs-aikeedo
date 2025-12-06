@@ -11,11 +11,13 @@ Get usage statistics for a workspace.
 **Requirements:** 10.4, 12.1, 12.4
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace UUID
 - `startDate` (optional): Start date for usage period (ISO 8601)
 - `endDate` (optional): End date for usage period (ISO 8601)
 
 **Response:**
+
 ```json
 {
   "usage": {
@@ -45,6 +47,7 @@ Get usage statistics for a workspace.
 ```
 
 **Features:**
+
 - Real-time usage tracking (Requirement 10.4)
 - Overage calculation (Requirements 10.1, 10.2)
 - Breakdown by service type (Requirement 12.4)
@@ -59,15 +62,17 @@ Calculate and charge overage fees for a billing period.
 **Requirements:** 10.1, 10.2, 10.3, 10.5
 
 **Request Body:**
+
 ```json
 {
   "workspaceId": "uuid",
   "billingPeriodStart": "2024-01-01T00:00:00.000Z", // Optional
-  "billingPeriodEnd": "2024-02-01T00:00:00.000Z"    // Optional
+  "billingPeriodEnd": "2024-02-01T00:00:00.000Z" // Optional
 }
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Overage charges calculated and added to next invoice",
@@ -75,7 +80,7 @@ Calculate and charge overage fees for a billing period.
   "limit": 1000,
   "overage": 500,
   "overageRate": 0.01,
-  "charges": 5.00,
+  "charges": 5.0,
   "billingPeriod": {
     "start": "2024-01-01T00:00:00.000Z",
     "end": "2024-02-01T00:00:00.000Z"
@@ -84,6 +89,7 @@ Calculate and charge overage fees for a billing period.
 ```
 
 **Features:**
+
 - Checks if usage exceeds plan limits (Requirement 10.1)
 - Calculates charges using per-unit pricing (Requirement 10.2)
 - Adds charges to next invoice (Requirement 10.3)
@@ -96,9 +102,11 @@ Get current overage status for a workspace.
 **Requirements:** 10.1, 10.4
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace UUID
 
 **Response:**
+
 ```json
 {
   "hasOverage": true,
@@ -106,7 +114,7 @@ Get current overage status for a workspace.
   "limit": 1000,
   "overage": 500,
   "overageRate": 0.01,
-  "estimatedCharges": 5.00,
+  "estimatedCharges": 5.0,
   "currentPeriod": {
     "start": "2024-01-01T00:00:00.000Z",
     "end": "2024-02-01T00:00:00.000Z"

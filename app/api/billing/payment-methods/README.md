@@ -5,6 +5,7 @@ This API handles payment method management for workspaces, including adding, upd
 ## Requirements
 
 Implements the following requirements from the billing module:
+
 - **6.1**: Add and list payment methods
 - **6.2**: Update payment methods (set as default)
 - **6.3**: Remove payment methods
@@ -22,9 +23,11 @@ GET /api/billing/payment-methods?workspaceId={workspaceId}
 Lists all payment methods for a workspace.
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace ID
 
 **Response:**
+
 ```json
 {
   "paymentMethods": [
@@ -54,6 +57,7 @@ POST /api/billing/payment-methods
 Adds a new payment method to a workspace.
 
 **Request Body:**
+
 ```json
 {
   "workspaceId": "ws_123",
@@ -63,6 +67,7 @@ Adds a new payment method to a workspace.
 ```
 
 **Response:**
+
 ```json
 {
   "paymentMethod": {
@@ -91,6 +96,7 @@ PATCH /api/billing/payment-methods/{id}
 Updates a payment method (currently only supports setting as default).
 
 **Request Body:**
+
 ```json
 {
   "workspaceId": "ws_123",
@@ -99,6 +105,7 @@ Updates a payment method (currently only supports setting as default).
 ```
 
 **Response:**
+
 ```json
 {
   "paymentMethod": {
@@ -119,9 +126,11 @@ DELETE /api/billing/payment-methods/{id}?workspaceId={workspaceId}
 Removes a payment method from a workspace.
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace ID
 
 **Response:**
+
 ```json
 {
   "message": "Payment method removed successfully"
@@ -139,10 +148,12 @@ GET /api/billing/payment-methods/expiring?workspaceId={workspaceId}&days={days}
 Gets payment methods that are expiring within the specified threshold.
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace ID
 - `days` (optional): Days threshold (default: 30)
 
 **Response:**
+
 ```json
 {
   "expiringPaymentMethods": [
@@ -168,6 +179,7 @@ Gets payment methods that are expiring within the specified threshold.
 ## Error Handling
 
 All endpoints return appropriate HTTP status codes:
+
 - `200`: Success
 - `400`: Bad request (invalid parameters)
 - `401`: Unauthorized (not authenticated)
@@ -175,6 +187,7 @@ All endpoints return appropriate HTTP status codes:
 - `500`: Internal server error
 
 Error responses include:
+
 ```json
 {
   "error": "Error message",
@@ -220,4 +233,3 @@ const { expiringPaymentMethods } = await getExpiringPaymentMethods({
   daysThreshold: 30,
 });
 ```
-

@@ -84,7 +84,11 @@ export function UserManagementClient() {
   };
 
   const handleStatusChange = async (userId: string, status: UserStatus) => {
-    if (!confirm(`Are you sure you want to change this user's status to ${status}?`)) {
+    if (
+      !confirm(
+        `Are you sure you want to change this user's status to ${status}?`
+      )
+    ) {
       return;
     }
 
@@ -108,7 +112,11 @@ export function UserManagementClient() {
   };
 
   const handleDeleteUser = async (userId: string, userEmail: string) => {
-    if (!confirm(`Are you sure you want to delete user ${userEmail}? This action cannot be undone.`)) {
+    if (
+      !confirm(
+        `Are you sure you want to delete user ${userEmail}? This action cannot be undone.`
+      )
+    ) {
       return;
     }
 
@@ -232,9 +240,7 @@ export function UserManagementClient() {
             <p className="mt-2 text-gray-600">Loading users...</p>
           </div>
         ) : users.length === 0 ? (
-          <div className="p-8 text-center text-gray-600">
-            No users found
-          </div>
+          <div className="p-8 text-center text-gray-600">No users found</div>
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -318,7 +324,10 @@ export function UserManagementClient() {
                           {user.status === UserStatus.ACTIVE && (
                             <button
                               onClick={() =>
-                                handleStatusChange(user.id, UserStatus.SUSPENDED)
+                                handleStatusChange(
+                                  user.id,
+                                  UserStatus.SUSPENDED
+                                )
                               }
                               className="text-orange-600 hover:text-orange-900"
                             >

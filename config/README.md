@@ -74,15 +74,15 @@ Edit `custom.config.ts`:
 export const customConfig = {
   credits: {
     text: {
-      'gpt-4': 25,  // Override GPT-4 rate
+      'gpt-4': 25, // Override GPT-4 rate
     },
-    trialCredits: 200,  // Give new users 200 credits
+    trialCredits: 200, // Give new users 200 credits
   },
-  
+
   affiliate: {
-    commissionRate: 0.15,  // 15% commission
+    commissionRate: 0.15, // 15% commission
   },
-  
+
   ui: {
     branding: {
       appName: 'My AI Platform',
@@ -128,7 +128,7 @@ config.features = {
   imageGeneration: true,
   affiliateProgram: true,
   // ... more features
-}
+};
 ```
 
 ### AI Providers
@@ -144,7 +144,7 @@ config.aiProviders = {
     text: 'openai',
     image: 'openai',
   },
-}
+};
 ```
 
 ### Credits
@@ -162,9 +162,9 @@ config.credits = {
     '1024x1024': 40,
     // ... per size
   },
-  speech: 5,  // per 1000 chars
-  transcription: 3,  // per minute
-}
+  speech: 5, // per 1000 chars
+  transcription: 3, // per minute
+};
 ```
 
 ### Subscription Plans
@@ -180,7 +180,7 @@ config.subscriptionPlans = {
     features: ['...'],
   },
   // ... more plans
-}
+};
 ```
 
 ### Affiliate Program
@@ -189,10 +189,10 @@ Configure affiliate settings:
 
 ```typescript
 config.affiliate = {
-  commissionRate: 0.20,  // 20%
+  commissionRate: 0.2, // 20%
   minimumPayout: 50,
-  cookieDuration: 30,  // days
-}
+  cookieDuration: 30, // days
+};
 ```
 
 ### Rate Limits
@@ -202,14 +202,14 @@ Define rate limits for operations:
 ```typescript
 config.rateLimits = {
   api: {
-    default: 60,  // requests per minute
+    default: 60, // requests per minute
     ai: 20,
   },
   upload: {
-    maxFileSize: 10 * 1024 * 1024,  // 10MB
+    maxFileSize: 10 * 1024 * 1024, // 10MB
     allowedTypes: ['image/jpeg', '...'],
   },
-}
+};
 ```
 
 ### Security
@@ -221,7 +221,7 @@ config.security = {
   bcryptRounds: 12,
   passwordMinLength: 8,
   csrfEnabled: true,
-}
+};
 ```
 
 ### UI
@@ -239,7 +239,7 @@ config.ui = {
     defaultMode: 'light',
     allowToggle: true,
   },
-}
+};
 ```
 
 ## Best Practices
@@ -271,8 +271,8 @@ export const customConfig = {
 export const customConfig = {
   credits: {
     text: {
-      'gpt-4': 20,  // Reduce from 30 to 20
-      'gpt-3.5-turbo': 1,  // Reduce from 2 to 1
+      'gpt-4': 20, // Reduce from 30 to 20
+      'gpt-3.5-turbo': 1, // Reduce from 2 to 1
     },
   },
 };
@@ -301,8 +301,8 @@ export const customConfig = {
 export const customConfig = {
   rateLimits: {
     api: {
-      default: 120,  // Increase from 60 to 120
-      ai: 40,  // Increase from 20 to 40
+      default: 120, // Increase from 60 to 120
+      ai: 40, // Increase from 20 to 40
     },
   },
 };
@@ -316,7 +316,7 @@ If you have hard-coded values in your codebase:
 
 ```typescript
 const TRIAL_CREDITS = 100;
-const COMMISSION_RATE = 0.20;
+const COMMISSION_RATE = 0.2;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 ```
 
@@ -354,8 +354,8 @@ Configuration is cached on first load. To reload:
 ```typescript
 import { resetConfig, getConfig } from '@/config/config-loader';
 
-resetConfig();  // Clear cache
-const config = getConfig();  // Reload
+resetConfig(); // Clear cache
+const config = getConfig(); // Reload
 ```
 
 ## Support

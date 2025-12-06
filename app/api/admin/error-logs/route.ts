@@ -117,7 +117,9 @@ export async function GET(request: NextRequest) {
       if (gen.error) {
         // Extract first line of error for grouping
         const firstLine = gen.error.split('\n')[0];
-        const errorKey = firstLine ? firstLine.substring(0, 100) : 'Unknown error';
+        const errorKey = firstLine
+          ? firstLine.substring(0, 100)
+          : 'Unknown error';
         errorCounts[errorKey] = (errorCounts[errorKey] || 0) + 1;
       }
     });

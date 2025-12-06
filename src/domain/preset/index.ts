@@ -1,6 +1,6 @@
 /**
  * Preset Domain Exports
- * 
+ *
  * Barrel file for preset domain layer exports.
  */
 

@@ -20,11 +20,11 @@ interface PageHeaderProps {
   }>;
 }
 
-export function PageHeader({ 
-  title, 
-  description, 
+export function PageHeader({
+  title,
+  description,
   actions,
-  breadcrumbs 
+  breadcrumbs,
 }: PageHeaderProps) {
   return (
     <div className="mb-8">
@@ -56,7 +56,9 @@ export function PageHeader({
                     {crumb.label}
                   </a>
                 ) : (
-                  <span className="text-gray-900 font-medium">{crumb.label}</span>
+                  <span className="text-gray-900 font-medium">
+                    {crumb.label}
+                  </span>
                 )}
               </li>
             ))}
@@ -67,15 +69,9 @@ export function PageHeader({
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-          {description && (
-            <p className="text-gray-600 mt-2">{description}</p>
-          )}
+          {description && <p className="text-gray-600 mt-2">{description}</p>}
         </div>
-        {actions && (
-          <div className="flex gap-2">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="flex gap-2">{actions}</div>}
       </div>
     </div>
   );

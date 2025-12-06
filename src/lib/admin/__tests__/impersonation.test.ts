@@ -74,9 +74,9 @@ describe('Impersonation Service', () => {
     it('should throw error if user not found', async () => {
       vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
 
-      await expect(
-        startImpersonation(mockAdminId, mockUserId)
-      ).rejects.toThrow('Target user not found');
+      await expect(startImpersonation(mockAdminId, mockUserId)).rejects.toThrow(
+        'Target user not found'
+      );
     });
 
     it('should throw error if trying to impersonate admin', async () => {
@@ -85,9 +85,9 @@ describe('Impersonation Service', () => {
         role: 'ADMIN',
       } as any);
 
-      await expect(
-        startImpersonation(mockAdminId, mockUserId)
-      ).rejects.toThrow('Cannot impersonate admin users');
+      await expect(startImpersonation(mockAdminId, mockUserId)).rejects.toThrow(
+        'Cannot impersonate admin users'
+      );
     });
 
     it('should throw error if user is inactive', async () => {
@@ -96,16 +96,21 @@ describe('Impersonation Service', () => {
         status: 'SUSPENDED',
       } as any);
 
-      await expect(
-        startImpersonation(mockAdminId, mockUserId)
-      ).rejects.toThrow('Cannot impersonate inactive users');
+      await expect(startImpersonation(mockAdminId, mockUserId)).rejects.toThrow(
+        'Cannot impersonate inactive users'
+      );
     });
 
     it('should log the impersonation start action', async () => {
       vi.mocked(prisma.user.findUnique).mockResolvedValue(mockUser as any);
       vi.mocked(prisma.adminAction.create).mockResolvedValue({} as any);
 
-      await startImpersonation(mockAdminId, mockUserId, '127.0.0.1', 'test-agent');
+      await startImpersonation(
+        mockAdminId,
+        mockUserId,
+        '127.0.0.1',
+        'test-agent'
+      );
 
       expect(prisma.adminAction.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -144,7 +149,7 @@ describe('Impersonation Service', () => {
       vi.mocked(prisma.adminAction.create).mockResolvedValue({} as any);
 
       const session = await startImpersonation(mockAdminId, mockUserId);
-      
+
       // Manually expire the session
       session.expiresAt = new Date(Date.now() - 1000);
 
@@ -159,7 +164,7 @@ describe('Impersonation Service', () => {
       vi.mocked(prisma.adminAction.create).mockResolvedValue({} as any);
 
       const session = await startImpersonation(mockAdminId, mockUserId);
-      
+
       await endImpersonation(session.id);
 
       const retrieved = getImpersonationSession(session.id);
@@ -177,7 +182,7 @@ describe('Impersonation Service', () => {
       vi.mocked(prisma.adminAction.create).mockResolvedValue({} as any);
 
       const session = await startImpersonation(mockAdminId, mockUserId);
-      
+
       await endImpersonation(session.id, '127.0.0.1', 'test-agent');
 
       // Should be called twice: once for start, once for end
@@ -227,7 +232,7 @@ describe('Impersonation Service', () => {
       vi.mocked(prisma.adminAction.create).mockResolvedValue({} as any);
 
       const session = await startImpersonation(mockAdminId, mockUserId);
-      
+
       // Manually expire the session
       session.expiresAt = new Date(Date.now() - 1000);
 

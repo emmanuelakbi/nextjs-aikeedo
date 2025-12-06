@@ -45,7 +45,8 @@ function loadDefaultCircuitConfig(): CircuitBreakerConfig {
   }
 }
 
-export const DEFAULT_CIRCUIT_CONFIG: CircuitBreakerConfig = loadDefaultCircuitConfig();
+export const DEFAULT_CIRCUIT_CONFIG: CircuitBreakerConfig =
+  loadDefaultCircuitConfig();
 
 interface CircuitMetrics {
   failures: number;

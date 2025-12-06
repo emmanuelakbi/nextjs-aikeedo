@@ -106,6 +106,9 @@ export function generateReferralCode(userId: string): string {
   // Create a code from user ID and random string
   const random = Math.random().toString(36).substring(2, 8).toUpperCase();
   // Remove any non-alphanumeric characters from user ID
-  const userPart = userId.replace(/[^A-Za-z0-9]/g, '').substring(0, 6).toUpperCase();
+  const userPart = userId
+    .replace(/[^A-Za-z0-9]/g, '')
+    .substring(0, 6)
+    .toUpperCase();
   return `${userPart}${random}`;
 }

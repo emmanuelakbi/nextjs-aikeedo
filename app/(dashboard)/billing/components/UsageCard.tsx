@@ -22,8 +22,10 @@ export default function UsageCard({ credits, currentPeriod }: UsageCardProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold mb-2 text-gray-700">Credit Balance</h3>
-      
+      <h3 className="text-lg font-semibold mb-2 text-gray-700">
+        Credit Balance
+      </h3>
+
       <div className="mb-4">
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-blue-600">
@@ -39,15 +41,18 @@ export default function UsageCard({ credits, currentPeriod }: UsageCardProps) {
             <div className="flex justify-between text-sm mb-1">
               <span className="text-gray-600">Usage this period</span>
               <span className="font-medium">
-                {currentPeriod.usage.toLocaleString()} / {credits.limit?.toLocaleString()}
+                {currentPeriod.usage.toLocaleString()} /{' '}
+                {credits.limit?.toLocaleString()}
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all ${
-                  percentageUsed > 90 ? 'bg-red-500' :
-                  percentageUsed > 70 ? 'bg-yellow-500' :
-                  'bg-blue-500'
+                  percentageUsed > 90
+                    ? 'bg-red-500'
+                    : percentageUsed > 70
+                      ? 'bg-yellow-500'
+                      : 'bg-blue-500'
                 }`}
                 style={{ width: `${Math.min(percentageUsed, 100)}%` }}
               />
@@ -56,11 +61,14 @@ export default function UsageCard({ credits, currentPeriod }: UsageCardProps) {
 
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Remaining</span>
-            <span className={`font-semibold ${
-              credits.remaining !== null && credits.remaining < (credits.limit || 0) * 0.1
-                ? 'text-red-600'
-                : 'text-green-600'
-            }`}>
+            <span
+              className={`font-semibold ${
+                credits.remaining !== null &&
+                credits.remaining < (credits.limit || 0) * 0.1
+                  ? 'text-red-600'
+                  : 'text-green-600'
+              }`}
+            >
               {credits.remaining?.toLocaleString() || 0} credits
             </span>
           </div>
@@ -70,7 +78,9 @@ export default function UsageCard({ credits, currentPeriod }: UsageCardProps) {
       {!hasLimit && (
         <div className="text-sm text-gray-600">
           <p>Unlimited credits</p>
-          <p className="mt-1">Used this period: {currentPeriod.usage.toLocaleString()}</p>
+          <p className="mt-1">
+            Used this period: {currentPeriod.usage.toLocaleString()}
+          </p>
         </div>
       )}
     </div>

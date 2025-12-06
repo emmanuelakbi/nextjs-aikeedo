@@ -27,10 +27,7 @@ export async function POST(request: NextRequest) {
 
     if (!signature) {
       console.error('Missing stripe-signature header');
-      return NextResponse.json(
-        { error: 'Missing signature' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
     }
 
     // Verify webhook signature
@@ -40,10 +37,7 @@ export async function POST(request: NextRequest) {
       event = stripeService.verifyWebhookSignature(body, signature);
     } catch (error) {
       console.error('Webhook signature verification failed:', error);
-      return NextResponse.json(
-        { error: 'Invalid signature' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
     // Log webhook event for debugging
@@ -55,21 +49,20 @@ export async function POST(request: NextRequest) {
     } catch (error) {
       // Requirements: 7.5 - Log error for manual review
       console.error(`Error processing webhook ${event.type}:`, error);
-      
+
       // Return 200 to acknowledge receipt even if processing fails
       // Stripe will retry failed webhooks automatically
       return NextResponse.json(
-        { 
+        {
           received: true,
           error: 'Processing failed, will retry',
-          eventId: event.id 
+          eventId: event.id,
         },
         { status: 200 }
       );
     }
 
     return NextResponse.json({ received: true, eventId: event.id });
-
   } catch (error) {
     console.error('Webhook handler error:', error);
     return NextResponse.json(
@@ -87,7 +80,9 @@ async function processWebhookEvent(event: Stripe.Event): Promise<void> {
   switch (event.type) {
     // Checkout session completed
     case 'checkout.session.completed':
-      await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
+      await handleCheckoutSessionCompleted(
+        event.data.object as Stripe.Checkout.Session
+      );
       break;
 
     // Payment succeeded
@@ -127,7 +122,9 @@ async function processWebhookEvent(event: Stripe.Event): Promise<void> {
 
     // Payment intent succeeded (for one-time credit purchases)
     case 'payment_intent.succeeded':
-      await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+      await handlePaymentIntentSucceeded(
+        event.data.object as Stripe.PaymentIntent
+      );
       break;
 
     // Refund handling
@@ -174,9 +171,10 @@ async function handleCheckoutSessionCompleted(
 
   // FIX: Use transaction with upsert to handle race condition
   await prisma.$transaction(async (tx) => {
-    const customerId = typeof stripeSubscription.customer === 'string'
-      ? stripeSubscription.customer
-      : stripeSubscription.customer?.id || '';
+    const customerId =
+      typeof stripeSubscription.customer === 'string'
+        ? stripeSubscription.customer
+        : stripeSubscription.customer?.id || '';
 
     const subscriptionData = {
       workspaceId,
@@ -184,14 +182,16 @@ async function handleCheckoutSessionCompleted(
       stripeSubscriptionId: stripeSubscription.id,
       stripeCustomerId: customerId,
       status: mapStripeStatus(stripeSubscription.status),
-      currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+      currentPeriodStart: new Date(
+        stripeSubscription.current_period_start * 1000
+      ),
       currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
       cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-      canceledAt: stripeSubscription.canceled_at 
-        ? new Date(stripeSubscription.canceled_at * 1000) 
+      canceledAt: stripeSubscription.canceled_at
+        ? new Date(stripeSubscription.canceled_at * 1000)
         : null,
-      trialEnd: stripeSubscription.trial_end 
-        ? new Date(stripeSubscription.trial_end * 1000) 
+      trialEnd: stripeSubscription.trial_end
+        ? new Date(stripeSubscription.trial_end * 1000)
         : null,
     };
 
@@ -218,7 +218,7 @@ async function handleCheckoutSessionCompleted(
       if (workspace) {
         await tx.user.update({
           where: { id: workspace.ownerId },
-          data: { 
+          data: {
             hasUsedTrial: true,
             trialUsedAt: new Date(),
           },
@@ -234,12 +234,15 @@ async function handleCheckoutSessionCompleted(
  * Handle invoice payment succeeded event
  * Requirements: 7.2 - Activate subscription on payment success, 5.1 - Generate invoice, 5.5 - Email invoice
  */
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
+async function handleInvoicePaymentSucceeded(
+  invoice: Stripe.Invoice
+): Promise<void> {
   console.log(`Processing invoice.payment_succeeded: ${invoice.id}`);
 
-  const subscriptionId = typeof invoice.subscription === 'string' 
-    ? invoice.subscription 
-    : invoice.subscription?.id;
+  const subscriptionId =
+    typeof invoice.subscription === 'string'
+      ? invoice.subscription
+      : invoice.subscription?.id;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
@@ -253,7 +256,7 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<v
   // Update subscription status
   const subscription = await prisma.subscription.findUnique({
     where: { stripeSubscriptionId: subscriptionId },
-    include: { workspace: true, plan: true }
+    include: { workspace: true, plan: true },
   });
 
   if (!subscription) {
@@ -287,12 +290,15 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<v
  * Handle invoice payment failed event
  * Requirements: 7.3 - Update subscription status on payment failure, 5.1 - Generate invoice
  */
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
+async function handleInvoicePaymentFailed(
+  invoice: Stripe.Invoice
+): Promise<void> {
   console.log(`Processing invoice.payment_failed: ${invoice.id}`);
 
-  const subscriptionId = typeof invoice.subscription === 'string' 
-    ? invoice.subscription 
-    : invoice.subscription?.id;
+  const subscriptionId =
+    typeof invoice.subscription === 'string'
+      ? invoice.subscription
+      : invoice.subscription?.id;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
@@ -306,7 +312,7 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void
   // Update subscription status to PAST_DUE
   await prisma.subscription.updateMany({
     where: { stripeSubscriptionId: subscriptionId },
-    data: { status: 'PAST_DUE' }
+    data: { status: 'PAST_DUE' },
   });
 
   console.log(`Invoice payment failed for subscription: ${subscriptionId}`);
@@ -315,7 +321,9 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void
 /**
  * Handle subscription created event
  */
-async function handleSubscriptionCreated(subscription: Stripe.Subscription): Promise<void> {
+async function handleSubscriptionCreated(
+  subscription: Stripe.Subscription
+): Promise<void> {
   console.log(`Processing customer.subscription.created: ${subscription.id}`);
 
   const workspaceId = subscription.metadata?.workspaceId;
@@ -333,7 +341,9 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription): Pro
  * Handle subscription updated event
  * FIX: Use optimistic locking with version field
  */
-async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Promise<void> {
+async function handleSubscriptionUpdated(
+  subscription: Stripe.Subscription
+): Promise<void> {
   console.log(`Processing customer.subscription.updated: ${subscription.id}`);
 
   const maxRetries = 3;
@@ -360,14 +370,16 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
           },
           data: {
             status: mapStripeStatus(subscription.status),
-            currentPeriodStart: new Date(subscription.current_period_start * 1000),
+            currentPeriodStart: new Date(
+              subscription.current_period_start * 1000
+            ),
             currentPeriodEnd: new Date(subscription.current_period_end * 1000),
             cancelAtPeriodEnd: subscription.cancel_at_period_end,
-            canceledAt: subscription.canceled_at 
-              ? new Date(subscription.canceled_at * 1000) 
+            canceledAt: subscription.canceled_at
+              ? new Date(subscription.canceled_at * 1000)
               : null,
-            trialEnd: subscription.trial_end 
-              ? new Date(subscription.trial_end * 1000) 
+            trialEnd: subscription.trial_end
+              ? new Date(subscription.trial_end * 1000)
               : null,
             version: current.version + 1, // Increment version
           },
@@ -389,7 +401,9 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
           throw new Error('Failed to update subscription after max retries');
         }
         // Wait before retry with exponential backoff
-        await new Promise(resolve => setTimeout(resolve, 100 * Math.pow(2, retries)));
+        await new Promise((resolve) =>
+          setTimeout(resolve, 100 * Math.pow(2, retries))
+        );
       } else {
         throw error;
       }
@@ -401,7 +415,9 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
  * Handle subscription deleted event
  * Requirements: 7.4 - Schedule deactivation on cancellation
  */
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
+async function handleSubscriptionDeleted(
+  subscription: Stripe.Subscription
+): Promise<void> {
   console.log(`Processing customer.subscription.deleted: ${subscription.id}`);
 
   await prisma.subscription.updateMany({
@@ -409,8 +425,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Pro
     data: {
       status: 'CANCELED',
       canceledAt: new Date(),
-      cancelAtPeriodEnd: false
-    }
+      cancelAtPeriodEnd: false,
+    },
   });
 
   console.log(`Subscription canceled: ${subscription.id}`);
@@ -439,7 +455,9 @@ async function handleInvoiceFinalized(invoice: Stripe.Invoice): Promise<void> {
  * Requirements: 4.1, 4.2, 4.4, 4.5
  * FIX: Added proper idempotency with transaction and unique constraint
  */
-async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent): Promise<void> {
+async function handlePaymentIntentSucceeded(
+  paymentIntent: Stripe.PaymentIntent
+): Promise<void> {
   console.log(`Processing payment_intent.succeeded: ${paymentIntent.id}`);
 
   // Check if this is a credit purchase
@@ -454,7 +472,9 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
   const creditAmount = parseInt(metadata.creditAmount || '0', 10);
 
   if (!workspaceId || !creditAmount || !userId) {
-    throw new Error('Missing workspaceId, userId, or creditAmount in payment intent metadata');
+    throw new Error(
+      'Missing workspaceId, userId, or creditAmount in payment intent metadata'
+    );
   }
 
   // FIX: Use transaction with unique constraint to prevent race condition
@@ -497,7 +517,11 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     });
   } catch (error) {
     // Check if it's a unique constraint violation (duplicate processing)
-    if (error instanceof Error && (error.message.includes('Unique constraint') || error.message.includes('unique'))) {
+    if (
+      error instanceof Error &&
+      (error.message.includes('Unique constraint') ||
+        error.message.includes('unique'))
+    ) {
       console.log(`Credit purchase already processed: ${paymentIntent.id}`);
       return;
     }
@@ -508,12 +532,12 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { email: true, firstName: true }
+      select: { email: true, firstName: true },
     });
 
     const workspace = await prisma.workspace.findUnique({
       where: { id: workspaceId },
-      select: { name: true, creditCount: true }
+      select: { name: true, creditCount: true },
     });
 
     if (user && workspace) {
@@ -534,7 +558,9 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     console.error('Failed to send receipt email:', emailError);
   }
 
-  console.log(`Credit purchase completed for workspace: ${workspaceId}, amount: ${creditAmount}`);
+  console.log(
+    `Credit purchase completed for workspace: ${workspaceId}, amount: ${creditAmount}`
+  );
 }
 
 /**
@@ -546,9 +572,10 @@ async function createOrUpdateSubscription(
   workspaceId: string,
   planId: string
 ): Promise<void> {
-  const customerId = typeof stripeSubscription.customer === 'string'
-    ? stripeSubscription.customer
-    : stripeSubscription.customer?.id || '';
+  const customerId =
+    typeof stripeSubscription.customer === 'string'
+      ? stripeSubscription.customer
+      : stripeSubscription.customer?.id || '';
 
   const subscriptionData = {
     workspaceId,
@@ -556,21 +583,23 @@ async function createOrUpdateSubscription(
     stripeSubscriptionId: stripeSubscription.id,
     stripeCustomerId: customerId,
     status: mapStripeStatus(stripeSubscription.status),
-    currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+    currentPeriodStart: new Date(
+      stripeSubscription.current_period_start * 1000
+    ),
     currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
     cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-    canceledAt: stripeSubscription.canceled_at 
-      ? new Date(stripeSubscription.canceled_at * 1000) 
+    canceledAt: stripeSubscription.canceled_at
+      ? new Date(stripeSubscription.canceled_at * 1000)
       : null,
-    trialEnd: stripeSubscription.trial_end 
-      ? new Date(stripeSubscription.trial_end * 1000) 
+    trialEnd: stripeSubscription.trial_end
+      ? new Date(stripeSubscription.trial_end * 1000)
       : null,
   };
 
   await prisma.subscription.upsert({
     where: { stripeSubscriptionId: stripeSubscription.id },
     create: subscriptionData,
-    update: subscriptionData
+    update: subscriptionData,
   });
 }
 
@@ -585,20 +614,20 @@ async function updateSubscriptionFromStripe(
     where: { stripeSubscriptionId: stripeSubscription.id },
     data: {
       status: mapStripeStatus(stripeSubscription.status),
-      currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+      currentPeriodStart: new Date(
+        stripeSubscription.current_period_start * 1000
+      ),
       currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
       cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-      canceledAt: stripeSubscription.canceled_at 
-        ? new Date(stripeSubscription.canceled_at * 1000) 
+      canceledAt: stripeSubscription.canceled_at
+        ? new Date(stripeSubscription.canceled_at * 1000)
         : null,
-      trialEnd: stripeSubscription.trial_end 
-        ? new Date(stripeSubscription.trial_end * 1000) 
+      trialEnd: stripeSubscription.trial_end
+        ? new Date(stripeSubscription.trial_end * 1000)
         : null,
-    }
+    },
   });
 }
-
-
 
 /**
  * Allocate credits to workspace from subscription
@@ -610,7 +639,7 @@ async function allocateCredits(
   referenceId: string
 ): Promise<void> {
   const workspace = await prisma.workspace.findUnique({
-    where: { id: workspaceId }
+    where: { id: workspaceId },
   });
 
   if (!workspace) {
@@ -626,8 +655,8 @@ async function allocateCredits(
     data: {
       creditCount: balanceAfter,
       allocatedCredits: workspace.allocatedCredits + creditAmount,
-      creditsAdjustedAt: new Date()
-    }
+      creditsAdjustedAt: new Date(),
+    },
   });
 
   // Requirements: 4.5 - Create credit transaction record for auditing
@@ -640,8 +669,8 @@ async function allocateCredits(
       referenceId,
       referenceType: 'invoice',
       balanceBefore,
-      balanceAfter
-    }
+      balanceAfter,
+    },
   });
 
   console.log(`Allocated ${creditAmount} credits to workspace ${workspaceId}`);
@@ -659,7 +688,7 @@ async function allocatePurchasedCredits(
   amountPaid: number
 ): Promise<number> {
   const workspace = await prisma.workspace.findUnique({
-    where: { id: workspaceId }
+    where: { id: workspaceId },
   });
 
   if (!workspace) {
@@ -674,8 +703,8 @@ async function allocatePurchasedCredits(
     where: { id: workspaceId },
     data: {
       creditCount: balanceAfter,
-      creditsAdjustedAt: new Date()
-    }
+      creditsAdjustedAt: new Date(),
+    },
   });
 
   // Requirements: 4.5 - Log transaction for auditing
@@ -688,12 +717,14 @@ async function allocatePurchasedCredits(
       referenceId: paymentIntentId,
       referenceType: 'payment_intent',
       balanceBefore,
-      balanceAfter
-    }
+      balanceAfter,
+    },
   });
 
-  console.log(`Purchased credits allocated to workspace ${workspaceId}: ${creditAmount} credits`);
-  
+  console.log(
+    `Purchased credits allocated to workspace ${workspaceId}: ${creditAmount} credits`
+  );
+
   return balanceAfter;
 }
 
@@ -702,14 +733,14 @@ async function allocatePurchasedCredits(
  */
 function mapStripeStatus(status: Stripe.Subscription.Status): string {
   const statusMap: Record<Stripe.Subscription.Status, string> = {
-    'active': 'ACTIVE',
-    'canceled': 'CANCELED',
-    'incomplete': 'INCOMPLETE',
-    'incomplete_expired': 'INCOMPLETE_EXPIRED',
-    'past_due': 'PAST_DUE',
-    'trialing': 'TRIALING',
-    'unpaid': 'UNPAID',
-    'paused': 'CANCELED', // Map paused to canceled
+    active: 'ACTIVE',
+    canceled: 'CANCELED',
+    incomplete: 'INCOMPLETE',
+    incomplete_expired: 'INCOMPLETE_EXPIRED',
+    past_due: 'PAST_DUE',
+    trialing: 'TRIALING',
+    unpaid: 'UNPAID',
+    paused: 'CANCELED', // Map paused to canceled
   };
 
   return statusMap[status] || 'CANCELED';
@@ -722,11 +753,11 @@ function mapInvoiceStatus(status: Stripe.Invoice.Status | null): string {
   if (!status) return 'DRAFT';
 
   const statusMap: Record<Stripe.Invoice.Status, string> = {
-    'draft': 'DRAFT',
-    'open': 'OPEN',
-    'paid': 'PAID',
-    'void': 'VOID',
-    'uncollectible': 'UNCOLLECTIBLE',
+    draft: 'DRAFT',
+    open: 'OPEN',
+    paid: 'PAID',
+    void: 'VOID',
+    uncollectible: 'UNCOLLECTIBLE',
   };
 
   return statusMap[status] || 'DRAFT';
@@ -740,9 +771,10 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
   console.log(`Processing charge.refunded: ${charge.id}`);
 
   // Find the payment intent
-  const paymentIntentId = typeof charge.payment_intent === 'string'
-    ? charge.payment_intent
-    : charge.payment_intent?.id;
+  const paymentIntentId =
+    typeof charge.payment_intent === 'string'
+      ? charge.payment_intent
+      : charge.payment_intent?.id;
 
   if (!paymentIntentId) {
     console.log('Charge not associated with payment intent');
@@ -759,7 +791,9 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
   });
 
   if (!transaction) {
-    console.log(`No credit purchase found for payment intent: ${paymentIntentId}`);
+    console.log(
+      `No credit purchase found for payment intent: ${paymentIntentId}`
+    );
     return;
   }
 
@@ -824,10 +858,9 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
  */
 async function handleDisputeCreated(dispute: Stripe.Dispute): Promise<void> {
   console.log(`Processing dispute: ${dispute.id}`);
-  
-  const chargeId = typeof dispute.charge === 'string'
-    ? dispute.charge
-    : dispute.charge?.id;
+
+  const chargeId =
+    typeof dispute.charge === 'string' ? dispute.charge : dispute.charge?.id;
 
   if (!chargeId) {
     return;
@@ -835,9 +868,10 @@ async function handleDisputeCreated(dispute: Stripe.Dispute): Promise<void> {
 
   // Find associated transaction
   const charge = await stripeService.stripe.charges.retrieve(chargeId);
-  const paymentIntentId = typeof charge.payment_intent === 'string'
-    ? charge.payment_intent
-    : charge.payment_intent?.id;
+  const paymentIntentId =
+    typeof charge.payment_intent === 'string'
+      ? charge.payment_intent
+      : charge.payment_intent?.id;
 
   if (!paymentIntentId) {
     return;

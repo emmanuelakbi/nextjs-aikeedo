@@ -21,7 +21,10 @@ import { ZodError } from 'zod';
  */
 export async function POST(request: NextRequest) {
   // Apply rate limiting
-  const rateLimitResponse = await withAIRateLimit(request, request.headers.get('x-user-id') || undefined);
+  const rateLimitResponse = await withAIRateLimit(
+    request,
+    request.headers.get('x-user-id') || undefined
+  );
   if (rateLimitResponse) {
     return rateLimitResponse;
   }

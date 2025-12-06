@@ -11,22 +11,24 @@ Request a refund for a payment.
 **Requirements:** 11.1, 11.2, 11.3, 11.4, 11.5
 
 **Request Body:**
+
 ```json
 {
   "paymentIntentId": "pi_xxx", // Optional, either this or chargeId required
-  "chargeId": "ch_xxx",        // Optional, either this or paymentIntentId required
-  "amount": 50.00,             // Optional, partial refund amount
+  "chargeId": "ch_xxx", // Optional, either this or paymentIntentId required
+  "amount": 50.0, // Optional, partial refund amount
   "reason": "requested_by_customer", // Optional: duplicate, fraudulent, requested_by_customer
   "workspaceId": "uuid"
 }
 ```
 
 **Response:**
+
 ```json
 {
   "refund": {
     "id": "re_xxx",
-    "amount": 50.00,
+    "amount": 50.0,
     "currency": "usd",
     "status": "succeeded",
     "reason": "requested_by_customer",
@@ -37,6 +39,7 @@ Request a refund for a payment.
 ```
 
 **Features:**
+
 - Processes refund via Stripe (Requirement 11.1)
 - Deducts credits proportionally from workspace (Requirement 11.2)
 - Sends confirmation email to user (Requirement 11.3)
@@ -48,10 +51,12 @@ Request a refund for a payment.
 List refunds for a workspace.
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace UUID
 - `limit` (optional): Number of refunds to return (default: 50)
 
 **Response:**
+
 ```json
 {
   "refunds": [

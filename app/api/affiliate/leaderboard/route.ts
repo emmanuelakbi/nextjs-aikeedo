@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     // Calculate date range
     const now = new Date();
     let startDate = new Date();
-    
+
     switch (period) {
       case '7d':
         startDate.setDate(now.getDate() - 7);
@@ -83,7 +83,9 @@ export async function GET(request: NextRequest) {
           code: affiliate.code,
           tier: affiliate.tier,
           user: {
-            name: `${affiliate.user.firstName || ''} ${affiliate.user.lastName || ''}`.trim() || 'Anonymous',
+            name:
+              `${affiliate.user.firstName || ''} ${affiliate.user.lastName || ''}`.trim() ||
+              'Anonymous',
           },
         },
         metrics: {

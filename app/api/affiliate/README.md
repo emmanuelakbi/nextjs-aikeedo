@@ -5,6 +5,7 @@ Comprehensive API endpoints for the AIKEEDO affiliate system.
 ## Overview
 
 The affiliate API provides endpoints for:
+
 - Managing affiliate accounts
 - Tracking referrals and conversions
 - Processing commissions and payouts
@@ -15,9 +16,11 @@ The affiliate API provides endpoints for:
 ## Authentication
 
 All endpoints require authentication via NextAuth session, except:
+
 - `GET /api/affiliate/validate` - Public endpoint for validating referral codes
 
 Admin-only endpoints (marked with 🔒):
+
 - All endpoints under `/api/affiliate/payout/admin/*`
 - `GET /api/affiliate/fraud`
 - `POST /api/affiliate/fraud`
@@ -27,9 +30,11 @@ Admin-only endpoints (marked with 🔒):
 ### Affiliate Account Management
 
 #### `GET /api/affiliate`
+
 Get current user's affiliate account details.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -49,9 +54,11 @@ Get current user's affiliate account details.
 ```
 
 #### `PATCH /api/affiliate`
+
 Update affiliate account settings.
 
 **Request:**
+
 ```json
 {
   "payoutEmail": "payout@example.com",
@@ -61,9 +68,11 @@ Update affiliate account settings.
 ```
 
 #### `POST /api/affiliate/create`
+
 Create a new affiliate account.
 
 **Request:**
+
 ```json
 {
   "code": "MYCODE123",
@@ -75,9 +84,11 @@ Create a new affiliate account.
 ### Referral Tracking
 
 #### `POST /api/affiliate/track`
+
 Track referral events (clicks, signups, conversions).
 
 **Request:**
+
 ```json
 {
   "code": "MYCODE123",
@@ -87,14 +98,17 @@ Track referral events (clicks, signups, conversions).
 ```
 
 **Event Types:**
+
 - `click` - Referral link clicked
 - `signup` - User signed up with referral code
 - `conversion` - User made a purchase
 
 #### `GET /api/affiliate/referrals`
+
 Get list of all referrals for current affiliate.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -112,9 +126,11 @@ Get list of all referrals for current affiliate.
 ```
 
 #### `GET /api/affiliate/validate?code=MYCODE123`
+
 Validate a referral code (public endpoint).
 
 **Response:**
+
 ```json
 {
   "valid": true,
@@ -129,9 +145,11 @@ Validate a referral code (public endpoint).
 ### Statistics & Analytics
 
 #### `GET /api/affiliate/stats`
+
 Get affiliate statistics and performance metrics.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -147,14 +165,17 @@ Get affiliate statistics and performance metrics.
 ```
 
 #### `GET /api/affiliate/conversions?status=CONVERTED&limit=50&offset=0`
+
 Get detailed conversion data with pagination.
 
 **Query Parameters:**
+
 - `status` - Filter by status (PENDING, CONVERTED, CANCELED)
 - `limit` - Results per page (default: 50)
 - `offset` - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -178,14 +199,17 @@ Get detailed conversion data with pagination.
 ```
 
 #### `GET /api/affiliate/leaderboard?metric=earnings&period=30d&limit=10`
+
 Get top performing affiliates leaderboard.
 
 **Query Parameters:**
+
 - `metric` - Sort by: earnings, referrals, conversions (default: earnings)
 - `period` - Time period: 7d, 30d, 90d, all (default: 30d)
 - `limit` - Number of results (default: 10)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -215,15 +239,18 @@ Get top performing affiliates leaderboard.
 ### Reports
 
 #### `GET /api/affiliate/reports?type=summary&period=30d`
+
 Generate affiliate reports.
 
 **Query Parameters:**
+
 - `type` - Report type: summary, detailed, earnings, conversions (default: summary)
 - `period` - Time period: 7d, 30d, 90d, 1y, all (default: 30d)
 
 **Report Types:**
 
 **Summary Report:**
+
 ```json
 {
   "success": true,
@@ -241,6 +268,7 @@ Generate affiliate reports.
 ```
 
 **Earnings Report:**
+
 ```json
 {
   "data": {
@@ -256,6 +284,7 @@ Generate affiliate reports.
 ```
 
 **Conversions Report:**
+
 ```json
 {
   "data": {
@@ -272,9 +301,11 @@ Generate affiliate reports.
 ### Commission Processing
 
 #### `POST /api/affiliate/commission/process`
+
 Process commission for a transaction (manual/testing).
 
 **Request:**
+
 ```json
 {
   "userId": "user_id",
@@ -285,9 +316,11 @@ Process commission for a transaction (manual/testing).
 ```
 
 #### `POST /api/affiliate/commission/refund`
+
 Process refund and adjust commission.
 
 **Request:**
+
 ```json
 {
   "userId": "user_id",
@@ -299,9 +332,11 @@ Process refund and adjust commission.
 ### Payout Management
 
 #### `POST /api/affiliate/payout/request`
+
 Request a payout.
 
 **Request:**
+
 ```json
 {
   "amount": 10000,
@@ -313,9 +348,11 @@ Request a payout.
 **Methods:** PAYPAL, STRIPE, BANK_TRANSFER
 
 #### `GET /api/affiliate/payout/list`
+
 Get payout history for current affiliate.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -333,12 +370,15 @@ Get payout history for current affiliate.
 ### Admin Endpoints 🔒
 
 #### `GET /api/affiliate/payout/admin/pending`
+
 Get all pending payouts (admin only).
 
 #### `POST /api/affiliate/payout/admin/approve`
+
 Approve a payout request (admin only).
 
 **Request:**
+
 ```json
 {
   "payoutId": "payout_id",
@@ -347,9 +387,11 @@ Approve a payout request (admin only).
 ```
 
 #### `POST /api/affiliate/payout/admin/reject`
+
 Reject a payout request (admin only).
 
 **Request:**
+
 ```json
 {
   "payoutId": "payout_id",
@@ -358,9 +400,11 @@ Reject a payout request (admin only).
 ```
 
 #### `POST /api/affiliate/payout/admin/process`
+
 Process an approved payout (admin only).
 
 **Request:**
+
 ```json
 {
   "payoutId": "payout_id"
@@ -370,9 +414,11 @@ Process an approved payout (admin only).
 ### Marketing Materials
 
 #### `GET /api/affiliate/materials`
+
 Get marketing materials and promotional content.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -391,9 +437,11 @@ Get marketing materials and promotional content.
 ### Fraud Detection 🔒
 
 #### `GET /api/affiliate/fraud?affiliateId=xxx`
+
 Get fraud detection report (admin only).
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -413,9 +461,11 @@ Get fraud detection report (admin only).
 ```
 
 #### `POST /api/affiliate/fraud`
+
 Flag affiliate for fraud (admin only).
 
 **Request:**
+
 ```json
 {
   "affiliateId": "affiliate_id",
@@ -437,6 +487,7 @@ All endpoints return errors in this format:
 ```
 
 **Common Status Codes:**
+
 - `200` - Success
 - `201` - Created
 - `400` - Bad Request
@@ -457,8 +508,8 @@ const response = await fetch('/api/affiliate/track', {
   body: JSON.stringify({
     code: referralCode,
     userId: newUser.id,
-    eventType: 'signup'
-  })
+    eventType: 'signup',
+  }),
 });
 ```
 
@@ -473,8 +524,8 @@ const response = await fetch('/api/affiliate/commission/process', {
     userId: user.id,
     amount: purchaseAmount,
     transactionType: 'credit_purchase',
-    referenceId: transactionId
-  })
+    referenceId: transactionId,
+  }),
 });
 ```
 
@@ -488,8 +539,8 @@ const response = await fetch('/api/affiliate/payout/request', {
   body: JSON.stringify({
     amount: 10000, // $100.00 in cents
     method: 'PAYPAL',
-    notes: 'Monthly payout'
-  })
+    notes: 'Monthly payout',
+  }),
 });
 ```
 

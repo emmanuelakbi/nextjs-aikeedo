@@ -110,7 +110,6 @@ This service validates the following requirements:
 - **Property 1 (Credit deduction atomicity)**: Credits are deducted if and only if generation completes successfully
 - **Property 7 (Credit refund on failure)**: Credits are refunded when generation fails
 
-
 ---
 
 # Subscription Service
@@ -156,11 +155,12 @@ window.location.href = session.url;
 // In your webhook handler
 const stripeSubscription = event.data.object as Stripe.Subscription;
 
-const subscription = await subscriptionService.syncSubscriptionFromStripe(
-  stripeSubscription
-);
+const subscription =
+  await subscriptionService.syncSubscriptionFromStripe(stripeSubscription);
 
-console.log(`Subscription ${subscription.id} synced with status: ${subscription.status}`);
+console.log(
+  `Subscription ${subscription.id} synced with status: ${subscription.status}`
+);
 ```
 
 ### Update Subscription (Upgrade/Downgrade)
@@ -202,16 +202,16 @@ const canceledSubscription = await subscriptionService.cancelSubscription({
 
 ```typescript
 // Reactivate a subscription scheduled for cancellation
-const reactivatedSubscription = await subscriptionService.reactivateSubscription(
-  'sub-123'
-);
+const reactivatedSubscription =
+  await subscriptionService.reactivateSubscription('sub-123');
 ```
 
 ### Check Active Subscription
 
 ```typescript
 // Check if workspace has an active subscription
-const hasActive = await subscriptionService.hasActiveSubscription('workspace-123');
+const hasActive =
+  await subscriptionService.hasActiveSubscription('workspace-123');
 
 if (!hasActive) {
   console.log('Workspace does not have an active subscription');
@@ -222,14 +222,12 @@ if (!hasActive) {
 
 ```typescript
 // Get subscription by workspace ID
-const subscription = await subscriptionService.getSubscriptionByWorkspaceId(
-  'workspace-123'
-);
+const subscription =
+  await subscriptionService.getSubscriptionByWorkspaceId('workspace-123');
 
 // Get subscription by Stripe subscription ID
-const subscription = await subscriptionService.getSubscriptionByStripeId(
-  'sub_1234567890'
-);
+const subscription =
+  await subscriptionService.getSubscriptionByStripeId('sub_1234567890');
 ```
 
 ## Error Handling

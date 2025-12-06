@@ -54,7 +54,9 @@ describe('Stripe Utilities', () => {
     });
 
     it('should return original status for unknown statuses', () => {
-      expect(getSubscriptionStatusText('unknown_status')).toBe('unknown_status');
+      expect(getSubscriptionStatusText('unknown_status')).toBe(
+        'unknown_status'
+      );
     });
   });
 

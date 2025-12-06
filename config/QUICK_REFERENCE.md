@@ -20,6 +20,7 @@ npm run dev
 ## 📋 Common Tasks
 
 ### Disable a Feature
+
 ```typescript
 // custom.config.ts
 export const customConfig = {
@@ -30,6 +31,7 @@ export const customConfig = {
 ```
 
 ### Change Credit Rates
+
 ```typescript
 credits: {
   text: { 'gpt-4': 20 },
@@ -38,6 +40,7 @@ credits: {
 ```
 
 ### Adjust Rate Limits
+
 ```typescript
 rateLimits: {
   api: { default: 120 },
@@ -45,6 +48,7 @@ rateLimits: {
 ```
 
 ### Customize Branding
+
 ```typescript
 ui: {
   branding: {
@@ -54,6 +58,7 @@ ui: {
 ```
 
 ### Change Affiliate Commission
+
 ```typescript
 affiliate: {
   commissionRate: 0.15,  // 15%
@@ -62,14 +67,14 @@ affiliate: {
 
 ## 🛠️ CLI Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run config:view` | View all configuration |
-| `npm run config:view credits` | View specific section |
-| `npm run config:validate` | Validate configuration |
-| `npm run config:init` | Create custom config |
-| `npm run config:diff` | Show differences |
-| `npm run find:hardcoded` | Find hard-coded values |
+| Command                       | Description            |
+| ----------------------------- | ---------------------- |
+| `npm run config:view`         | View all configuration |
+| `npm run config:view credits` | View specific section  |
+| `npm run config:validate`     | Validate configuration |
+| `npm run config:init`         | Create custom config   |
+| `npm run config:diff`         | Show differences       |
+| `npm run find:hardcoded`      | Find hard-coded values |
 
 ## 📁 File Structure
 
@@ -86,25 +91,25 @@ config/
 
 ## 🔧 Configuration Sections
 
-| Section | What It Controls |
-|---------|------------------|
-| `features` | Enable/disable features |
-| `aiProviders` | AI provider settings |
-| `credits` | Pricing for AI operations |
-| `subscriptionPlans` | Subscription tiers |
-| `affiliate` | Affiliate program settings |
-| `rateLimits` | API rate limits |
-| `circuitBreaker` | Failure handling |
-| `retry` | Retry logic |
-| `session` | Session management |
-| `security` | Security settings |
-| `email` | Email configuration |
-| `pagination` | Pagination defaults |
-| `cache` | Cache TTL settings |
-| `auditLog` | Audit logging |
-| `moderation` | Content moderation |
-| `ui` | Branding and UI |
-| `development` | Dev settings |
+| Section             | What It Controls           |
+| ------------------- | -------------------------- |
+| `features`          | Enable/disable features    |
+| `aiProviders`       | AI provider settings       |
+| `credits`           | Pricing for AI operations  |
+| `subscriptionPlans` | Subscription tiers         |
+| `affiliate`         | Affiliate program settings |
+| `rateLimits`        | API rate limits            |
+| `circuitBreaker`    | Failure handling           |
+| `retry`             | Retry logic                |
+| `session`           | Session management         |
+| `security`          | Security settings          |
+| `email`             | Email configuration        |
+| `pagination`        | Pagination defaults        |
+| `cache`             | Cache TTL settings         |
+| `auditLog`          | Audit logging              |
+| `moderation`        | Content moderation         |
+| `ui`                | Branding and UI            |
+| `development`       | Dev settings               |
 
 ## 💡 Usage in Code
 
@@ -154,12 +159,12 @@ Later overrides earlier.
 
 ## 🆘 Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| Changes not working | Restart server |
-| Type errors | Check types in `app.config.ts` |
-| Validation fails | Run `npm run config:validate` |
-| Can't find config | Check file exists: `config/custom.config.ts` |
+| Problem             | Solution                                     |
+| ------------------- | -------------------------------------------- |
+| Changes not working | Restart server                               |
+| Type errors         | Check types in `app.config.ts`               |
+| Validation fails    | Run `npm run config:validate`                |
+| Can't find config   | Check file exists: `config/custom.config.ts` |
 
 ## 🔍 Find Hard-Coded Values
 
@@ -179,7 +184,7 @@ export const customConfig = {
     voiceCloning: false,
     affiliateProgram: false,
   },
-  
+
   // Adjust pricing
   credits: {
     text: {
@@ -188,7 +193,7 @@ export const customConfig = {
     },
     trialCredits: 500,
   },
-  
+
   // Customize plans
   subscriptionPlans: {
     starter: {
@@ -196,14 +201,14 @@ export const customConfig = {
       price: 14.99,
     },
   },
-  
+
   // Adjust limits
   rateLimits: {
     api: {
       default: 120,
     },
   },
-  
+
   // Customize branding
   ui: {
     branding: {

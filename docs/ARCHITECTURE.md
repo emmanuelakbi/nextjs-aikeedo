@@ -530,7 +530,7 @@ The application uses a centralized Dependency Injection (DI) container that mana
 interface Container {
   readonly userRepository: IUserRepository;
   readonly workspaceRepository: IWorkspaceRepository;
-  
+
   createGetUserUseCase(): GetUserUseCase;
   createUpdateProfileUseCase(): UpdateProfileUseCase;
   // ... other factory methods
@@ -540,16 +540,16 @@ interface Container {
 class DIContainer implements Container {
   private static instance: DIContainer;
   private _userRepository?: IUserRepository;
-  
+
   private constructor() {}
-  
+
   public static getInstance(): DIContainer {
     if (!DIContainer.instance) {
       DIContainer.instance = new DIContainer();
     }
     return DIContainer.instance;
   }
-  
+
   // Lazy-loaded repository getter
   public get userRepository(): IUserRepository {
     if (!this._userRepository) {
@@ -557,7 +557,7 @@ class DIContainer implements Container {
     }
     return this._userRepository;
   }
-  
+
   // Use case factory method
   public createGetUserUseCase(): GetUserUseCase {
     return new GetUserUseCase(this.userRepository);

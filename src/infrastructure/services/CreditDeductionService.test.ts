@@ -9,7 +9,10 @@ import { UserRepository } from '../repositories/UserRepository';
 import { Workspace } from '../../domain/workspace/entities/Workspace';
 import { User } from '../../domain/user/entities/User';
 import { prisma } from '../../lib/db';
-import { createTestFixtures, type TestFixtures } from '../../lib/testing/test-fixtures';
+import {
+  createTestFixtures,
+  type TestFixtures,
+} from '../../lib/testing/test-fixtures';
 
 /**
  * Unit tests for CreditDeductionService
@@ -35,9 +38,11 @@ describe('CreditDeductionService', () => {
 
     // Use test fixtures
     fixtures = await createTestFixtures({ workspace: { credits: 1000 } });
-    
+
     // Load workspace and user entities
-    testWorkspace = (await workspaceRepository.findById(fixtures.workspace.id))!;
+    testWorkspace = (await workspaceRepository.findById(
+      fixtures.workspace.id
+    ))!;
     testWorkspaceId = fixtures.workspace.id;
     testUser = (await userRepository.findById(fixtures.user.id))!;
     testUserId = fixtures.user.id;

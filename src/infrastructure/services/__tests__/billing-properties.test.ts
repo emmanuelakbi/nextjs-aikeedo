@@ -9,7 +9,7 @@ import { runPropertyTest } from '../../../lib/testing/property-test-helpers';
 
 /**
  * Property-Based Tests for Billing Module
- * 
+ *
  * These tests validate the correctness properties defined in the design document.
  * Each property test runs 100+ iterations with randomly generated data.
  */
@@ -36,7 +36,10 @@ describe('Billing Module - Property-Based Tests', () => {
   }
 
   // Helper to create a test workspace
-  async function createTestWorkspace(ownerId: string, creditCount: number = 1000) {
+  async function createTestWorkspace(
+    ownerId: string,
+    creditCount: number = 1000
+  ) {
     const workspace = await prisma.workspace.create({
       data: {
         name: `Test Workspace ${Date.now()}`,
@@ -50,7 +53,11 @@ describe('Billing Module - Property-Based Tests', () => {
   }
 
   // Helper to create a test plan
-  async function createTestPlan(price: number, interval: PlanInterval, creditCount: number | null) {
+  async function createTestPlan(
+    price: number,
+    interval: PlanInterval,
+    creditCount: number | null
+  ) {
     const plan = await prisma.plan.create({
       data: {
         name: `Test Plan ${Date.now()}`,
@@ -104,7 +111,7 @@ describe('Billing Module - Property-Based Tests', () => {
   /**
    * Property 2: Proration accuracy
    * Feature: nextjs-billing, Property 2: Proration accuracy
-   * 
+   *
    * For any plan change, prorated charges should be calculated correctly based on remaining days
    * Validates: Requirements 9.1, 9.2, 9.4
    */
@@ -133,8 +140,13 @@ describe('Billing Module - Property-Based Tests', () => {
 
           // Calculate dates
           const now = new Date();
-          const periodStart = new Date(now.getTime() - (totalDays - effectiveDaysRemaining) * 24 * 60 * 60 * 1000);
-          const periodEnd = new Date(now.getTime() + effectiveDaysRemaining * 24 * 60 * 60 * 1000);
+          const periodStart = new Date(
+            now.getTime() -
+              (totalDays - effectiveDaysRemaining) * 24 * 60 * 60 * 1000
+          );
+          const periodEnd = new Date(
+            now.getTime() + effectiveDaysRemaining * 24 * 60 * 60 * 1000
+          );
 
           // Use the private method through reflection (for testing purposes)
           const calculation = (prorationService as any).calculateDailyProration(
@@ -147,8 +159,12 @@ describe('Billing Module - Property-Based Tests', () => {
 
           // Verify proration calculation
           const tolerance = 0.02; // Allow 2 cent tolerance for rounding
-          const proratedDiff = Math.abs(calculation.proratedAmount - expectedProrated);
-          const creditDiff = Math.abs(calculation.creditAmount - expectedCredit);
+          const proratedDiff = Math.abs(
+            calculation.proratedAmount - expectedProrated
+          );
+          const creditDiff = Math.abs(
+            calculation.creditAmount - expectedCredit
+          );
 
           return proratedDiff <= tolerance && creditDiff <= tolerance;
         },
@@ -165,8 +181,13 @@ describe('Billing Module - Property-Based Tests', () => {
         async ([currentPrice, newPrice, daysRemaining, totalDays]) => {
           const effectiveDaysRemaining = Math.min(daysRemaining, totalDays);
           const now = new Date();
-          const periodStart = new Date(now.getTime() - (totalDays - effectiveDaysRemaining) * 24 * 60 * 60 * 1000);
-          const periodEnd = new Date(now.getTime() + effectiveDaysRemaining * 24 * 60 * 60 * 1000);
+          const periodStart = new Date(
+            now.getTime() -
+              (totalDays - effectiveDaysRemaining) * 24 * 60 * 60 * 1000
+          );
+          const periodEnd = new Date(
+            now.getTime() + effectiveDaysRemaining * 24 * 60 * 60 * 1000
+          );
 
           const calculation = (prorationService as any).calculateDailyProration(
             currentPrice,
@@ -177,7 +198,9 @@ describe('Billing Module - Property-Based Tests', () => {
           );
 
           // Both proration and credit should never be negative
-          return calculation.proratedAmount >= 0 && calculation.creditAmount >= 0;
+          return (
+            calculation.proratedAmount >= 0 && calculation.creditAmount >= 0
+          );
         },
         { numRuns: 100 }
       );
@@ -187,7 +210,7 @@ describe('Billing Module - Property-Based Tests', () => {
   /**
    * Property 3: Trial uniqueness
    * Feature: nextjs-billing, Property 3: Trial uniqueness
-   * 
+   *
    * For any workspace, only one trial should be allowed per lifetime
    * Validates: Requirements 8.4
    */
@@ -205,7 +228,9 @@ describe('Billing Module - Property-Based Tests', () => {
       await trialService.markTrialAsUsed(workspace.id);
 
       // Second trial check should not be eligible
-      const secondCheck = await trialService.checkTrialEligibility(workspace.id);
+      const secondCheck = await trialService.checkTrialEligibility(
+        workspace.id
+      );
       expect(secondCheck.isEligible).toBe(false);
       expect(secondCheck.hasUsedTrial).toBe(true);
       expect(secondCheck.reason).toContain('already used trial');
@@ -225,7 +250,9 @@ describe('Billing Module - Property-Based Tests', () => {
 
           // Perform multiple eligibility checks
           for (let i = 0; i < numChecks; i++) {
-            const check = await trialService.checkTrialEligibility(workspace.id);
+            const check = await trialService.checkTrialEligibility(
+              workspace.id
+            );
             if (check.isEligible || !check.hasUsedTrial) {
               return false;
             }
@@ -241,7 +268,7 @@ describe('Billing Module - Property-Based Tests', () => {
   /**
    * Property 5: Credit consistency
    * Feature: nextjs-billing, Property 5: Credit consistency
-   * 
+   *
    * For any subscription, workspace credits should match plan allocation
    * Validates: Requirements 2.2, 3.1
    */
@@ -257,7 +284,11 @@ describe('Billing Module - Property-Based Tests', () => {
         async (creditCount) => {
           const user = await createTestUser();
           const workspace = await createTestWorkspace(user.id, 0);
-          const plan = await createTestPlan(999, PlanInterval.MONTH, creditCount);
+          const plan = await createTestPlan(
+            999,
+            PlanInterval.MONTH,
+            creditCount
+          );
 
           // Simulate credit allocation (as would happen in subscription activation)
           if (creditCount !== null) {
@@ -274,8 +305,10 @@ describe('Billing Module - Property-Based Tests', () => {
               where: { id: workspace.id },
             });
 
-            return updatedWorkspace?.creditCount === creditCount &&
-                   updatedWorkspace?.allocatedCredits === creditCount;
+            return (
+              updatedWorkspace?.creditCount === creditCount &&
+              updatedWorkspace?.allocatedCredits === creditCount
+            );
           }
 
           // For unlimited plans, credits should remain unchanged
@@ -289,10 +322,10 @@ describe('Billing Module - Property-Based Tests', () => {
       const user = await createTestUser();
       const workspace = await createTestWorkspace(user.id, 0);
 
-      const creditAmounts = fc.array(
-        fc.integer({ min: 100, max: 10000 }),
-        { minLength: 1, maxLength: 5 }
-      );
+      const creditAmounts = fc.array(fc.integer({ min: 100, max: 10000 }), {
+        minLength: 1,
+        maxLength: 5,
+      });
 
       await runPropertyTest(
         creditAmounts,
@@ -317,8 +350,10 @@ describe('Billing Module - Property-Based Tests', () => {
           });
 
           const lastAmount = amounts[amounts.length - 1];
-          return finalWorkspace?.creditCount === lastAmount &&
-                 finalWorkspace?.allocatedCredits === lastAmount;
+          return (
+            finalWorkspace?.creditCount === lastAmount &&
+            finalWorkspace?.allocatedCredits === lastAmount
+          );
         },
         { numRuns: 50 }
       );

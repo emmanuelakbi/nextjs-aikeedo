@@ -1,9 +1,9 @@
 /**
  * Application Configuration
- * 
+ *
  * Centralized configuration system for the entire application.
  * All configurable values should be defined here to avoid hard-coding.
- * 
+ *
  * This file serves as the single source of truth for:
  * - Feature flags
  * - Business rules
@@ -24,26 +24,26 @@ export const features = {
   authentication: true,
   workspaces: true,
   billing: true,
-  
+
   // AI services
   textGeneration: true,
   imageGeneration: true,
   speechSynthesis: true,
   transcription: true,
   voiceCloning: true,
-  
+
   // Business features
   affiliateProgram: true,
   subscriptions: true,
   oneTimePurchases: true,
   trialPeriod: true,
-  
+
   // Admin features
   adminDashboard: true,
   userImpersonation: true,
   auditLogging: true,
   contentModeration: true,
-  
+
   // Advanced features
   fileUpload: true,
   documentManagement: true,
@@ -62,10 +62,10 @@ export const aiProviders = {
   google: true,
   mistral: true,
   openrouter: true,
-  
+
   // Fallback order when primary provider fails
   fallbackOrder: ['openai', 'anthropic', 'google', 'mistral'] as const,
-  
+
   // Default provider for each service type
   defaults: {
     text: 'openai',
@@ -87,27 +87,27 @@ export const credits = {
     'gpt-4-turbo': 20,
     'gpt-4o': 15,
     'gpt-3.5-turbo': 2,
-    
+
     // Anthropic models
     'claude-3-opus': 30,
     'claude-3-sonnet': 15,
     'claude-3-haiku': 5,
     'claude-3-5-sonnet': 15,
-    
+
     // Google models
     'gemini-pro': 10,
     'gemini-1.5-pro': 15,
     'gemini-1.5-flash': 5,
-    
+
     // Mistral models
     'mistral-large': 20,
     'mistral-medium': 10,
     'mistral-small': 5,
-    
+
     // Default fallback
     default: 10,
   } as Record<string, number>,
-  
+
   // Image generation rates (credits per image)
   image: {
     '256x256': 10,
@@ -116,16 +116,16 @@ export const credits = {
     '1792x1024': 60,
     '1024x1792': 60,
   } as Record<ImageSize, number>,
-  
+
   // Speech synthesis (credits per 1000 characters)
   speech: 5,
-  
+
   // Transcription (credits per minute)
   transcription: 3,
-  
+
   // Minimum credit balance to use services
   minimumBalance: 1,
-  
+
   // Free trial credits for new users
   trialCredits: 100,
 } as const;
@@ -167,17 +167,17 @@ export const subscriptionPlans = {
  */
 export const affiliate = {
   // Commission rates (percentage)
-  commissionRate: 0.20, // 20%
-  
+  commissionRate: 0.2, // 20%
+
   // Minimum payout amount
   minimumPayout: 50,
-  
+
   // Cookie duration (days)
   cookieDuration: 30,
-  
+
   // Commission duration (days after signup)
   commissionDuration: 365,
-  
+
   // Payout methods
   payoutMethods: ['paypal', 'bank_transfer', 'stripe'] as const,
 } as const;
@@ -194,7 +194,7 @@ export const rateLimits = {
     upload: 10,
     auth: 5,
   },
-  
+
   // AI operations (per hour)
   aiOperations: {
     text: 100,
@@ -202,7 +202,7 @@ export const rateLimits = {
     speech: 50,
     transcription: 20,
   },
-  
+
   // File uploads
   upload: {
     maxFileSize: 10 * 1024 * 1024, // 10MB
@@ -262,10 +262,10 @@ export const security = {
   passwordRequireLowercase: true,
   passwordRequireNumbers: true,
   passwordRequireSpecialChars: true,
-  
+
   // CSRF protection
   csrfEnabled: true,
-  
+
   // Content Security Policy
   cspEnabled: true,
 } as const;
@@ -282,7 +282,7 @@ export const email = {
     invoice: 'invoice',
     payoutRequest: 'payout-request',
   },
-  
+
   // Email sending limits
   rateLimit: {
     perHour: 100,
@@ -310,7 +310,7 @@ export const cache = {
     workspace: 300, // 5 minutes
     usage: 60, // 1 minute
   },
-  
+
   // Enable/disable caching
   enabled: true,
 } as const;
@@ -327,7 +327,7 @@ export const auditLog = {
     aiUsage: true,
     fileUpload: true,
   },
-  
+
   // Retention period (days)
   retentionDays: 90,
 } as const;
@@ -338,10 +338,10 @@ export const auditLog = {
 export const moderation = {
   // Auto-moderation enabled
   enabled: true,
-  
+
   // Moderation providers
   providers: ['openai'] as const,
-  
+
   // Actions on flagged content
   autoBlock: false,
   requireReview: true,
@@ -356,7 +356,7 @@ export const ui = {
     defaultMode: 'light' as 'light' | 'dark' | 'system',
     allowToggle: true,
   },
-  
+
   // Branding
   branding: {
     appName: 'AIKEEDO',
@@ -364,7 +364,7 @@ export const ui = {
     logo: '/logo.png',
     favicon: '/favicon.ico',
   },
-  
+
   // Toast notifications
   toast: {
     duration: 5000, // 5 seconds
@@ -378,10 +378,10 @@ export const ui = {
 export const development = {
   // Enable debug mode
   debug: process.env.NODE_ENV === 'development',
-  
+
   // Mock external services
   mockServices: false,
-  
+
   // Seed database on startup
   autoSeed: false,
 } as const;

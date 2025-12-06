@@ -13,7 +13,9 @@ interface WorkspaceDetailClientProps {
   workspaceId: string;
 }
 
-export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProps) {
+export function WorkspaceDetailClient({
+  workspaceId,
+}: WorkspaceDetailClientProps) {
   const router = useRouter();
   const [workspace, setWorkspace] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -60,11 +62,14 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
     }
 
     try {
-      const response = await fetch(`/api/admin/workspaces/${workspaceId}/credits`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(creditAdjustment),
-      });
+      const response = await fetch(
+        `/api/admin/workspaces/${workspaceId}/credits`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(creditAdjustment),
+        }
+      );
 
       if (response.ok) {
         setShowCreditModal(false);
@@ -81,7 +86,11 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
   };
 
   const handleDelete = async () => {
-    if (!confirm(`Are you sure you want to delete this workspace? This action cannot be undone.`)) {
+    if (
+      !confirm(
+        `Are you sure you want to delete this workspace? This action cannot be undone.`
+      )
+    ) {
       return;
     }
 
@@ -137,7 +146,8 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
           </button>
           <h1 className="text-3xl font-bold">{workspace.name}</h1>
           <p className="text-gray-600">
-            Owner: {workspace.owner.firstName} {workspace.owner.lastName} ({workspace.owner.email})
+            Owner: {workspace.owner.firstName} {workspace.owner.lastName} (
+            {workspace.owner.email})
           </p>
         </div>
         <div className="flex gap-2">
@@ -162,16 +172,22 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <p className="text-sm text-gray-600">Current Balance</p>
-            <p className="text-3xl font-bold">{workspace.creditCount.toLocaleString()}</p>
+            <p className="text-3xl font-bold">
+              {workspace.creditCount.toLocaleString()}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Allocated Credits</p>
-            <p className="text-3xl font-bold">{workspace.allocatedCredits.toLocaleString()}</p>
+            <p className="text-3xl font-bold">
+              {workspace.allocatedCredits.toLocaleString()}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Purchased Credits</p>
             <p className="text-3xl font-bold">
-              {(workspace.creditCount - workspace.allocatedCredits).toLocaleString()}
+              {(
+                workspace.creditCount - workspace.allocatedCredits
+              ).toLocaleString()}
             </p>
           </div>
         </div>
@@ -204,7 +220,9 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
           </div>
           <div>
             <p className="text-sm text-gray-600">Conversations</p>
-            <p className="text-2xl font-bold">{workspace._count.conversations}</p>
+            <p className="text-2xl font-bold">
+              {workspace._count.conversations}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Generations</p>
@@ -219,7 +237,9 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
 
       {/* Recent Credit Transactions */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Recent Credit Transactions</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Recent Credit Transactions
+        </h2>
         {workspace.creditTransactions.length === 0 ? (
           <p className="text-gray-600">No transactions yet</p>
         ) : (
@@ -236,7 +256,9 @@ export function WorkspaceDetailClient({ workspaceId }: WorkspaceDetailClientProp
                   </p>
                   <p className="text-sm text-gray-600">{transaction.type}</p>
                   {transaction.description && (
-                    <p className="text-xs text-gray-500">{transaction.description}</p>
+                    <p className="text-xs text-gray-500">
+                      {transaction.description}
+                    </p>
                   )}
                 </div>
                 <div className="text-right">

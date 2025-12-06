@@ -3,8 +3,14 @@
  * Provides convenient access to Stripe service and related utilities
  */
 
-import { stripeService, StripeService } from '../infrastructure/services/StripeService';
-import { subscriptionService, SubscriptionService } from '../infrastructure/services/SubscriptionService';
+import {
+  stripeService,
+  StripeService,
+} from '../infrastructure/services/StripeService';
+import {
+  subscriptionService,
+  SubscriptionService,
+} from '../infrastructure/services/SubscriptionService';
 import { stripeConfig } from './config';
 
 /**
@@ -128,9 +134,7 @@ export function formatCurrency(
  * @param status - Stripe subscription status
  * @returns Human-readable status text
  */
-export function getSubscriptionStatusText(
-  status: string
-): string {
+export function getSubscriptionStatusText(status: string): string {
   const statusMap: Record<string, string> = {
     active: 'Active',
     canceled: 'Canceled',

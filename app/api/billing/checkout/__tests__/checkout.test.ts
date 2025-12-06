@@ -1,6 +1,6 @@
 /**
  * Checkout API Tests
- * 
+ *
  * Tests for Stripe checkout flow endpoints
  * Requirements: 2.1, 2.2, 2.3, 2.4, 4.1, 4.2, 4.3, 8.4
  */
@@ -60,13 +60,16 @@ describe('POST /api/billing/checkout', () => {
   it('should return 401 if user is not authenticated', async () => {
     vi.mocked(auth).mockResolvedValue(null);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        planId: 'plan-123',
-        workspaceId: 'workspace-123',
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          planId: 'plan-123',
+          workspaceId: 'workspace-123',
+        }),
+      }
+    );
 
     const response = await checkoutPost(request);
     const data = await response.json();
@@ -80,13 +83,16 @@ describe('POST /api/billing/checkout', () => {
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        planId: 'invalid-uuid',
-        workspaceId: 'workspace-123',
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          planId: 'invalid-uuid',
+          workspaceId: 'workspace-123',
+        }),
+      }
+    );
 
     const response = await checkoutPost(request);
     const data = await response.json();
@@ -102,13 +108,16 @@ describe('POST /api/billing/checkout', () => {
 
     vi.mocked(prisma.workspace.findFirst).mockResolvedValue(null);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        planId: '123e4567-e89b-12d3-a456-426614174000',
-        workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          planId: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+        }),
+      }
+    );
 
     const response = await checkoutPost(request);
     const data = await response.json();
@@ -131,13 +140,16 @@ describe('POST /api/billing/checkout', () => {
       },
     } as any);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        planId: '123e4567-e89b-12d3-a456-426614174000',
-        workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          planId: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+        }),
+      }
+    );
 
     const response = await checkoutPost(request);
     const data = await response.json();
@@ -170,14 +182,17 @@ describe('POST /api/billing/checkout', () => {
       url: 'https://checkout.stripe.com/test',
     } as any);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        planId: '123e4567-e89b-12d3-a456-426614174000',
-        workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-        trialDays: 14,
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          planId: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          trialDays: 14,
+        }),
+      }
+    );
 
     const response = await checkoutPost(request);
     const data = await response.json();
@@ -213,14 +228,17 @@ describe('POST /api/billing/checkout', () => {
       url: 'https://checkout.stripe.com/test',
     } as any);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        planId: '123e4567-e89b-12d3-a456-426614174000',
-        workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-        trialDays: 14,
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          planId: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          trialDays: 14,
+        }),
+      }
+    );
 
     const response = await checkoutPost(request);
     const data = await response.json();
@@ -239,14 +257,17 @@ describe('POST /api/billing/credits/checkout', () => {
   it('should return 401 if user is not authenticated', async () => {
     vi.mocked(auth).mockResolvedValue(null);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/credits/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        workspaceId: 'workspace-123',
-        creditAmount: 1000,
-        pricePerCredit: 0.01,
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/credits/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          workspaceId: 'workspace-123',
+          creditAmount: 1000,
+          pricePerCredit: 0.01,
+        }),
+      }
+    );
 
     const response = await creditCheckoutPost(request);
     const data = await response.json();
@@ -270,14 +291,17 @@ describe('POST /api/billing/credits/checkout', () => {
       url: 'https://checkout.stripe.com/test',
     } as any);
 
-    const request = new NextRequest('http://localhost:3000/api/billing/credits/checkout', {
-      method: 'POST',
-      body: JSON.stringify({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-        creditAmount: 1000,
-        pricePerCredit: 0.01,
-      }),
-    });
+    const request = new NextRequest(
+      'http://localhost:3000/api/billing/credits/checkout',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          creditAmount: 1000,
+          pricePerCredit: 0.01,
+        }),
+      }
+    );
 
     const response = await creditCheckoutPost(request);
     const data = await response.json();

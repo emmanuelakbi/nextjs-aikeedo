@@ -48,10 +48,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!invoice) {
-      return NextResponse.json(
-        { error: 'Invoice not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
     }
 
     if (invoice.status !== 'PAID') {
@@ -74,11 +71,17 @@ export async function POST(request: NextRequest) {
     const refundAmount = amount || invoice.amount;
 
     // Get the payment intent from the invoice
-    const stripeInvoice = await stripe.invoices.retrieve(invoice.stripeInvoiceId, {
-      expand: ['payment_intent'],
-    }) as Stripe.Invoice & { payment_intent?: Stripe.PaymentIntent | string };
-    
-    if (!stripeInvoice.payment_intent || typeof stripeInvoice.payment_intent === 'string') {
+    const stripeInvoice = (await stripe.invoices.retrieve(
+      invoice.stripeInvoiceId,
+      {
+        expand: ['payment_intent'],
+      }
+    )) as Stripe.Invoice & { payment_intent?: Stripe.PaymentIntent | string };
+
+    if (
+      !stripeInvoice.payment_intent ||
+      typeof stripeInvoice.payment_intent === 'string'
+    ) {
       return NextResponse.json(
         { error: 'Invoice has no payment intent' },
         { status: 400 }
@@ -86,9 +89,10 @@ export async function POST(request: NextRequest) {
     }
 
     const refund = await stripe.refunds.create({
-      payment_intent: typeof stripeInvoice.payment_intent === 'string' 
-        ? stripeInvoice.payment_intent 
-        : stripeInvoice.payment_intent.id,
+      payment_intent:
+        typeof stripeInvoice.payment_intent === 'string'
+          ? stripeInvoice.payment_intent
+          : stripeInvoice.payment_intent.id,
       amount: Math.round(refundAmount * 100), // Convert to cents
       reason: 'requested_by_customer',
       metadata: {

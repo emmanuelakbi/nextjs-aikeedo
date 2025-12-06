@@ -146,11 +146,14 @@ const WorkspaceList: React.FC<WorkspaceListProps> = ({
                       </svg>
                       <span>
                         Created{' '}
-                        {new Date(workspace.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
+                        {new Date(workspace.createdAt).toLocaleDateString(
+                          'en-US',
+                          {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          }
+                        )}
                       </span>
                     </div>
                   </div>

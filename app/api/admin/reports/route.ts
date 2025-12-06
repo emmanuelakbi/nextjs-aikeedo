@@ -335,8 +335,14 @@ async function generateAIUsageReport(startDate: Date, endDate: Date) {
     _count: true,
   });
 
-  const totalCredits = generations.reduce((sum: number, gen: { credits: number }) => sum + gen.credits, 0);
-  const totalTokens = generations.reduce((sum: number, gen: { tokens: number }) => sum + gen.tokens, 0);
+  const totalCredits = generations.reduce(
+    (sum: number, gen: { credits: number }) => sum + gen.credits,
+    0
+  );
+  const totalTokens = generations.reduce(
+    (sum: number, gen: { tokens: number }) => sum + gen.tokens,
+    0
+  );
 
   return {
     summary: {
@@ -398,7 +404,10 @@ async function generateFinancialReport(startDate: Date, endDate: Date) {
     }),
   ]);
 
-  const totalRefunds = expenses.reduce((sum: number, tx: { amount: number }) => sum + Math.abs(tx.amount), 0);
+  const totalRefunds = expenses.reduce(
+    (sum: number, tx: { amount: number }) => sum + Math.abs(tx.amount),
+    0
+  );
 
   return {
     summary: {
@@ -472,11 +481,13 @@ async function generateSubscriptionReport(startDate: Date, endDate: Date) {
   });
 
   const churnedSubscriptions = subscriptions.filter(
-    (sub: { canceledAt: Date | null }) => sub.canceledAt && sub.canceledAt >= startDate && sub.canceledAt <= endDate
+    (sub: { canceledAt: Date | null }) =>
+      sub.canceledAt && sub.canceledAt >= startDate && sub.canceledAt <= endDate
   );
 
   const newSubscriptions = subscriptions.filter(
-    (sub: { createdAt: Date }) => sub.createdAt >= startDate && sub.createdAt <= endDate
+    (sub: { createdAt: Date }) =>
+      sub.createdAt >= startDate && sub.createdAt <= endDate
   );
 
   return {
@@ -484,9 +495,10 @@ async function generateSubscriptionReport(startDate: Date, endDate: Date) {
       totalSubscriptions: subscriptions.length,
       newSubscriptions: newSubscriptions.length,
       churnedSubscriptions: churnedSubscriptions.length,
-      churnRate: subscriptions.length > 0
-        ? (churnedSubscriptions.length / subscriptions.length) * 100
-        : 0,
+      churnRate:
+        subscriptions.length > 0
+          ? (churnedSubscriptions.length / subscriptions.length) * 100
+          : 0,
       statusBreakdown,
       planBreakdown,
     },

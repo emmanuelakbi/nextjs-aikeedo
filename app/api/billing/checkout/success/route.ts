@@ -19,10 +19,7 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate query parameters
@@ -33,9 +30,9 @@ export async function GET(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { 
+        {
           error: 'Invalid session ID',
-          details: validationResult.error.issues 
+          details: validationResult.error.issues,
         },
         { status: 400 }
       );
@@ -44,7 +41,8 @@ export async function GET(request: NextRequest) {
     const { session_id } = validationResult.data;
 
     // Retrieve checkout session from Stripe
-    const checkoutSession = await stripeService.retrieveCheckoutSession(session_id);
+    const checkoutSession =
+      await stripeService.retrieveCheckoutSession(session_id);
 
     // Verify session belongs to the authenticated user
     const workspaceId = checkoutSession.metadata?.workspaceId;
@@ -58,13 +56,15 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if payment was successful
-    if (checkoutSession.payment_status !== 'paid' && 
-        checkoutSession.status !== 'complete') {
+    if (
+      checkoutSession.payment_status !== 'paid' &&
+      checkoutSession.status !== 'complete'
+    ) {
       return NextResponse.json(
-        { 
+        {
           error: 'Payment not completed',
           status: checkoutSession.payment_status,
-          sessionStatus: checkoutSession.status
+          sessionStatus: checkoutSession.status,
         },
         { status: 400 }
       );
@@ -73,11 +73,15 @@ export async function GET(request: NextRequest) {
     // Get subscription details
     let subscription = null;
     if (checkoutSession.subscription) {
-      const stripeSubscriptionId = typeof checkoutSession.subscription === 'string'
-        ? checkoutSession.subscription
-        : checkoutSession.subscription.id;
+      const stripeSubscriptionId =
+        typeof checkoutSession.subscription === 'string'
+          ? checkoutSession.subscription
+          : checkoutSession.subscription.id;
 
-      subscription = await subscriptionService.getSubscriptionByStripeId(stripeSubscriptionId);
+      subscription =
+        await subscriptionService.getSubscriptionByStripeId(
+          stripeSubscriptionId
+        );
     }
 
     return NextResponse.json({
@@ -87,17 +91,18 @@ export async function GET(request: NextRequest) {
       customerEmail: checkoutSession.customer_email,
       amountTotal: checkoutSession.amount_total,
       currency: checkoutSession.currency,
-      subscription: subscription ? {
-        id: subscription.id,
-        status: subscription.status,
-        currentPeriodEnd: subscription.currentPeriodEnd,
-        trialEnd: subscription.trialEnd,
-      } : null,
+      subscription: subscription
+        ? {
+            id: subscription.id,
+            status: subscription.status,
+            currentPeriodEnd: subscription.currentPeriodEnd,
+            trialEnd: subscription.trialEnd,
+          }
+        : null,
     });
-
   } catch (error) {
     console.error('Error retrieving checkout session:', error);
-    
+
     if (error instanceof Error) {
       if (error.message.includes('No such checkout.session')) {
         return NextResponse.json(
@@ -106,10 +111,7 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     return NextResponse.json(

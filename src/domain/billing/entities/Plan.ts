@@ -75,7 +75,9 @@ export class Plan {
     }
 
     if (createProps.creditCount !== null && createProps.creditCount < 0) {
-      throw new Error('Credit count must be non-negative or null for unlimited');
+      throw new Error(
+        'Credit count must be non-negative or null for unlimited'
+      );
     }
 
     if (!createProps.stripeProductId?.trim()) {
@@ -151,7 +153,9 @@ export class Plan {
 
     if (data.creditCount !== undefined) {
       if (data.creditCount !== null && data.creditCount < 0) {
-        throw new Error('Credit count must be non-negative or null for unlimited');
+        throw new Error(
+          'Credit count must be non-negative or null for unlimited'
+        );
       }
       this.props.creditCount = data.creditCount;
     }

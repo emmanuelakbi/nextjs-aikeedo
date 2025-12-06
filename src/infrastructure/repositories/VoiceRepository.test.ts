@@ -9,7 +9,10 @@ import { VoiceEntity } from '../../domain/voice/entities/Voice';
 import { FileEntity } from '../../domain/file/entities/File';
 import { FileRepository } from './FileRepository';
 import { prisma } from '../../lib/db';
-import { createTestFixtures, type TestFixtures } from '../../lib/testing/test-fixtures';
+import {
+  createTestFixtures,
+  type TestFixtures,
+} from '../../lib/testing/test-fixtures';
 
 describe('VoiceRepository', () => {
   let repository: VoiceRepository;

@@ -3,12 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Button,
-  Spinner,
-  ErrorMessage,
-  SuccessMessage,
-} from '@/components/ui';
+import { Button, Spinner, ErrorMessage, SuccessMessage } from '@/components/ui';
 
 /**
  * Email Verification Page

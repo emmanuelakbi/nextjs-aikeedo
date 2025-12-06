@@ -5,10 +5,10 @@ import { PlanInterval, SubscriptionStatus } from '@prisma/client';
 
 /**
  * Unit Tests for ProrationService
- * 
+ *
  * Tests proration calculations for subscription changes, including
  * upgrade charges and downgrade credits.
- * 
+ *
  * Requirements: 9.1, 9.2, 9.4, 9.5
  */
 
@@ -48,7 +48,10 @@ describe('ProrationService', () => {
   }
 
   // Helper to create a test plan
-  async function createTestPlan(price: number, interval: PlanInterval = PlanInterval.MONTH) {
+  async function createTestPlan(
+    price: number,
+    interval: PlanInterval = PlanInterval.MONTH
+  ) {
     const plan = await prisma.plan.create({
       data: {
         name: `Test Plan ${price}`,
@@ -75,8 +78,12 @@ describe('ProrationService', () => {
     daysIntoMonth: number = 0
   ) {
     const now = new Date();
-    const periodStart = new Date(now.getTime() - daysIntoMonth * 24 * 60 * 60 * 1000);
-    const periodEnd = new Date(periodStart.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const periodStart = new Date(
+      now.getTime() - daysIntoMonth * 24 * 60 * 60 * 1000
+    );
+    const periodEnd = new Date(
+      periodStart.getTime() + 30 * 24 * 60 * 60 * 1000
+    );
 
     const subscription = await prisma.subscription.create({
       data: {
@@ -133,7 +140,11 @@ describe('ProrationService', () => {
       const newPlan = await createTestPlan(2000); // $20
 
       // Create subscription 10 days into the month
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 10);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        10
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -155,7 +166,11 @@ describe('ProrationService', () => {
       const newPlan = await createTestPlan(1000); // $10
 
       // Create subscription 10 days into the month
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 10);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        10
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -177,7 +192,11 @@ describe('ProrationService', () => {
       const newPlan = await createTestPlan(6000); // $60 (6000 cents)
 
       // Create subscription exactly 15 days into a 30-day month
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 15);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        15
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -211,7 +230,10 @@ describe('ProrationService', () => {
       const user = await createTestUser();
       const workspace = await createTestWorkspace(user.id);
       const currentPlan = await createTestPlan(1000);
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id
+      );
 
       await expect(
         prorationService.calculateProration({
@@ -233,7 +255,10 @@ describe('ProrationService', () => {
         data: { isActive: false },
       });
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id
+      );
 
       await expect(
         prorationService.calculateProration({
@@ -249,7 +274,10 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(1000, PlanInterval.MONTH);
       const newPlan = await createTestPlan(10000, PlanInterval.YEAR);
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id
+      );
 
       await expect(
         prorationService.calculateProration({
@@ -265,7 +293,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(1000);
       const newPlan = await createTestPlan(1000);
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 10);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        10
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -286,7 +318,11 @@ describe('ProrationService', () => {
       const newPlan = await createTestPlan(2000);
 
       // Create subscription at start of period (0 days in)
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 0);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        0
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -305,7 +341,11 @@ describe('ProrationService', () => {
       const newPlan = await createTestPlan(2000);
 
       // Create subscription 29 days into the month (1 day remaining)
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 29);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        29
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -325,7 +365,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(1000);
       const newPlan = await createTestPlan(2000);
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 15);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        15
+      );
 
       const details = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -337,7 +381,9 @@ describe('ProrationService', () => {
       expect(breakdown.summary).toContain('Upgrading');
       expect(breakdown.summary).toContain(newPlan.name);
       expect(breakdown.items.length).toBeGreaterThan(0);
-      expect(breakdown.items.some(item => item.label.includes('Immediate Charge'))).toBe(true);
+      expect(
+        breakdown.items.some((item) => item.label.includes('Immediate Charge'))
+      ).toBe(true);
     });
 
     it('should format downgrade breakdown correctly', async () => {
@@ -346,7 +392,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(2000);
       const newPlan = await createTestPlan(1000);
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 15);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        15
+      );
 
       const details = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -358,7 +408,9 @@ describe('ProrationService', () => {
       expect(breakdown.summary).toContain('Downgrading');
       expect(breakdown.summary).toContain(newPlan.name);
       expect(breakdown.items.length).toBeGreaterThan(0);
-      expect(breakdown.items.some(item => item.label.includes('Credit Applied'))).toBe(true);
+      expect(
+        breakdown.items.some((item) => item.label.includes('Credit Applied'))
+      ).toBe(true);
     });
 
     it('should include days remaining in breakdown', async () => {
@@ -367,7 +419,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(1000);
       const newPlan = await createTestPlan(2000);
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 10);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        10
+      );
 
       const details = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -377,9 +433,9 @@ describe('ProrationService', () => {
       const breakdown = prorationService.formatProrationBreakdown(details);
 
       expect(breakdown.summary).toContain('days');
-      expect(breakdown.items.some(item => 
-        item.description.includes('days')
-      )).toBe(true);
+      expect(
+        breakdown.items.some((item) => item.description.includes('days'))
+      ).toBe(true);
     });
   });
 
@@ -390,7 +446,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(1000);
       const newPlan = await createTestPlan(1001); // Only $0.01 difference
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 15);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        15
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -408,7 +468,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(1000);
       const newPlan = await createTestPlan(100000); // $1000
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 15);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        15
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,
@@ -426,7 +490,11 @@ describe('ProrationService', () => {
       const currentPlan = await createTestPlan(5000);
       const newPlan = await createTestPlan(1000);
 
-      const subscription = await createTestSubscription(workspace.id, currentPlan.id, 20);
+      const subscription = await createTestSubscription(
+        workspace.id,
+        currentPlan.id,
+        20
+      );
 
       const result = await prorationService.calculateProration({
         subscriptionId: subscription.id,

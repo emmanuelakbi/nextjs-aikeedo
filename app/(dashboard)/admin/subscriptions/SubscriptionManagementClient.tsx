@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from 'react';
 // SubscriptionStatus type
-type SubscriptionStatus = 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'TRIALING' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'UNPAID';
+type SubscriptionStatus =
+  | 'ACTIVE'
+  | 'CANCELED'
+  | 'PAST_DUE'
+  | 'TRIALING'
+  | 'INCOMPLETE'
+  | 'INCOMPLETE_EXPIRED'
+  | 'UNPAID';
 
 /**
  * Subscription Management Client Component
@@ -108,7 +115,9 @@ export function SubscriptionManagementClient() {
       return;
     }
 
-    const reason = prompt('Please provide a reason for cancellation (optional):');
+    const reason = prompt(
+      'Please provide a reason for cancellation (optional):'
+    );
 
     try {
       const response = await fetch(

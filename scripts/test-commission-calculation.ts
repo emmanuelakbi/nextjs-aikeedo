@@ -38,9 +38,7 @@ async function testCommissionCalculation() {
     console.log(`  Rate: ${(result1.rate * 100).toFixed(1)}%`);
     console.log(`  Commission: $${(result1.commission / 100).toFixed(2)}`);
     console.log(`  Expected: $10.00`);
-    console.log(
-      result1.commission === 1000 ? '  ✅ Pass\n' : '  ❌ Fail\n'
-    );
+    console.log(result1.commission === 1000 ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 2: Tier-Based Commission
     console.log('Test 2: Tier-Based Commission (Tier 2)');
@@ -55,9 +53,7 @@ async function testCommissionCalculation() {
     console.log(`  Applied Rate: ${(result2.rate * 100).toFixed(1)}%`);
     console.log(`  Commission: $${(result2.commission / 100).toFixed(2)}`);
     console.log(`  Expected: $11.00`);
-    console.log(
-      result2.commission === 1100 ? '  ✅ Pass\n' : '  ❌ Fail\n'
-    );
+    console.log(result2.commission === 1100 ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 3: Subscription Commission
     console.log('Test 3: Subscription Commission');
@@ -66,9 +62,7 @@ async function testCommissionCalculation() {
     console.log(`  Rate: ${(result3.rate * 100).toFixed(1)}%`);
     console.log(`  Commission: $${(result3.commission / 100).toFixed(2)}`);
     console.log(`  Expected: $7.50`);
-    console.log(
-      result3.commission === 750 ? '  ✅ Pass\n' : '  ❌ Fail\n'
-    );
+    console.log(result3.commission === 750 ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 4: Credit Purchase Commission
     console.log('Test 4: Credit Purchase Commission');
@@ -77,26 +71,28 @@ async function testCommissionCalculation() {
     console.log(`  Rate: ${(result4.rate * 100).toFixed(1)}%`);
     console.log(`  Commission: $${(result4.commission / 100).toFixed(2)}`);
     console.log(`  Expected: $16.00`);
-    console.log(
-      result4.commission === 1600 ? '  ✅ Pass\n' : '  ❌ Fail\n'
-    );
+    console.log(result4.commission === 1600 ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 5: Refund Adjustment
     console.log('Test 5: Refund Adjustment');
     const originalCommission = 1000; // $10.00
     const adjustment = calculateRefundAdjustment(originalCommission);
-    console.log(`  Original Commission: $${(originalCommission / 100).toFixed(2)}`);
+    console.log(
+      `  Original Commission: $${(originalCommission / 100).toFixed(2)}`
+    );
     console.log(`  Adjustment: $${(adjustment / 100).toFixed(2)}`);
     console.log(`  Expected: -$10.00`);
-    console.log(
-      adjustment === -1000 ? '  ✅ Pass\n' : '  ❌ Fail\n'
-    );
+    console.log(adjustment === -1000 ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 6: Commission Validation
     console.log('Test 6: Commission Validation');
     console.log(`  Valid (500 of 10000): ${isValidCommission(500, 10000)}`);
-    console.log(`  Invalid negative (-100 of 10000): ${isValidCommission(-100, 10000)}`);
-    console.log(`  Invalid exceeds (15000 of 10000): ${isValidCommission(15000, 10000)}`);
+    console.log(
+      `  Invalid negative (-100 of 10000): ${isValidCommission(-100, 10000)}`
+    );
+    console.log(
+      `  Invalid exceeds (15000 of 10000): ${isValidCommission(15000, 10000)}`
+    );
     console.log('  ✅ Pass\n');
 
     // Test 7: End-to-End Commission Processing
@@ -160,7 +156,9 @@ async function testCommissionCalculation() {
     });
 
     console.log(`  Commission processed: ${commissionResult.processed}`);
-    console.log(`  Commission amount: $${(commissionResult.commission! / 100).toFixed(2)}`);
+    console.log(
+      `  Commission amount: $${(commissionResult.commission! / 100).toFixed(2)}`
+    );
     console.log(`  Expected: $15.00`);
 
     // Verify affiliate earnings
@@ -168,8 +166,12 @@ async function testCommissionCalculation() {
       where: { id: affiliate.id },
     });
 
-    console.log(`  Affiliate total earnings: $${(updatedAffiliate!.totalEarnings / 100).toFixed(2)}`);
-    console.log(`  Affiliate pending earnings: $${(updatedAffiliate!.pendingEarnings / 100).toFixed(2)}`);
+    console.log(
+      `  Affiliate total earnings: $${(updatedAffiliate!.totalEarnings / 100).toFixed(2)}`
+    );
+    console.log(
+      `  Affiliate pending earnings: $${(updatedAffiliate!.pendingEarnings / 100).toFixed(2)}`
+    );
 
     // Verify referral status
     const updatedReferral = await prisma.referral.findUnique({
@@ -177,7 +179,9 @@ async function testCommissionCalculation() {
     });
 
     console.log(`  Referral status: ${updatedReferral!.status}`);
-    console.log(`  Referral commission: $${(updatedReferral!.commission / 100).toFixed(2)}`);
+    console.log(
+      `  Referral commission: $${(updatedReferral!.commission / 100).toFixed(2)}`
+    );
 
     const test7Pass =
       commissionResult.processed &&
@@ -203,15 +207,21 @@ async function testCommissionCalculation() {
     });
 
     console.log(`  Refund processed: ${refundResult.processed}`);
-    console.log(`  Adjustment: $${(refundResult.adjustment! / 100).toFixed(2)}`);
+    console.log(
+      `  Adjustment: $${(refundResult.adjustment! / 100).toFixed(2)}`
+    );
 
     // Verify affiliate earnings after refund
     const affiliateAfterRefund = await prisma.affiliate.findUnique({
       where: { id: affiliate.id },
     });
 
-    console.log(`  Affiliate total earnings: $${(affiliateAfterRefund!.totalEarnings / 100).toFixed(2)}`);
-    console.log(`  Affiliate pending earnings: $${(affiliateAfterRefund!.pendingEarnings / 100).toFixed(2)}`);
+    console.log(
+      `  Affiliate total earnings: $${(affiliateAfterRefund!.totalEarnings / 100).toFixed(2)}`
+    );
+    console.log(
+      `  Affiliate pending earnings: $${(affiliateAfterRefund!.pendingEarnings / 100).toFixed(2)}`
+    );
 
     // Verify referral status after refund
     const referralAfterRefund = await prisma.referral.findUnique({

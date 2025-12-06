@@ -44,10 +44,7 @@ export async function POST(request: NextRequest) {
     console.error('Create affiliate error:', error);
 
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     return NextResponse.json(

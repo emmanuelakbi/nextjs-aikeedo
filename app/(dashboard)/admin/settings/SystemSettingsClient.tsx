@@ -27,11 +27,15 @@ interface SystemSetting {
 
 export function SystemSettingsClient() {
   const [settings, setSettings] = useState<SystemSetting[]>([]);
-  const [groupedSettings, setGroupedSettings] = useState<Record<string, SystemSetting[]>>({});
+  const [groupedSettings, setGroupedSettings] = useState<
+    Record<string, SystemSetting[]>
+  >({});
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingSetting, setEditingSetting] = useState<SystemSetting | null>(null);
+  const [editingSetting, setEditingSetting] = useState<SystemSetting | null>(
+    null
+  );
   const [formData, setFormData] = useState({
     key: '',
     value: '',
@@ -109,9 +113,10 @@ export function SystemSettingsClient() {
     setEditingSetting(setting);
     setFormData({
       key: setting.key,
-      value: typeof setting.value === 'string' 
-        ? setting.value 
-        : JSON.stringify(setting.value, null, 2),
+      value:
+        typeof setting.value === 'string'
+          ? setting.value
+          : JSON.stringify(setting.value, null, 2),
       description: setting.description || '',
       category: setting.category,
       isPublic: setting.isPublic,
@@ -125,9 +130,12 @@ export function SystemSettingsClient() {
     }
 
     try {
-      const response = await fetch(`/api/admin/settings/${encodeURIComponent(key)}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `/api/admin/settings/${encodeURIComponent(key)}`,
+        {
+          method: 'DELETE',
+        }
+      );
 
       if (response.ok) {
         fetchSettings();
@@ -142,9 +150,10 @@ export function SystemSettingsClient() {
   };
 
   const categories = ['all', ...Object.keys(groupedSettings)];
-  const displayedSettings = selectedCategory === 'all' 
-    ? settings 
-    : groupedSettings[selectedCategory] || [];
+  const displayedSettings =
+    selectedCategory === 'all'
+      ? settings
+      : groupedSettings[selectedCategory] || [];
 
   return (
     <div className="space-y-6">
@@ -219,7 +228,9 @@ export function SystemSettingsClient() {
                       </p>
                     )}
                     <div className="mt-2">
-                      <p className="text-sm font-medium text-gray-700">Value:</p>
+                      <p className="text-sm font-medium text-gray-700">
+                        Value:
+                      </p>
                       <pre className="mt-1 p-2 bg-gray-100 rounded text-sm overflow-x-auto">
                         {typeof setting.value === 'string'
                           ? setting.value
@@ -277,7 +288,8 @@ export function SystemSettingsClient() {
                   placeholder="e.g., ai.openai.api_key"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Use dot notation for nested keys (e.g., category.subcategory.key)
+                  Use dot notation for nested keys (e.g.,
+                  category.subcategory.key)
                 </p>
               </div>
 
@@ -346,7 +358,10 @@ export function SystemSettingsClient() {
                   }
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
-                <label htmlFor="isPublic" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="isPublic"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Public (accessible to non-admin users)
                 </label>
               </div>

@@ -83,7 +83,10 @@
           {
             "patterns": [
               {
-                "group": ["**/infrastructure/repositories/*", "@/infrastructure/repositories/*"],
+                "group": [
+                  "**/infrastructure/repositories/*",
+                  "@/infrastructure/repositories/*"
+                ],
                 "message": "Application layer (use cases) must not import concrete repositories. Import from domain interfaces instead (e.g., '@/domain/user/repositories/IUserRepository')."
               },
               {
@@ -103,7 +106,10 @@
           {
             "patterns": [
               {
-                "group": ["**/infrastructure/repositories/*", "@/infrastructure/repositories/*"],
+                "group": [
+                  "**/infrastructure/repositories/*",
+                  "@/infrastructure/repositories/*"
+                ],
                 "message": "API routes must not import concrete repositories directly. Use the DI container instead: import { container } from '@/infrastructure/di/container'."
               }
             ]

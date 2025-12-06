@@ -1,10 +1,10 @@
 /**
  * Workspace Repository Interface
- * 
+ *
  * Domain-level contract for workspace data access operations.
  * This interface defines all operations needed to persist and retrieve workspaces
  * without exposing infrastructure implementation details.
- * 
+ *
  * @interface IWorkspaceRepository
  */
 
@@ -29,14 +29,14 @@ export interface WorkspaceMember {
 
 /**
  * Workspace Repository Interface
- * 
+ *
  * Defines the contract for workspace data access operations.
  * All implementations must provide these methods.
  */
 export interface IWorkspaceRepository {
   /**
    * Persist a workspace entity (create or update)
-   * 
+   *
    * @param workspace - The workspace entity to save
    * @returns Promise resolving to the saved workspace
    */
@@ -44,7 +44,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Find a workspace by its unique identifier
-   * 
+   *
    * @param id - The workspace's unique identifier
    * @returns Promise resolving to the workspace or null if not found
    */
@@ -52,7 +52,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Find all workspaces owned by a specific user
-   * 
+   *
    * @param ownerId - The owner's user identifier
    * @returns Promise resolving to array of workspaces
    */
@@ -60,7 +60,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Find all workspaces where a user is a member (including owned)
-   * 
+   *
    * @param userId - The user's identifier
    * @returns Promise resolving to array of workspaces
    */
@@ -68,7 +68,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Delete a workspace by its unique identifier
-   * 
+   *
    * @param id - The workspace's unique identifier
    * @returns Promise resolving when deletion is complete
    */
@@ -76,7 +76,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Add a member to a workspace
-   * 
+   *
    * @param workspaceId - The workspace identifier
    * @param userId - The user identifier to add
    * @param role - The role to assign (defaults to MEMBER)
@@ -90,7 +90,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Remove a member from a workspace
-   * 
+   *
    * @param workspaceId - The workspace identifier
    * @param userId - The user identifier to remove
    * @returns Promise resolving when member is removed
@@ -99,7 +99,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Check if a user is a member of a workspace
-   * 
+   *
    * @param workspaceId - The workspace identifier
    * @param userId - The user identifier to check
    * @returns Promise resolving to true if member, false otherwise
@@ -108,7 +108,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Get all members of a workspace
-   * 
+   *
    * @param workspaceId - The workspace identifier
    * @returns Promise resolving to array of workspace members
    */
@@ -116,7 +116,7 @@ export interface IWorkspaceRepository {
 
   /**
    * Check if a workspace exists with the given name for a specific owner
-   * 
+   *
    * @param name - The workspace name to check
    * @param ownerId - The owner's user identifier
    * @returns Promise resolving to true if exists, false otherwise

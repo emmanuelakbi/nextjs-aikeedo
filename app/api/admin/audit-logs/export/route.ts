@@ -83,7 +83,7 @@ function convertToCSV(logs: any[]): string {
   const rows = logs.map((log) => {
     const adminName = `${log.admin.firstName} ${log.admin.lastName}`;
     const changes = JSON.stringify(log.changes);
-    
+
     return [
       new Date(log.createdAt).toISOString(),
       log.admin.email,
@@ -96,7 +96,10 @@ function convertToCSV(logs: any[]): string {
       log.userAgent || '',
     ].map((value) => {
       // Escape values that contain commas or quotes
-      if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+      if (
+        typeof value === 'string' &&
+        (value.includes(',') || value.includes('"'))
+      ) {
         return `"${value.replace(/"/g, '""')}"`;
       }
       return value;

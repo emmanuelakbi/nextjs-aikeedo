@@ -1,6 +1,6 @@
 /**
  * Billing Checkout Utilities
- * 
+ *
  * Client-side utilities for initiating Stripe checkout flows
  * Requirements: 2.1, 4.1
  */
@@ -49,7 +49,7 @@ export interface CheckoutSuccessResponse {
 /**
  * Create a checkout session for subscription
  * Requirements: 2.1
- * 
+ *
  * @param params - Checkout parameters
  * @returns Checkout session with redirect URL
  */
@@ -75,7 +75,7 @@ export async function createSubscriptionCheckout(
 /**
  * Create a checkout session for credit purchase
  * Requirements: 4.1
- * 
+ *
  * @param params - Credit purchase parameters
  * @returns Checkout session with redirect URL
  */
@@ -101,7 +101,7 @@ export async function createCreditCheckout(
 /**
  * Retrieve checkout session details after success
  * Requirements: 2.2
- * 
+ *
  * @param sessionId - Stripe checkout session ID
  * @returns Checkout session details
  */
@@ -123,7 +123,7 @@ export async function getCheckoutSuccess(
 /**
  * Redirect to Stripe checkout
  * Requirements: 2.1
- * 
+ *
  * @param checkoutUrl - Stripe checkout URL
  */
 export function redirectToCheckout(checkoutUrl: string): void {
@@ -133,7 +133,7 @@ export function redirectToCheckout(checkoutUrl: string): void {
 /**
  * Start subscription checkout flow
  * Requirements: 2.1
- * 
+ *
  * @param params - Checkout parameters
  */
 export async function startSubscriptionCheckout(
@@ -146,7 +146,7 @@ export async function startSubscriptionCheckout(
 /**
  * Start credit purchase checkout flow
  * Requirements: 4.1
- * 
+ *
  * @param params - Credit purchase parameters
  */
 export async function startCreditCheckout(
@@ -158,7 +158,7 @@ export async function startCreditCheckout(
 
 /**
  * Extract session ID from URL query parameters
- * 
+ *
  * @param url - URL or search params string
  * @returns Session ID or null
  */
@@ -171,7 +171,7 @@ export function extractSessionId(url?: string): string | null {
 
 /**
  * Check if checkout was successful from URL
- * 
+ *
  * @param url - URL or search params string
  * @returns True if success parameter is present
  */
@@ -184,7 +184,7 @@ export function isCheckoutSuccess(url?: string): boolean {
 
 /**
  * Check if checkout was canceled from URL
- * 
+ *
  * @param url - URL or search params string
  * @returns True if canceled parameter is present
  */
@@ -197,7 +197,7 @@ export function isCheckoutCanceled(url?: string): boolean {
 
 /**
  * Check if credit purchase was successful from URL
- * 
+ *
  * @param url - URL or search params string
  * @returns True if credit_purchase=success parameter is present
  */
@@ -210,7 +210,7 @@ export function isCreditPurchaseSuccess(url?: string): boolean {
 
 /**
  * Check if credit purchase was canceled from URL
- * 
+ *
  * @param url - URL or search params string
  * @returns True if credit_purchase=canceled parameter is present
  */

@@ -13,11 +13,16 @@ interface CurrentPeriodCardProps {
   subscription: any;
 }
 
-export default function CurrentPeriodCard({ currentPeriod, subscription }: CurrentPeriodCardProps) {
+export default function CurrentPeriodCard({
+  currentPeriod,
+  subscription,
+}: CurrentPeriodCardProps) {
   if (!subscription) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold mb-2 text-gray-700">Current Period</h3>
+        <h3 className="text-lg font-semibold mb-2 text-gray-700">
+          Current Period
+        </h3>
         <p className="text-gray-500">No active billing period</p>
       </div>
     );
@@ -28,8 +33,10 @@ export default function CurrentPeriodCard({ currentPeriod, subscription }: Curre
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold mb-2 text-gray-700">Current Period</h3>
-      
+      <h3 className="text-lg font-semibold mb-2 text-gray-700">
+        Current Period
+      </h3>
+
       <div className="mb-4">
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-gray-900">
@@ -43,7 +50,9 @@ export default function CurrentPeriodCard({ currentPeriod, subscription }: Curre
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-gray-600">Period start</span>
-            <span className="font-medium">{startDate.toLocaleDateString()}</span>
+            <span className="font-medium">
+              {startDate.toLocaleDateString()}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Period end</span>
@@ -51,7 +60,9 @@ export default function CurrentPeriodCard({ currentPeriod, subscription }: Curre
           </div>
           <div className="flex justify-between pt-2 border-t">
             <span className="text-gray-600">Credits used</span>
-            <span className="font-medium">{currentPeriod.usage.toLocaleString()}</span>
+            <span className="font-medium">
+              {currentPeriod.usage.toLocaleString()}
+            </span>
           </div>
         </div>
       )}

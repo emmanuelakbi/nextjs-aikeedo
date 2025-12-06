@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 /**
  * Payment Methods API Routes
- * 
+ *
  * Handles listing and adding payment methods for workspaces
  * Requirements: 6.1, 6.2
  */
@@ -27,10 +27,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -68,9 +65,8 @@ export async function GET(request: NextRequest) {
     }
 
     const paymentMethodService = createPaymentMethodService(prisma);
-    const paymentMethods = await paymentMethodService.listPaymentMethods(
-      workspaceId
-    );
+    const paymentMethods =
+      await paymentMethodService.listPaymentMethods(workspaceId);
 
     return NextResponse.json({
       paymentMethods,
@@ -97,10 +93,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -175,4 +168,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

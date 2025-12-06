@@ -9,24 +9,29 @@ The Billing Dashboard provides a comprehensive view of billing information, subs
 This implementation satisfies the following requirements from the billing module specification:
 
 ### Requirement 12.1: Current Plan and Usage Display
+
 - **CurrentPlanCard**: Displays current subscription plan details including name, price, status, and renewal information
 - **UsageCard**: Shows current credit balance and usage statistics
 
 ### Requirement 12.2: Current Period Charges
+
 - **CurrentPeriodCard**: Displays estimated charges for the current billing period
 - Shows period start/end dates and credits used
 
 ### Requirement 12.3: Past 12 Months History
+
 - **BillingHistoryChart**: Visual bar chart showing monthly spending over the past 12 months
 - **InvoicesList**: Table of recent invoices with status, amount, and download links
 - Summary statistics including total spent and average monthly spending
 
 ### Requirement 12.4: Usage Breakdown by Service Type
+
 - **UsageBreakdownChart**: Visual breakdown of credit usage by service type (text generation, image generation, speech synthesis, etc.)
 - Shows both absolute numbers and percentages
 - Color-coded bars for easy identification
 
 ### Requirement 12.5: Remaining Quota Indicator
+
 - **UsageCard**: Progress bar showing usage percentage
 - Color-coded warnings (red > 90%, yellow > 70%, blue otherwise)
 - Displays remaining credits with visual emphasis when running low
@@ -36,18 +41,23 @@ This implementation satisfies the following requirements from the billing module
 ### Main Components
 
 #### `BillingDashboard.tsx`
+
 Main dashboard component that fetches data from the API and orchestrates all sub-components.
 
 **Props:**
+
 - `workspaceId: string` - The workspace ID to fetch billing data for
 
 **Data Source:**
+
 - Fetches from `/api/billing/dashboard?workspaceId={workspaceId}`
 
 #### `page.tsx`
+
 Next.js page component that handles authentication and routing.
 
 **Features:**
+
 - Authentication check
 - Workspace validation
 - Success/cancel message display for credit purchases
@@ -56,9 +66,11 @@ Next.js page component that handles authentication and routing.
 ### Sub-Components
 
 #### `CurrentPlanCard.tsx`
+
 Displays current subscription plan information.
 
 **Features:**
+
 - Plan name and description
 - Price and billing interval
 - Credit allocation
@@ -67,9 +79,11 @@ Displays current subscription plan information.
 - Days until next billing
 
 #### `UsageCard.tsx`
+
 Shows credit balance and usage metrics.
 
 **Features:**
+
 - Current credit balance (large, prominent display)
 - Usage progress bar (if plan has limits)
 - Remaining credits indicator
@@ -77,17 +91,21 @@ Shows credit balance and usage metrics.
 - Unlimited plan support
 
 #### `CurrentPeriodCard.tsx`
+
 Displays current billing period information.
 
 **Features:**
+
 - Estimated charges for current period
 - Period start and end dates
 - Credits used in current period
 
 #### `UsageBreakdownChart.tsx`
+
 Visual breakdown of usage by service type.
 
 **Features:**
+
 - Horizontal bar chart
 - Color-coded service types
 - Percentage and absolute values
@@ -95,18 +113,22 @@ Visual breakdown of usage by service type.
 - Legend for service types
 
 #### `BillingHistoryChart.tsx`
+
 Visual representation of billing history.
 
 **Features:**
+
 - Bar chart for last 12 months
 - Hover tooltips showing exact amounts
 - Summary statistics (total, average, last month)
 - Responsive design
 
 #### `InvoicesList.tsx`
+
 Table of recent invoices.
 
 **Features:**
+
 - Invoice date, status, and amount
 - Status badges with color coding
 - Links to view/download invoices
@@ -163,11 +185,13 @@ All components use Tailwind CSS for styling with a consistent design system:
 ## User Experience
 
 ### Visual Hierarchy
+
 1. **Top Row**: Three key metrics cards (Plan, Usage, Current Period)
 2. **Middle Section**: Visual charts for usage breakdown and billing history
 3. **Bottom Section**: Credit purchase form, invoices list, and payment methods
 
 ### Color Coding
+
 - **Green**: Healthy status, positive actions
 - **Yellow**: Warnings, approaching limits
 - **Red**: Critical status, exceeded limits
@@ -175,6 +199,7 @@ All components use Tailwind CSS for styling with a consistent design system:
 - **Gray**: Inactive or secondary information
 
 ### Responsive Design
+
 - **Desktop**: 3-column grid for metric cards, full-width charts
 - **Tablet**: 2-column grid, adjusted chart sizes
 - **Mobile**: Single column layout, stacked components

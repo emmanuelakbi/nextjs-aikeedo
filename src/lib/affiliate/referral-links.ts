@@ -6,10 +6,7 @@
 /**
  * Generate a referral link with the affiliate code
  */
-export function generateReferralLink(
-  code: string,
-  path: string = '/'
-): string {
+export function generateReferralLink(code: string, path: string = '/'): string {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const url = new URL(path, baseUrl);
   url.searchParams.set('ref', code);
@@ -34,7 +31,10 @@ export function generateReferralLinks(code: string): {
 /**
  * Copy referral link to clipboard
  */
-export async function copyReferralLink(code: string, path?: string): Promise<boolean> {
+export async function copyReferralLink(
+  code: string,
+  path?: string
+): Promise<boolean> {
   try {
     const link = generateReferralLink(code, path);
     await navigator.clipboard.writeText(link);

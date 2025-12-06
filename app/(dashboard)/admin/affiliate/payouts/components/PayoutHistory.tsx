@@ -10,7 +10,9 @@ import { useEffect, useState } from 'react';
 export default function PayoutHistory() {
   const [payouts, setPayouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'approved' | 'paid' | 'rejected'>('all');
+  const [filter, setFilter] = useState<
+    'all' | 'approved' | 'paid' | 'rejected'
+  >('all');
 
   useEffect(() => {
     fetchPayouts();
@@ -59,9 +61,10 @@ export default function PayoutHistory() {
     );
   }
 
-  const filteredPayouts = filter === 'all' 
-    ? payouts 
-    : payouts.filter((p) => p.status === filter.toUpperCase());
+  const filteredPayouts =
+    filter === 'all'
+      ? payouts
+      : payouts.filter((p) => p.status === filter.toUpperCase());
 
   return (
     <div className="space-y-4">
@@ -111,7 +114,10 @@ export default function PayoutHistory() {
             </thead>
             <tbody>
               {filteredPayouts.map((payout) => (
-                <tr key={payout.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr
+                  key={payout.id}
+                  className="border-b border-gray-100 hover:bg-gray-50"
+                >
                   <td className="py-3 px-4 text-sm text-gray-900">
                     {formatDate(payout.createdAt)}
                   </td>

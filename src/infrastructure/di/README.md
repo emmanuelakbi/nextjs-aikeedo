@@ -83,10 +83,10 @@ import { container } from '@/infrastructure/di/container';
 export async function GET(request: NextRequest) {
   // Get a use case from the container
   const useCase = container.createGetUserUseCase();
-  
+
   // Execute the use case
   const user = await useCase.execute({ userId: '123' });
-  
+
   return NextResponse.json({ data: user });
 }
 ```
@@ -109,18 +109,18 @@ import { container } from '@/infrastructure/di/container';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  
+
   // Create multiple use cases
   const getUserUseCase = container.createGetUserUseCase();
   const createWorkspaceUseCase = container.createCreateWorkspaceUseCase();
-  
+
   // Execute them
   const user = await getUserUseCase.execute({ userId: body.userId });
   const workspace = await createWorkspaceUseCase.execute({
     userId: user.getId().getValue(),
     name: body.workspaceName,
   });
-  
+
   return NextResponse.json({ data: workspace });
 }
 ```
@@ -132,18 +132,22 @@ export async function POST(request: NextRequest) {
 All repositories are lazy-loaded singletons accessed via getters:
 
 ### User Repository
+
 ```typescript
 container.userRepository: IUserRepository
 ```
+
 - `save(user: User): Promise<User>`
 - `findById(id: Id): Promise<User | null>`
 - `findByEmail(email: Email): Promise<User | null>`
 - `delete(id: Id): Promise<void>`
 
 ### Workspace Repository
+
 ```typescript
 container.workspaceRepository: IWorkspaceRepository
 ```
+
 - `save(workspace: Workspace): Promise<Workspace>`
 - `findById(id: string): Promise<Workspace | null>`
 - `findByOwnerId(ownerId: string): Promise<Workspace[]>`
@@ -151,36 +155,44 @@ container.workspaceRepository: IWorkspaceRepository
 - `delete(id: string): Promise<void>`
 
 ### Document Repository
+
 ```typescript
 container.documentRepository: DocumentRepositoryInterface
 ```
+
 - `save(document: DocumentEntity): Promise<DocumentEntity>`
 - `findById(id: string): Promise<DocumentEntity | null>`
 - `findByWorkspaceId(workspaceId: string): Promise<DocumentEntity[]>`
 - `delete(id: string): Promise<void>`
 
 ### File Repository
+
 ```typescript
 container.fileRepository: FileRepositoryInterface
 ```
+
 - `save(file: FileEntity): Promise<FileEntity>`
 - `findById(id: string): Promise<FileEntity | null>`
 - `findByWorkspaceId(workspaceId: string): Promise<FileEntity[]>`
 - `delete(id: string): Promise<void>`
 
 ### Conversation Repository
+
 ```typescript
 container.conversationRepository: IConversationRepository
 ```
+
 - `save(conversation: Conversation): Promise<Conversation>`
 - `findById(id: string): Promise<Conversation | null>`
 - `list(options: ListConversationsOptions): Promise<Conversation[]>`
 - `delete(id: string): Promise<void>`
 
 ### Message Repository
+
 ```typescript
 container.messageRepository: IMessageRepository
 ```
+
 - `create(data: CreateMessageData): Promise<Message>`
 - `save(message: Message): Promise<Message>`
 - `findById(id: string): Promise<Message | null>`
@@ -188,18 +200,22 @@ container.messageRepository: IMessageRepository
 - `deleteByConversationId(conversationId: string): Promise<void>`
 
 ### Preset Repository
+
 ```typescript
 container.presetRepository: IPresetRepository
 ```
+
 - `save(preset: Preset): Promise<Preset>`
 - `findById(id: string): Promise<Preset | null>`
 - `list(options: ListPresetsOptions): Promise<Preset[]>`
 - `delete(id: string): Promise<void>`
 
 ### Verification Token Repository
+
 ```typescript
 container.verificationTokenRepository: VerificationTokenRepository
 ```
+
 - Used internally by UpdateEmailUseCase for email verification
 
 ---
@@ -327,12 +343,12 @@ import { createTestContainer } from '@/infrastructure/di/test-container';
 
 describe('Use Case Tests', () => {
   let container: TestDIContainer;
-  
+
   beforeEach(() => {
     // Create fresh test container with default mocks
     container = createTestContainer();
   });
-  
+
   it('should execute use case with mocks', async () => {
     const useCase = container.createGetUserUseCase();
     const result = await useCase.execute({ userId: '123' });
@@ -351,11 +367,11 @@ import { vi } from 'vitest';
 
 describe('Custom Mock Tests', () => {
   let container: TestDIContainer;
-  
+
   beforeEach(() => {
     container = createTestContainer();
   });
-  
+
   it('should use custom mock', async () => {
     // Create custom mock with specific behavior
     const mockUserRepo = {
@@ -368,14 +384,14 @@ describe('Custom Mock Tests', () => {
       findByWorkspace: vi.fn().mockResolvedValue([]),
       existsByEmail: vi.fn().mockResolvedValue(false),
     };
-    
+
     // Override the repository
     container.setUserRepository(mockUserRepo);
-    
+
     // Use case will now use your custom mock
     const useCase = container.createGetUserUseCase();
     const result = await useCase.execute({ userId: '123' });
-    
+
     expect(mockUserRepo.findById).toHaveBeenCalledWith('123');
     expect(result).toEqual(mockUser);
   });
@@ -389,22 +405,22 @@ Reset the container to default mocks between tests:
 ```typescript
 describe('Multiple Tests', () => {
   let container: TestDIContainer;
-  
+
   beforeEach(() => {
     container = createTestContainer();
   });
-  
+
   afterEach(() => {
     // Reset to default mocks
     container.reset();
   });
-  
+
   it('test 1', async () => {
     // Customize for this test
     container.setUserRepository(customMock1);
     // ... test logic
   });
-  
+
   it('test 2', async () => {
     // Starts fresh with default mocks
     // ... test logic
@@ -443,20 +459,20 @@ import { setupTestDatabase, teardownTestDatabase } from '@/lib/testing/test-db';
 
 describe('Integration Tests', () => {
   let container: DIContainer;
-  
+
   beforeAll(async () => {
     await setupTestDatabase();
   });
-  
+
   afterAll(async () => {
     await teardownTestDatabase();
   });
-  
+
   beforeEach(() => {
     DIContainer.reset();
     container = DIContainer.getInstance();
   });
-  
+
   it('should work with real database', async () => {
     const useCase = container.createGetUserUseCase();
     // Test with real database
@@ -493,17 +509,20 @@ const useCase = new UpdateEmailUseCase(
 ### DO ✅
 
 1. **Always use the container in API routes**
+
    ```typescript
    const useCase = container.createGetUserUseCase();
    ```
 
 2. **Use factory methods for use cases**
+
    ```typescript
    // Good - dependencies injected automatically
    const useCase = container.createUpdateProfileUseCase();
    ```
 
 3. **Access repositories through container**
+
    ```typescript
    const user = await container.userRepository.findById(userId);
    ```
@@ -518,18 +537,21 @@ const useCase = new UpdateEmailUseCase(
 ### DON'T ❌
 
 1. **Don't instantiate repositories directly**
+
    ```typescript
    // Bad - bypasses container
    const repo = new UserRepository();
    ```
 
 2. **Don't instantiate use cases directly**
+
    ```typescript
    // Bad - manual dependency management
    const useCase = new GetUserUseCase(new UserRepository());
    ```
 
 3. **Don't import concrete repositories in API routes**
+
    ```typescript
    // Bad - creates tight coupling
    import { UserRepository } from '@/infrastructure/repositories/UserRepository';
@@ -556,6 +578,7 @@ const useCase = new UpdateEmailUseCase(
 ### Adding a New Repository
 
 1. **Create the repository interface** in the domain layer:
+
    ```typescript
    // src/domain/[domain]/repositories/I[Entity]Repository.ts
    export interface IEntityRepository {
@@ -565,6 +588,7 @@ const useCase = new UpdateEmailUseCase(
    ```
 
 2. **Implement the repository** in the infrastructure layer:
+
    ```typescript
    // src/infrastructure/repositories/EntityRepository.ts
    export class EntityRepository implements IEntityRepository {
@@ -575,10 +599,11 @@ const useCase = new UpdateEmailUseCase(
    ```
 
 3. **Add to container**:
+
    ```typescript
    // In DIContainer class
    private _entityRepository?: IEntityRepository;
-   
+
    public get entityRepository(): IEntityRepository {
      if (!this._entityRepository) {
        this._entityRepository = new EntityRepository();
@@ -590,13 +615,12 @@ const useCase = new UpdateEmailUseCase(
 ### Adding a New Use Case
 
 1. **Create the use case** in the application layer:
+
    ```typescript
    // src/application/use-cases/[domain]/DoSomethingUseCase.ts
    export class DoSomethingUseCase {
-     constructor(
-       private readonly entityRepository: IEntityRepository
-     ) {}
-     
+     constructor(private readonly entityRepository: IEntityRepository) {}
+
      async execute(command: DoSomethingCommand): Promise<Result> {
        // Implementation
      }
@@ -604,6 +628,7 @@ const useCase = new UpdateEmailUseCase(
    ```
 
 2. **Add factory method to container**:
+
    ```typescript
    // In DIContainer class
    public createDoSomethingUseCase(): DoSomethingUseCase {
@@ -626,6 +651,7 @@ const useCase = new UpdateEmailUseCase(
 **Error**: `Cannot find module '@/infrastructure/di/container'`
 
 **Solution**: Ensure TypeScript path aliases are configured in `tsconfig.json`:
+
 ```json
 {
   "compilerOptions": {
@@ -641,6 +667,7 @@ const useCase = new UpdateEmailUseCase(
 **Error**: Repository method returns `undefined` instead of expected value
 
 **Solution**: Check that:
+
 1. Repository is properly implementing the interface
 2. Database connection is established
 3. Prisma client is generated: `npm run db:generate`
@@ -650,6 +677,7 @@ const useCase = new UpdateEmailUseCase(
 **Error**: `Cannot read property 'X' of undefined` in use case
 
 **Solution**: Ensure all required repositories are injected in the factory method:
+
 ```typescript
 public createMyUseCase(): MyUseCase {
   return new MyUseCase(

@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
           where: { id: generation.userId },
           data: { status: 'SUSPENDED' },
         });
-        
+
         // Also mark generation as failed
         await prisma.generation.update({
           where: { id: validated.generationId },

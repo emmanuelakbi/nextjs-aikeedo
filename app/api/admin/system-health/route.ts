@@ -59,9 +59,8 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Calculate error rate
-    const errorRate = recentGenerations > 0
-      ? (recentErrors / recentGenerations) * 100
-      : 0;
+    const errorRate =
+      recentGenerations > 0 ? (recentErrors / recentGenerations) * 100 : 0;
 
     // Memory usage (Node.js process)
     const memoryUsage = process.memoryUsage();

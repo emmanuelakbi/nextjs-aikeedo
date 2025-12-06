@@ -1,9 +1,9 @@
 #!/usr/bin/env ts-node
 /**
  * Find Hard-Coded Values Script
- * 
+ *
  * Scans the codebase for potential hard-coded values that should be in configuration
- * 
+ *
  * Usage:
  *   npm run find:hardcoded
  */
@@ -84,7 +84,7 @@ const excludePatterns = [
  * Check if file should be excluded
  */
 function shouldExclude(filePath: string): boolean {
-  return excludePatterns.some(pattern => pattern.test(filePath));
+  return excludePatterns.some((pattern) => pattern.test(filePath));
 }
 
 /**
@@ -100,7 +100,7 @@ function scanFile(filePath: string): void {
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
-      patterns.forEach(pattern => {
+      patterns.forEach((pattern) => {
         const matches = line.match(pattern.regex);
         if (matches) {
           findings.push({
@@ -125,7 +125,7 @@ function scanDirectory(dirPath: string): void {
   try {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       const fullPath = path.join(dirPath, entry.name);
 
       if (entry.isDirectory()) {
@@ -145,7 +145,7 @@ function scanDirectory(dirPath: string): void {
 function groupByType(findings: Finding[]): Map<string, Finding[]> {
   const grouped = new Map<string, Finding[]>();
 
-  findings.forEach(finding => {
+  findings.forEach((finding) => {
     const existing = grouped.get(finding.type) || [];
     existing.push(finding);
     grouped.set(finding.type, existing);
@@ -171,7 +171,7 @@ function displayFindings(): void {
     console.log(`\n📌 ${type} (${items.length} found)`);
     console.log('─'.repeat(60));
 
-    items.forEach(finding => {
+    items.forEach((finding) => {
       console.log(`\n  File: ${finding.file}:${finding.line}`);
       console.log(`  Code: ${finding.code}`);
       console.log(`  💡 ${finding.suggestion}`);
@@ -189,7 +189,7 @@ function displayFindings(): void {
 function main(): void {
   console.log('🔍 Scanning codebase for hard-coded values...\n');
 
-  dirsToScan.forEach(dir => {
+  dirsToScan.forEach((dir) => {
     const dirPath = path.join(process.cwd(), dir);
     if (fs.existsSync(dirPath)) {
       console.log(`  Scanning ${dir}/...`);

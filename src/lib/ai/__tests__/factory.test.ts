@@ -340,7 +340,9 @@ describe('AIServiceFactory', () => {
       const defaultFactory = new AIServiceFactory();
 
       expect(await defaultFactory.isProviderAvailable('openai')).toBe(true);
-      expect((await defaultFactory.getAvailableModels()).length).toBeGreaterThan(0);
+      expect(
+        (await defaultFactory.getAvailableModels()).length
+      ).toBeGreaterThan(0);
     });
   });
 });

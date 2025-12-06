@@ -37,7 +37,7 @@ describe('Admin System Health API', () => {
 
   it('should return system health status', async () => {
     const prisma = (await import('@/lib/db/prisma')).default;
-    
+
     vi.mocked(prisma.$queryRaw).mockResolvedValue([{ '?column?': 1 }]);
     vi.mocked(prisma.user.count).mockResolvedValue(100);
     vi.mocked(prisma.workspace.count).mockResolvedValue(50);
@@ -66,8 +66,10 @@ describe('Admin System Health API', () => {
 
   it('should detect unhealthy database', async () => {
     const prisma = (await import('@/lib/db/prisma')).default;
-    
-    vi.mocked(prisma.$queryRaw).mockRejectedValue(new Error('Connection failed'));
+
+    vi.mocked(prisma.$queryRaw).mockRejectedValue(
+      new Error('Connection failed')
+    );
     vi.mocked(prisma.user.count).mockResolvedValue(0);
     vi.mocked(prisma.workspace.count).mockResolvedValue(0);
     vi.mocked(prisma.subscription.count).mockResolvedValue(0);
@@ -85,7 +87,7 @@ describe('Admin System Health API', () => {
 
   it('should calculate error rate correctly', async () => {
     const prisma = (await import('@/lib/db/prisma')).default;
-    
+
     vi.mocked(prisma.$queryRaw).mockResolvedValue([{ '?column?': 1 }]);
     vi.mocked(prisma.user.count).mockResolvedValue(100);
     vi.mocked(prisma.workspace.count).mockResolvedValue(50);
@@ -106,7 +108,7 @@ describe('Admin System Health API', () => {
 
   it('should include system information', async () => {
     const prisma = (await import('@/lib/db/prisma')).default;
-    
+
     vi.mocked(prisma.$queryRaw).mockResolvedValue([{ '?column?': 1 }]);
     vi.mocked(prisma.user.count).mockResolvedValue(0);
     vi.mocked(prisma.workspace.count).mockResolvedValue(0);

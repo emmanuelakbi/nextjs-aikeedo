@@ -29,11 +29,7 @@ export default function InvoicesList({ invoices }: InvoicesListProps) {
   };
 
   if (invoices.length === 0) {
-    return (
-      <p className="text-gray-500 text-center py-8">
-        No invoices yet
-      </p>
-    );
+    return <p className="text-gray-500 text-center py-8">No invoices yet</p>;
   }
 
   return (
@@ -41,10 +37,18 @@ export default function InvoicesList({ invoices }: InvoicesListProps) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className="text-left py-3 px-4 font-semibold text-gray-700">Date</th>
-            <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-            <th className="text-right py-3 px-4 font-semibold text-gray-700">Amount</th>
-            <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
+            <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              Date
+            </th>
+            <th className="text-left py-3 px-4 font-semibold text-gray-700">
+              Status
+            </th>
+            <th className="text-right py-3 px-4 font-semibold text-gray-700">
+              Amount
+            </th>
+            <th className="text-right py-3 px-4 font-semibold text-gray-700">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -58,12 +62,15 @@ export default function InvoicesList({ invoices }: InvoicesListProps) {
                 })}
               </td>
               <td className="py-3 px-4">
-                <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${statusColors[invoice.status] || 'bg-gray-100 text-gray-800'}`}>
+                <span
+                  className={`inline-block px-2 py-1 rounded text-xs font-medium ${statusColors[invoice.status] || 'bg-gray-100 text-gray-800'}`}
+                >
                   {invoice.status}
                 </span>
               </td>
               <td className="py-3 px-4 text-sm text-right font-medium text-gray-900">
-                ${(invoice.amount / 100).toFixed(2)} {invoice.currency.toUpperCase()}
+                ${(invoice.amount / 100).toFixed(2)}{' '}
+                {invoice.currency.toUpperCase()}
               </td>
               <td className="py-3 px-4 text-right">
                 {invoice.invoiceUrl && (

@@ -19,7 +19,7 @@ export function validateCsrfToken(
   cookieToken?: string
 ): boolean {
   const headerToken = request.headers.get(CSRF_HEADER_NAME);
-  
+
   if (!headerToken || !cookieToken) {
     return false;
   }
@@ -47,10 +47,7 @@ export async function withCsrfProtection(
   const cookieToken = request.cookies.get(CSRF_COOKIE_NAME)?.value;
 
   if (!validateCsrfToken(request, cookieToken)) {
-    return NextResponse.json(
-      { error: 'Invalid CSRF token' },
-      { status: 403 }
-    );
+    return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   }
 
   return null; // Allow request
@@ -59,7 +56,7 @@ export async function withCsrfProtection(
 // Helper to set CSRF token in response
 export function setCsrfTokenCookie(response: NextResponse): NextResponse {
   const token = generateCsrfToken();
-  
+
   response.cookies.set(CSRF_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

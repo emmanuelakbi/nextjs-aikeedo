@@ -119,22 +119,22 @@ export const customConfig = {
     voiceCloning: false,
     affiliateProgram: false,
   },
-  
+
   // Customize credit rates
   credits: {
     text: {
-      'gpt-4': 25,        // Reduce from 30
+      'gpt-4': 25, // Reduce from 30
       'gpt-3.5-turbo': 1, // Reduce from 2
     },
-    trialCredits: 200,    // Increase from 100
+    trialCredits: 200, // Increase from 100
   },
-  
+
   // Adjust affiliate settings
   affiliate: {
-    commissionRate: 0.15,  // 15% instead of 20%
-    minimumPayout: 100,    // Increase from 50
+    commissionRate: 0.15, // 15% instead of 20%
+    minimumPayout: 100, // Increase from 50
   },
-  
+
   // Customize branding
   ui: {
     branding: {
@@ -179,12 +179,12 @@ Edit `config/env/production.config.ts`:
 export const productionConfig = {
   rateLimits: {
     api: {
-      default: 30,  // Stricter in production
+      default: 30, // Stricter in production
     },
   },
-  
+
   security: {
-    bcryptRounds: 13,  // More secure in production
+    bcryptRounds: 13, // More secure in production
   },
 };
 ```
@@ -216,17 +216,17 @@ export const customConfig = {
       'claude-3-opus': 25,
       default: 8,
     },
-    
+
     // Image generation rates
     image: {
       '1024x1024': 30,
       '512x512': 15,
     },
-    
+
     // Other services
     speech: 3,
     transcription: 2,
-    
+
     // Trial credits
     trialCredits: 500,
   },
@@ -244,7 +244,7 @@ export const customConfig = {
       monthlyCredits: 2000,
       price: 14.99,
     },
-    
+
     // Add new plan
     enterprise: {
       name: 'Enterprise',
@@ -267,18 +267,14 @@ export const customConfig = {
 export const customConfig = {
   rateLimits: {
     api: {
-      default: 120,  // requests per minute
+      default: 120, // requests per minute
       ai: 40,
       upload: 20,
     },
-    
+
     upload: {
-      maxFileSize: 20 * 1024 * 1024,  // 20MB
-      allowedTypes: [
-        'image/jpeg',
-        'image/png',
-        'application/pdf',
-      ],
+      maxFileSize: 20 * 1024 * 1024, // 20MB
+      allowedTypes: ['image/jpeg', 'image/png', 'application/pdf'],
     },
   },
 };
@@ -293,10 +289,10 @@ export const customConfig = {
     // Disable providers
     mistral: false,
     google: false,
-    
+
     // Change fallback order
     fallbackOrder: ['openai', 'anthropic'],
-    
+
     // Change defaults
     defaults: {
       text: 'anthropic',
@@ -312,10 +308,10 @@ export const customConfig = {
 // custom.config.ts
 export const customConfig = {
   affiliate: {
-    commissionRate: 0.15,      // 15%
-    minimumPayout: 100,        // $100
-    cookieDuration: 60,        // 60 days
-    commissionDuration: 180,   // 6 months
+    commissionRate: 0.15, // 15%
+    minimumPayout: 100, // $100
+    cookieDuration: 60, // 60 days
+    commissionDuration: 180, // 6 months
   },
 };
 ```
@@ -346,12 +342,12 @@ export const customConfig = {
       logo: '/custom-logo.png',
       favicon: '/custom-favicon.ico',
     },
-    
+
     theme: {
       defaultMode: 'dark',
       allowToggle: true,
     },
-    
+
     toast: {
       duration: 3000,
       position: 'top-right',
@@ -393,12 +389,12 @@ export const productionConfig = {
   rateLimits: {
     api: { default: 30 },
   },
-  
+
   // More secure in production
   security: {
     bcryptRounds: 13,
   },
-  
+
   // Longer cache in production
   cache: {
     ttl: {
@@ -421,12 +417,12 @@ export const customConfig = {
       'gpt-4-turbo': 20,
       'gpt-4o': 15,
       'gpt-3.5-turbo': 2,
-      
+
       // Anthropic models
       'claude-3-opus': 30,
       'claude-3-sonnet': 15,
       'claude-3-haiku': 5,
-      
+
       // Custom model
       'my-custom-model': 10,
     },
@@ -478,7 +474,7 @@ export const customConfig = {
   // Reduced rates for promotional period (Q1 2024)
   credits: {
     text: {
-      'gpt-4': 20,  // Reduced from 30
+      'gpt-4': 20, // Reduced from 30
     },
   },
 };
@@ -510,14 +506,14 @@ TypeScript ensures you only set valid values:
 // ✅ Type-safe
 export const customConfig = {
   credits: {
-    trialCredits: 200,  // number
+    trialCredits: 200, // number
   },
 };
 
 // ❌ Type error
 export const customConfig = {
   credits: {
-    trialCredits: "200",  // Error: should be number
+    trialCredits: '200', // Error: should be number
   },
 };
 ```
@@ -529,6 +525,7 @@ export const customConfig = {
 **Problem**: Changes not taking effect
 
 **Solutions**:
+
 1. Restart the development server
 2. Check file exists: `config/custom.config.ts`
 3. Validate syntax: `npm run config:validate`
@@ -539,6 +536,7 @@ export const customConfig = {
 **Problem**: TypeScript errors in custom config
 
 **Solutions**:
+
 1. Check the type in `app.config.ts`
 2. Use correct type (number vs string, etc.)
 3. Use `DeepPartial<AppConfig>` for partial overrides
@@ -560,6 +558,7 @@ export const customConfig: DeepPartial<AppConfig> = {
 **Problem**: Old values still being used
 
 **Solutions**:
+
 1. Clear cache: Delete `.next` folder
 2. Restart server: `npm run dev`
 3. Check merge order: Later configs override earlier ones
@@ -569,6 +568,7 @@ export const customConfig: DeepPartial<AppConfig> = {
 **Problem**: Env vars not being applied
 
 **Solutions**:
+
 1. Check variable name matches expected format
 2. Restart server after changing `.env`
 3. Check `config-loader.ts` for supported env vars
@@ -578,6 +578,7 @@ export const customConfig: DeepPartial<AppConfig> = {
 **Problem**: `npm run config:validate` fails
 
 **Solutions**:
+
 1. Check error message for specific issue
 2. Ensure values are in valid ranges
 3. Check required fields are present
@@ -614,7 +615,7 @@ npm run config:help              # Show CLI help
 ```typescript
 // ❌ Hard-coded in component
 const TRIAL_CREDITS = 100;
-const COMMISSION_RATE = 0.20;
+const COMMISSION_RATE = 0.2;
 
 function MyComponent() {
   const credits = TRIAL_CREDITS;
@@ -656,6 +657,7 @@ For help with configuration:
 ## Examples Repository
 
 See `config/custom.config.example.ts` for complete examples of:
+
 - Feature toggles
 - Credit rate customization
 - Subscription plan modifications

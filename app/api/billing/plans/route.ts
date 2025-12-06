@@ -49,7 +49,9 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error listing plans:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to list plans' },
+      {
+        error: error instanceof Error ? error.message : 'Failed to list plans',
+      },
       { status: 500 }
     );
   }
@@ -106,7 +108,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating plan:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create plan' },
+      {
+        error: error instanceof Error ? error.message : 'Failed to create plan',
+      },
       { status: 400 }
     );
   }

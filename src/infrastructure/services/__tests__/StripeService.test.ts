@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  StripeService,
-  StripeNotConfiguredError,
-} from '../StripeService';
+import { StripeService, StripeNotConfiguredError } from '../StripeService';
 
 describe('StripeService', () => {
   let stripeService: StripeService;

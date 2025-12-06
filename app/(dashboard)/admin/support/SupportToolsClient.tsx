@@ -60,16 +60,17 @@ interface Announcement {
 }
 
 export function SupportToolsClient() {
-  const [activeTab, setActiveTab] = useState<'health' | 'announcements'>('health');
+  const [activeTab, setActiveTab] = useState<'health' | 'announcements'>(
+    'health'
+  );
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [healthLoading, setHealthLoading] = useState(false);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [announcementsLoading, setAnnouncementsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(
-    null
-  );
+  const [editingAnnouncement, setEditingAnnouncement] =
+    useState<Announcement | null>(null);
 
   useEffect(() => {
     if (activeTab === 'health') {
@@ -92,7 +93,9 @@ export function SupportToolsClient() {
       const data = await response.json();
       setHealth(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch system health');
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch system health'
+      );
     } finally {
       setHealthLoading(false);
     }
@@ -220,7 +223,9 @@ export function SupportToolsClient() {
               <div className="bg-white rounded-lg shadow p-6 mb-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Overall Status</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Overall Status
+                    </h3>
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
                         health.status
@@ -231,7 +236,9 @@ export function SupportToolsClient() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-600">Last checked</p>
-                    <p className="text-sm font-medium">{formatDate(health.timestamp)}</p>
+                    <p className="text-sm font-medium">
+                      {formatDate(health.timestamp)}
+                    </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Response time: {health.responseTime}ms
                     </p>
@@ -264,7 +271,9 @@ export function SupportToolsClient() {
 
               {/* Statistics */}
               <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <h3 className="text-lg font-semibold mb-4">Statistics (Last 24h)</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Statistics (Last 24h)
+                </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                   <div>
                     <p className="text-sm text-gray-600">Users</p>
@@ -298,25 +307,33 @@ export function SupportToolsClient() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Error Rate</p>
-                    <p className="text-2xl font-bold mt-1">{health.statistics.errorRate}</p>
+                    <p className="text-2xl font-bold mt-1">
+                      {health.statistics.errorRate}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* System Info */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">System Information</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  System Information
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-medium mb-2">Runtime</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Uptime:</span>
-                        <span className="font-medium">{health.system.uptime}</span>
+                        <span className="font-medium">
+                          {health.system.uptime}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Node Version:</span>
-                        <span className="font-medium">{health.system.nodeVersion}</span>
+                        <span className="font-medium">
+                          {health.system.nodeVersion}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Platform:</span>
@@ -331,7 +348,9 @@ export function SupportToolsClient() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-600">RSS:</span>
-                        <span className="font-medium">{health.system.memory.rss} MB</span>
+                        <span className="font-medium">
+                          {health.system.memory.rss} MB
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Heap Total:</span>
@@ -408,14 +427,18 @@ export function SupportToolsClient() {
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-lg font-semibold">{announcement.title}</h3>
+                        <h3 className="text-lg font-semibold">
+                          {announcement.title}
+                        </h3>
                         {!announcement.isActive && (
                           <span className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded">
                             Inactive
                           </span>
                         )}
                       </div>
-                      <p className="text-sm whitespace-pre-wrap">{announcement.content}</p>
+                      <p className="text-sm whitespace-pre-wrap">
+                        {announcement.content}
+                      </p>
                     </div>
                     <div className="flex gap-2 ml-4">
                       <button
@@ -429,7 +452,8 @@ export function SupportToolsClient() {
                   <div className="mt-4 text-xs text-gray-600">
                     <p>
                       Created by {announcement.creator.firstName}{' '}
-                      {announcement.creator.lastName} on {formatDate(announcement.createdAt)}
+                      {announcement.creator.lastName} on{' '}
+                      {formatDate(announcement.createdAt)}
                     </p>
                     {announcement.endDate && (
                       <p>Expires: {formatDate(announcement.endDate)}</p>
@@ -448,7 +472,9 @@ export function SupportToolsClient() {
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-xl font-semibold">
-                {editingAnnouncement ? 'Edit Announcement' : 'Create Announcement'}
+                {editingAnnouncement
+                  ? 'Edit Announcement'
+                  : 'Create Announcement'}
               </h3>
             </div>
             <div className="px-6 py-4">

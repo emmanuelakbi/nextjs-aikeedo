@@ -54,12 +54,9 @@ export async function POST(
     if (immediate) {
       await stripe.subscriptions.cancel(subscription.stripeSubscriptionId);
     } else {
-      await stripe.subscriptions.update(
-        subscription.stripeSubscriptionId,
-        {
-          cancel_at_period_end: true,
-        }
-      );
+      await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+        cancel_at_period_end: true,
+      });
     }
 
     // Update in database
@@ -77,7 +74,9 @@ export async function POST(
     // Log the action
     await logAdminAction({
       adminId: session.user.id,
-      action: immediate ? 'subscription.cancel.immediate' : 'subscription.cancel.end_of_period',
+      action: immediate
+        ? 'subscription.cancel.immediate'
+        : 'subscription.cancel.end_of_period',
       targetType: 'subscription',
       targetId: subscriptionId,
       changes: {

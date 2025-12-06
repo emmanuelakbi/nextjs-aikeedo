@@ -12,6 +12,7 @@ I used vibe coding for approximately 20% of the project - primarily for bug fixe
 4. **Verify immediately**: Run tests after each change
 
 Example conversation flow:
+
 - Me: "The credit deduction is happening twice for streaming AI responses. Here's the usage tracking code..."
 - Kiro: [Analyzes code, identifies duplicate call in stream handler]
 - Me: "Good catch. Also ensure we handle connection drops gracefully"
@@ -24,6 +25,7 @@ Example conversation flow:
 The circuit breaker pattern for AI provider failover. I described the requirement: "When an AI provider fails, automatically switch to a backup provider without the user noticing. Track failure rates and temporarily disable providers that are consistently failing."
 
 Kiro generated:
+
 - A complete circuit breaker implementation with three states (closed, open, half-open)
 - Exponential backoff logic for retry attempts
 - Automatic provider health tracking
@@ -66,6 +68,7 @@ I created 6 major specs, each with three files:
    - Testing requirements
 
 Example structure from `nextjs-billing` spec:
+
 - Requirements: "Users can purchase credits via Stripe, subscribe to plans, view invoices"
 - Design: "Credit ledger table, Stripe webhook handlers, subscription state machine"
 - Tasks: "1. Create credit ledger schema, 2. Implement Stripe checkout, 3. Add webhook handlers..."
@@ -82,13 +85,13 @@ Specs provided three major benefits:
 
 **How did this compare to vibe coding?**
 
-| Aspect | Spec-Driven | Vibe Coding |
-|--------|-------------|-------------|
-| **Best for** | Large features (20+ files) | Quick fixes (1-5 files) |
-| **Planning** | Upfront design required | Exploratory, iterative |
-| **Consistency** | High - follows defined patterns | Variable - depends on conversation |
-| **Speed** | Slower start, faster overall | Fast start, can slow down |
-| **Use in project** | 80% (major features) | 20% (refinements) |
+| Aspect             | Spec-Driven                     | Vibe Coding                        |
+| ------------------ | ------------------------------- | ---------------------------------- |
+| **Best for**       | Large features (20+ files)      | Quick fixes (1-5 files)            |
+| **Planning**       | Upfront design required         | Exploratory, iterative             |
+| **Consistency**    | High - follows defined patterns | Variable - depends on conversation |
+| **Speed**          | Slower start, faster overall    | Fast start, can slow down          |
+| **Use in project** | 80% (major features)            | 20% (refinements)                  |
 
 Specs were essential for features that touched multiple subsystems (like billing affecting auth, workspaces, and AI services). Vibe coding was perfect for "fix this bug" or "optimize this query" tasks.
 
@@ -120,6 +123,7 @@ I created 3 steering documents that Kiro applied to every interaction:
 The biggest impact came from **structure.md** enforcing Clean Architecture boundaries. Without it, Kiro would naturally take shortcuts (like importing Prisma directly in domain entities or mixing business logic with API routes).
 
 With structure.md, Kiro consistently:
+
 - Kept domain layer pure (no infrastructure dependencies)
 - Used repository interfaces instead of direct database access
 - Separated business logic from presentation logic

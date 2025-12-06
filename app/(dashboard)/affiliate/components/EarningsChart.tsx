@@ -18,7 +18,9 @@ export default function EarningsChart({ affiliateId }: EarningsChartProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/affiliate/reports?type=earnings&period=90d');
+        const response = await fetch(
+          '/api/affiliate/reports?type=earnings&period=90d'
+        );
         if (response.ok) {
           const result = await response.json();
           setData(result.data);
@@ -61,8 +63,9 @@ export default function EarningsChart({ affiliateId }: EarningsChartProps) {
       {/* Simple bar chart */}
       <div className="space-y-3">
         {data.earningsByMonth.map((month: any) => {
-          const percentage = maxAmount > 0 ? (month.amount / maxAmount) * 100 : 0;
-          
+          const percentage =
+            maxAmount > 0 ? (month.amount / maxAmount) * 100 : 0;
+
           return (
             <div key={month.month} className="flex items-center gap-4">
               <div className="w-20 text-sm text-gray-600 font-medium">
@@ -93,7 +96,9 @@ export default function EarningsChart({ affiliateId }: EarningsChartProps) {
       {/* Total */}
       <div className="pt-4 border-t border-gray-200">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-gray-600">Total Earnings (90 days)</span>
+          <span className="text-sm font-medium text-gray-600">
+            Total Earnings (90 days)
+          </span>
           <span className="text-lg font-bold text-gray-900">
             {formatCurrency(data.totalEarnings || 0)}
           </span>

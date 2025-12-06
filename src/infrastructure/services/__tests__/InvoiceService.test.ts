@@ -61,7 +61,9 @@ describe('InvoiceService', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(mockInvoice as any);
+      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(
+        mockInvoice as any
+      );
 
       const result = await invoiceService.getInvoiceById('invoice_123');
 
@@ -100,10 +102,13 @@ describe('InvoiceService', () => {
       vi.mocked(prisma.invoice.findMany).mockResolvedValue(mockInvoices as any);
       vi.mocked(prisma.invoice.count).mockResolvedValue(2);
 
-      const result = await invoiceService.listInvoicesByWorkspace('workspace_123', {
-        limit: 10,
-        offset: 0,
-      });
+      const result = await invoiceService.listInvoicesByWorkspace(
+        'workspace_123',
+        {
+          limit: 10,
+          offset: 0,
+        }
+      );
 
       expect(result.invoices).toEqual(mockInvoices);
       expect(result.total).toBe(2);
@@ -147,7 +152,9 @@ describe('InvoiceService', () => {
         invoicePdfUrl: 'https://cached-pdf-url.com',
       };
 
-      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(mockInvoice as any);
+      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(
+        mockInvoice as any
+      );
 
       const result = await invoiceService.getInvoicePdfUrl('invoice_123');
 
@@ -167,7 +174,9 @@ describe('InvoiceService', () => {
         invoice_pdf: 'https://stripe-pdf-url.com',
       };
 
-      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(mockInvoice as any);
+      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(
+        mockInvoice as any
+      );
       vi.mocked(stripeService.retrieveInvoice).mockResolvedValue(
         mockStripeInvoice as any
       );
@@ -194,7 +203,9 @@ describe('InvoiceService', () => {
         status: 'PAID',
       };
 
-      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(mockInvoice as any);
+      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(
+        mockInvoice as any
+      );
 
       const result = await invoiceService.isInvoicePaid('invoice_123');
 
@@ -207,7 +218,9 @@ describe('InvoiceService', () => {
         status: 'OPEN',
       };
 
-      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(mockInvoice as any);
+      vi.mocked(prisma.invoice.findUnique).mockResolvedValue(
+        mockInvoice as any
+      );
 
       const result = await invoiceService.isInvoicePaid('invoice_123');
 

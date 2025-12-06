@@ -118,7 +118,10 @@ export async function PATCH(
     }
 
     // If changing owner, verify new owner exists
-    if (validatedData.ownerId && validatedData.ownerId !== currentWorkspace.ownerId) {
+    if (
+      validatedData.ownerId &&
+      validatedData.ownerId !== currentWorkspace.ownerId
+    ) {
       const newOwner = await prisma.user.findUnique({
         where: { id: validatedData.ownerId },
       });

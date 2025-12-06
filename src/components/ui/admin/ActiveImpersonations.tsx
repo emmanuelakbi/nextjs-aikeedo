@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useImpersonation, ImpersonationSession } from '@/lib/hooks/use-impersonation';
+import {
+  useImpersonation,
+  ImpersonationSession,
+} from '@/lib/hooks/use-impersonation';
 import { Button } from '@/components/ui/Button';
 
 /**
@@ -28,10 +31,7 @@ export function ActiveImpersonations() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleEndImpersonation = async (
-    userId: string,
-    sessionId: string
-  ) => {
+  const handleEndImpersonation = async (userId: string, sessionId: string) => {
     const success = await endImpersonation(userId, sessionId);
     if (success) {
       loadSessions();
@@ -75,10 +75,7 @@ export function ActiveImpersonations() {
                 variant="secondary"
                 size="sm"
                 onClick={() =>
-                  handleEndImpersonation(
-                    session.targetUser.id,
-                    session.id
-                  )
+                  handleEndImpersonation(session.targetUser.id, session.id)
                 }
                 disabled={loading}
               >

@@ -3,7 +3,12 @@
  * Requirements: Affiliate 1, 2, 3, 4, 5
  */
 
-import { AffiliateStatus, ReferralStatus, PayoutMethod, PayoutStatus } from '@prisma/client';
+import {
+  AffiliateStatus,
+  ReferralStatus,
+  PayoutMethod,
+  PayoutStatus,
+} from '@prisma/client';
 
 /**
  * Affiliate Entity

@@ -277,18 +277,14 @@ describe('Audit Logger', () => {
 
       vi.mocked(prisma.adminAction.create).mockResolvedValue({} as any);
 
-      const result = await wrappedHandler(
-        'admin-1',
-        'user-1',
-        { status: 'SUSPENDED' }
-      );
+      const result = await wrappedHandler('admin-1', 'user-1', {
+        status: 'SUSPENDED',
+      });
 
       expect(result).toEqual({ success: true });
-      expect(mockHandler).toHaveBeenCalledWith(
-        'admin-1',
-        'user-1',
-        { status: 'SUSPENDED' }
-      );
+      expect(mockHandler).toHaveBeenCalledWith('admin-1', 'user-1', {
+        status: 'SUSPENDED',
+      });
       expect(prisma.adminAction.create).toHaveBeenCalledWith({
         data: {
           adminId: 'admin-1',

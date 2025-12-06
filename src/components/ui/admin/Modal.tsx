@@ -62,7 +62,9 @@ export function Modal({
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={handleOverlayClick}
     >
-      <div className={`bg-white rounded-lg shadow-xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto`}>
+      <div
+        className={`bg-white rounded-lg shadow-xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto`}
+      >
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white">
           <h3 className="text-xl font-semibold">{title}</h3>
@@ -145,11 +147,7 @@ export function ConfirmModal({
       closeOnOverlayClick={!isLoading}
       footer={
         <>
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            disabled={isLoading}
-          >
+          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
             {cancelLabel}
           </Button>
           <button

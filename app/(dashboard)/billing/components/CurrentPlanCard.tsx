@@ -14,22 +14,29 @@ interface CurrentPlanCardProps {
  */
 function calculateRemainingDays(futureDate: string | null): number | null {
   if (!futureDate) return null;
-  
+
   const now = new Date();
   const target = new Date(futureDate);
   const diffTime = target.getTime() - now.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   return diffDays > 0 ? diffDays : 0;
 }
 
-export default function CurrentPlanCard({ plan, subscription }: CurrentPlanCardProps) {
+export default function CurrentPlanCard({
+  plan,
+  subscription,
+}: CurrentPlanCardProps) {
   if (!plan || !subscription) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold mb-2 text-gray-700">Current Plan</h3>
+        <h3 className="text-lg font-semibold mb-2 text-gray-700">
+          Current Plan
+        </h3>
         <p className="text-gray-500">No active subscription</p>
-        <p className="text-sm text-gray-400 mt-2">Subscribe to a plan to get started</p>
+        <p className="text-sm text-gray-400 mt-2">
+          Subscribe to a plan to get started
+        </p>
       </div>
     );
   }
@@ -44,7 +51,9 @@ export default function CurrentPlanCard({ plan, subscription }: CurrentPlanCardP
   // Calculate remaining trial days
   // Requirements: 8.5
   const isTrialing = subscription.status === 'TRIALING';
-  const trialDaysRemaining = isTrialing ? calculateRemainingDays(subscription.trialEnd) : null;
+  const trialDaysRemaining = isTrialing
+    ? calculateRemainingDays(subscription.trialEnd)
+    : null;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -53,7 +62,7 @@ export default function CurrentPlanCard({ plan, subscription }: CurrentPlanCardP
         <p className="text-2xl font-bold text-gray-900">{plan.name}</p>
         <p className="text-sm text-gray-600 mt-1">{plan.description}</p>
       </div>
-      
+
       <div className="flex items-center justify-between mb-3">
         <span className="text-gray-600">Price</span>
         <span className="font-semibold">
@@ -64,12 +73,16 @@ export default function CurrentPlanCard({ plan, subscription }: CurrentPlanCardP
       {plan.creditCount !== null && (
         <div className="flex items-center justify-between mb-3">
           <span className="text-gray-600">Credits</span>
-          <span className="font-semibold">{plan.creditCount.toLocaleString()}</span>
+          <span className="font-semibold">
+            {plan.creditCount.toLocaleString()}
+          </span>
         </div>
       )}
 
       <div className="mt-4">
-        <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${statusColors[subscription.status] || 'bg-gray-100 text-gray-800'}`}>
+        <span
+          className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${statusColors[subscription.status] || 'bg-gray-100 text-gray-800'}`}
+        >
           {subscription.status}
         </span>
       </div>
@@ -81,12 +94,13 @@ export default function CurrentPlanCard({ plan, subscription }: CurrentPlanCardP
             Trial Period Active
           </p>
           <p className="text-xs text-blue-700 mt-1">
-            {trialDaysRemaining === 0 
-              ? 'Trial ends today' 
+            {trialDaysRemaining === 0
+              ? 'Trial ends today'
               : `${trialDaysRemaining} ${trialDaysRemaining === 1 ? 'day' : 'days'} remaining`}
           </p>
           <p className="text-xs text-blue-600 mt-1">
-            First payment on {new Date(subscription.trialEnd).toLocaleDateString()}
+            First payment on{' '}
+            {new Date(subscription.trialEnd).toLocaleDateString()}
           </p>
         </div>
       )}
@@ -94,16 +108,19 @@ export default function CurrentPlanCard({ plan, subscription }: CurrentPlanCardP
       {subscription.cancelAtPeriodEnd && (
         <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
           <p className="text-xs text-yellow-800">
-            Cancels on {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+            Cancels on{' '}
+            {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
           </p>
         </div>
       )}
 
-      {subscription.daysUntilNextBilling !== null && !subscription.cancelAtPeriodEnd && !isTrialing && (
-        <p className="text-xs text-gray-500 mt-3">
-          Next billing in {subscription.daysUntilNextBilling} days
-        </p>
-      )}
+      {subscription.daysUntilNextBilling !== null &&
+        !subscription.cancelAtPeriodEnd &&
+        !isTrialing && (
+          <p className="text-xs text-gray-500 mt-3">
+            Next billing in {subscription.daysUntilNextBilling} days
+          </p>
+        )}
     </div>
   );
 }

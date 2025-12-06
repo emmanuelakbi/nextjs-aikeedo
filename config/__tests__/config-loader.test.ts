@@ -15,7 +15,7 @@ describe('Configuration System', () => {
 
   it('should have correct default values', () => {
     expect(appConfig.credits.trialCredits).toBe(100);
-    expect(appConfig.affiliate.commissionRate).toBe(0.20);
+    expect(appConfig.affiliate.commissionRate).toBe(0.2);
     expect(appConfig.rateLimits.api.default).toBe(60);
   });
 
@@ -40,7 +40,7 @@ describe('Configuration System', () => {
       'development',
     ];
 
-    requiredSections.forEach(section => {
+    requiredSections.forEach((section) => {
       expect(appConfig[section as keyof typeof appConfig]).toBeDefined();
     });
   });
@@ -85,7 +85,9 @@ describe('Configuration System', () => {
 
   it('should have valid subscription plans', () => {
     expect(appConfig.subscriptionPlans.starter).toBeDefined();
-    expect(appConfig.subscriptionPlans.starter.monthlyCredits).toBeGreaterThan(0);
+    expect(appConfig.subscriptionPlans.starter.monthlyCredits).toBeGreaterThan(
+      0
+    );
     expect(appConfig.subscriptionPlans.starter.price).toBeGreaterThanOrEqual(0);
   });
 

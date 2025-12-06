@@ -12,7 +12,9 @@ interface MarketingMaterialsProps {
   affiliateId: string;
 }
 
-export default function MarketingMaterials({ affiliateId }: MarketingMaterialsProps) {
+export default function MarketingMaterials({
+  affiliateId,
+}: MarketingMaterialsProps) {
   const [materials, setMaterials] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState<string | null>(null);
@@ -74,7 +76,9 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => copyToClipboard(snippet.content, `snippet-${index}`)}
+                  onClick={() =>
+                    copyToClipboard(snippet.content, `snippet-${index}`)
+                  }
                 >
                   {copied === `snippet-${index}` ? '✓ Copied' : 'Copy'}
                 </Button>
@@ -95,7 +99,9 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
             <div key={index} className="border border-gray-200 rounded-lg p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <h4 className="font-medium text-gray-900">{template.title}</h4>
+                  <h4 className="font-medium text-gray-900">
+                    {template.title}
+                  </h4>
                   <p className="text-sm text-gray-600 mt-1">
                     Subject: {template.subject}
                   </p>
@@ -103,7 +109,9 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => copyToClipboard(template.body, `email-${index}`)}
+                  onClick={() =>
+                    copyToClipboard(template.body, `email-${index}`)
+                  }
                 >
                   {copied === `email-${index}` ? '✓ Copied' : 'Copy'}
                 </Button>
@@ -120,28 +128,32 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
       <div>
         <h3 className="font-semibold text-gray-900 mb-3">Tracking Links</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {materials.trackingLinks && Object.entries(materials.trackingLinks).map(([key, url]: [string, any]) => (
-            <div key={key} className="border border-gray-200 rounded-lg p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 capitalize mb-1">
-                    {key}
-                  </p>
-                  <p className="text-xs text-gray-600 truncate">
-                    {url}
-                  </p>
-                </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => copyToClipboard(url, `link-${key}`)}
-                  className="ml-2"
+          {materials.trackingLinks &&
+            Object.entries(materials.trackingLinks).map(
+              ([key, url]: [string, any]) => (
+                <div
+                  key={key}
+                  className="border border-gray-200 rounded-lg p-3"
                 >
-                  {copied === `link-${key}` ? '✓' : '📋'}
-                </Button>
-              </div>
-            </div>
-          ))}
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 capitalize mb-1">
+                        {key}
+                      </p>
+                      <p className="text-xs text-gray-600 truncate">{url}</p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyToClipboard(url, `link-${key}`)}
+                      className="ml-2"
+                    >
+                      {copied === `link-${key}` ? '✓' : '📋'}
+                    </Button>
+                  </div>
+                </div>
+              )
+            )}
         </div>
       </div>
 
@@ -150,7 +162,8 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
         <h3 className="font-semibold text-gray-900 mb-3">Banner Images</h3>
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
-            📸 Banner images coming soon! We're creating professional marketing materials for you.
+            📸 Banner images coming soon! We're creating professional marketing
+            materials for you.
           </p>
         </div>
       </div>
@@ -160,13 +173,18 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
         <h3 className="font-semibold text-gray-900 mb-3">Social Media</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {materials.socialImages?.map((social: any, index: number) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4 text-center">
+            <div
+              key={index}
+              className="border border-gray-200 rounded-lg p-4 text-center"
+            >
               <div className="text-3xl mb-2">
                 {social.platform === 'Twitter' && '🐦'}
                 {social.platform === 'Facebook' && '📘'}
                 {social.platform === 'Instagram' && '📷'}
               </div>
-              <p className="font-medium text-gray-900 mb-1">{social.platform}</p>
+              <p className="font-medium text-gray-900 mb-1">
+                {social.platform}
+              </p>
               <p className="text-xs text-gray-600">{social.size}</p>
             </div>
           ))}

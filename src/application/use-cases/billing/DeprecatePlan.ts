@@ -3,7 +3,7 @@ import { PlanRepository } from '../../../infrastructure/repositories/PlanReposit
 
 /**
  * Deprecate Plan Use Case
- * 
+ *
  * Deprecates a plan, preventing new subscriptions while maintaining existing ones.
  * Requirements: Billing 1.4
  */

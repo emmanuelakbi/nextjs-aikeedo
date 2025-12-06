@@ -10,12 +10,12 @@ This document lists the Clean Architecture violations detected by our automated 
 
 ## Summary
 
-| Layer | Violation Type | Count | Status |
-|-------|---------------|-------|--------|
-| Domain | Framework imports | 1 file | ⚠️ Needs Fix |
-| Application | Concrete repository imports | 13 files | ⚠️ Needs Fix |
-| Presentation | Direct repository imports | 22 files | ⚠️ Needs Fix |
-| Infrastructure | Missing interface implementation | 6 files | ⚠️ Needs Fix |
+| Layer          | Violation Type                   | Count    | Status       |
+| -------------- | -------------------------------- | -------- | ------------ |
+| Domain         | Framework imports                | 1 file   | ⚠️ Needs Fix |
+| Application    | Concrete repository imports      | 13 files | ⚠️ Needs Fix |
+| Presentation   | Direct repository imports        | 22 files | ⚠️ Needs Fix |
+| Infrastructure | Missing interface implementation | 6 files  | ⚠️ Needs Fix |
 
 ---
 
@@ -26,12 +26,14 @@ This document lists the Clean Architecture violations detected by our automated 
 **Issue**: Domain layer should not import framework code (Next.js, React)
 
 **Files**:
+
 - `src/domain/affiliate/services/referral-tracker.ts`
   - Imports: `next/headers`
 
 **Impact**: Medium - Breaks domain purity
 
-**Recommendation**: 
+**Recommendation**:
+
 - Move referral tracking logic to infrastructure layer
 - Create a domain service interface that infrastructure implements
 - Pass cookies/headers as parameters instead of importing Next.js
@@ -47,6 +49,7 @@ This document lists the Clean Architecture violations detected by our automated 
 **Files**:
 
 #### Auth Use Cases (6 files)
+
 - `src/application/use-cases/auth/LoginUserUseCase.ts`
   - Imports: `UserRepository`, `SessionRepository`
 - `src/application/use-cases/auth/RegisterUserUseCase.ts`
@@ -59,6 +62,7 @@ This document lists the Clean Architecture violations detected by our automated 
   - Imports: `UserRepository`, `VerificationTokenRepository`
 
 #### Billing Use Cases (6 files)
+
 - `src/application/use-cases/billing/ActivatePlan.ts`
   - Imports: `PlanRepository`
 - `src/application/use-cases/billing/CreatePlan.ts`
@@ -73,12 +77,14 @@ This document lists the Clean Architecture violations detected by our automated 
   - Imports: `PlanRepository`
 
 #### AI Use Cases (1 file)
+
 - `src/application/use-cases/ai/GenerateSpeechUseCase.ts`
   - Imports: `VoiceRepository`
 
 **Impact**: High - Violates Dependency Inversion Principle
 
 **Recommendation**:
+
 1. Create domain interfaces for missing repositories:
    - `ISessionRepository`
    - `IPlanRepository`
@@ -99,6 +105,7 @@ This document lists the Clean Architecture violations detected by our automated 
 **Files**:
 
 #### Auth Routes (5 files)
+
 - `app/api/auth/logout/route.ts`
 - `app/api/auth/register/route.ts`
 - `app/api/auth/request-reset/route.ts`
@@ -106,29 +113,35 @@ This document lists the Clean Architecture violations detected by our automated 
 - `app/api/auth/verify-email/route.ts`
 
 #### Billing Routes (4 files)
+
 - `app/api/billing/plans/[id]/activate/route.ts`
 - `app/api/billing/plans/[id]/deprecate/route.ts`
 - `app/api/billing/plans/[id]/route.ts`
 - `app/api/billing/plans/route.ts`
 
 #### Conversation Routes (3 files)
+
 - `app/api/conversations/[id]/messages/route.ts`
 - `app/api/conversations/[id]/route.ts`
 - `app/api/conversations/route.ts`
 
 #### Document Routes (2 files)
+
 - `app/api/documents/[id]/route.ts`
 - `app/api/documents/route.ts`
 
 #### File Routes (2 files)
+
 - `app/api/files/[id]/route.ts`
 - `app/api/files/route.ts`
 
 #### Preset Routes (2 files)
+
 - `app/api/presets/[id]/route.ts`
 - `app/api/presets/route.ts`
 
 #### Workspace Routes (3 files)
+
 - `app/api/workspaces/[id]/route.ts`
 - `app/api/workspaces/[id]/switch/route.ts`
 - `app/api/workspaces/[id]/transfer-ownership/route.ts`
@@ -136,14 +149,16 @@ This document lists the Clean Architecture violations detected by our automated 
 **Impact**: Medium - Creates tight coupling
 
 **Recommendation**:
+
 1. Follow the pattern from Phase 4 refactoring
 2. Replace direct repository imports with DI container
 3. Example transformation:
+
    ```typescript
    // Before
    const repo = new UserRepository();
    const useCase = new LoginUserUseCase(repo);
-   
+
    // After
    import { container } from '@/infrastructure/di/container';
    const useCase = container.createLoginUserUseCase();
@@ -158,6 +173,7 @@ This document lists the Clean Architecture violations detected by our automated 
 **Issue**: Repository implementations should implement domain interfaces
 
 **Files**:
+
 - `OptimizedUserRepository.ts` - Performance optimization variant
 - `OptimizedWorkspaceRepository.ts` - Performance optimization variant
 - `PlanRepository.ts` - Billing domain
@@ -168,6 +184,7 @@ This document lists the Clean Architecture violations detected by our automated 
 **Impact**: Low - Functionality works, but violates architecture
 
 **Recommendation**:
+
 1. Create domain interfaces:
    - `IPlanRepository` in `src/domain/billing/repositories/`
    - `ISessionRepository` in `src/domain/auth/repositories/`
@@ -180,12 +197,14 @@ This document lists the Clean Architecture violations detected by our automated 
 ## Refactoring Priority
 
 ### High Priority (Breaking DIP)
+
 1. ✅ **User use cases** - COMPLETED in Phase 2
 2. ✅ **Workspace use cases** - COMPLETED in Phase 2
 3. ⚠️ **Auth use cases** - Need refactoring
 4. ⚠️ **Billing use cases** - Need refactoring
 
 ### Medium Priority (Tight Coupling)
+
 1. ✅ **User API routes** - COMPLETED in Phase 4
 2. ✅ **Workspace API routes** - COMPLETED in Phase 4
 3. ⚠️ **Auth API routes** - Need refactoring
@@ -196,6 +215,7 @@ This document lists the Clean Architecture violations detected by our automated 
 8. ⚠️ **Conversation API routes** - Need refactoring
 
 ### Low Priority (Missing Interfaces)
+
 1. ⚠️ **Plan repository** - Create interface
 2. ⚠️ **Session repository** - Create interface
 3. ⚠️ **Voice repository** - Create interface
@@ -205,6 +225,7 @@ This document lists the Clean Architecture violations detected by our automated 
 ## Progress Tracking
 
 ### Completed Refactoring
+
 - ✅ Domain interfaces created (8 repositories)
 - ✅ User use cases refactored (4 use cases)
 - ✅ Workspace use cases refactored (5 use cases)
@@ -219,6 +240,7 @@ This document lists the Clean Architecture violations detected by our automated 
 **Total**: 42 tasks completed
 
 ### Remaining Work
+
 - ⚠️ Auth domain refactoring (6 use cases, 5 routes)
 - ⚠️ Billing domain refactoring (6 use cases, 4 routes)
 - ⚠️ AI domain refactoring (1 use case)
@@ -277,15 +299,18 @@ npm test tests/architecture/layer-dependencies.test.ts -t "Presentation Layer"
 Architecture rules have been added to `.eslintrc.json`:
 
 ### Domain Layer Rules
+
 - ❌ No infrastructure imports
 - ❌ No application imports
 - ❌ No framework imports (Next.js, React)
 
 ### Application Layer Rules
+
 - ❌ No concrete repository imports
 - ❌ No Next.js imports
 
 ### Presentation Layer Rules
+
 - ❌ No direct repository imports (use DI container)
 
 ### Enforcement

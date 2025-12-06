@@ -3,49 +3,52 @@
 ## Data Models
 
 **File**
+
 ```typescript
 type File = {
-  id: string
-  workspaceId: string
-  userId: string
-  name: string
-  type: string
-  size: number
-  url: string
-  storageKey: string
-  metadata: Json
-  createdAt: Date
-}
+  id: string;
+  workspaceId: string;
+  userId: string;
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+  storageKey: string;
+  metadata: Json;
+  createdAt: Date;
+};
 ```
 
 **Document**
+
 ```typescript
 type Document = {
-  id: string
-  workspaceId: string
-  userId: string
-  title: string
-  content: string
-  type: 'text' | 'image' | 'audio'
-  fileId: string | null
-  generationId: string | null
-  createdAt: Date
-  updatedAt: Date
-}
+  id: string;
+  workspaceId: string;
+  userId: string;
+  title: string;
+  content: string;
+  type: 'text' | 'image' | 'audio';
+  fileId: string | null;
+  generationId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 ```
 
 **Voice**
+
 ```typescript
 type Voice = {
-  id: string
-  workspaceId: string
-  name: string
-  description: string
-  sampleFileId: string
-  modelId: string | null
-  status: 'training' | 'ready' | 'failed'
-  createdAt: Date
-}
+  id: string;
+  workspaceId: string;
+  name: string;
+  description: string;
+  sampleFileId: string;
+  modelId: string | null;
+  status: 'training' | 'ready' | 'failed';
+  createdAt: Date;
+};
 ```
 
 ## Implementation

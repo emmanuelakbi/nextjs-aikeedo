@@ -23,6 +23,7 @@ This directory contains all the Kiro-specific files used to build AIKEEDO for th
 ## Steering Documents
 
 ### Purpose
+
 Steering documents provide context and rules that Kiro applies to ALL interactions. They ensure consistency across the entire codebase.
 
 ### Our Steering Strategy
@@ -46,12 +47,15 @@ Steering documents provide context and rules that Kiro applies to ALL interactio
    - **Impact**: Ensured consistent use of tools and prevented technology drift
 
 ### Key Insight
+
 Steering docs were crucial for the "Frankenstein" nature of this project. They allowed Kiro to understand how to make incompatible technologies work together (e.g., enterprise DDD patterns in a Next.js serverless environment).
 
 ## Specs
 
 ### Purpose
+
 Specs provide structured, incremental development of complex features. Each spec has:
+
 - **requirements.md**: What needs to be built (acceptance criteria)
 - **design.md**: How it will be built (architecture decisions)
 - **tasks.md**: Step-by-step implementation plan
@@ -61,9 +65,11 @@ Specs provide structured, incremental development of complex features. Each spec
 We built AIKEEDO in layers, with each spec building on previous ones:
 
 #### 0. Architecture Refactoring Spec (`architecture-refactoring`) - NEW!
+
 **Purpose**: Transform existing codebase from "good" to "excellent" Clean Architecture
 
-**What It Does**: 
+**What It Does**:
+
 - Adds repository interfaces in domain layer
 - Removes infrastructure dependencies from domain
 - Implements dependency injection container
@@ -76,6 +82,7 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 **Kiro Usage**: Spec-driven refactoring across 150+ files. Without specs, this would be impossible to coordinate. The 20 correctness properties ensure architectural rules are enforced.
 
 #### 1. Foundation Spec (`nextjs-foundation`)
+
 **Built**: Authentication, database, core infrastructure, Clean Architecture skeleton
 
 **Why First**: Everything else depends on this foundation. Established patterns that all other specs would follow.
@@ -83,6 +90,7 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 **Kiro Usage**: Spec-driven development was essential here. The foundation required coordinated changes across multiple layers (domain, application, infrastructure, presentation).
 
 #### 2. AI Services Spec (`nextjs-ai-services`)
+
 **Built**: Unified interface for OpenAI, Anthropic, Google, Mistral with circuit breakers and failover
 
 **Frankenstein Moment**: This is where we stitched together four competing AI providers. Each has a different API, pricing model, and capabilities.
@@ -90,6 +98,7 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 **Kiro Usage**: Spec defined the abstract interfaces and patterns. Vibe coding helped refine error handling and edge cases for each provider.
 
 #### 3. Billing Spec (`nextjs-billing`)
+
 **Built**: Credit system, Stripe integration, subscriptions, invoices, usage tracking
 
 **Frankenstein Moment**: Combining Stripe's subscription model with a custom credit system. Two different billing paradigms working together.
@@ -97,6 +106,7 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 **Kiro Usage**: Spec was critical for managing the complexity. Billing touches every part of the system (auth, workspaces, AI services, affiliates).
 
 #### 4. Affiliate Spec (`nextjs-affiliate`)
+
 **Built**: Referral tracking, commission calculation, payout system, analytics
 
 **Frankenstein Moment**: Integrating affiliate tracking with existing auth and billing systems. Cookie-based attribution + Stripe Connect payouts.
@@ -104,6 +114,7 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 **Kiro Usage**: Spec helped coordinate changes across multiple subsystems. Vibe coding optimized the commission calculation engine.
 
 #### 5. Content Management Spec (`nextjs-content-management`)
+
 **Built**: Document creation, file uploads, S3 integration, voice cloning, workspace isolation
 
 **Frankenstein Moment**: Combining local database storage (metadata) with S3 (files) with AI services (generation).
@@ -111,6 +122,7 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 **Kiro Usage**: Spec defined the architecture. Vibe coding handled S3 integration details and presigned URL generation.
 
 #### 6. Admin Dashboard Spec (`nextjs-admin-dashboard`)
+
 **Built**: User impersonation, content moderation, analytics, audit logging
 
 **Frankenstein Moment**: Admin features that work across all subsystems while maintaining security boundaries.
@@ -119,16 +131,17 @@ We built AIKEEDO in layers, with each spec building on previous ones:
 
 ### Spec vs Vibe Coding Comparison
 
-| Aspect | Specs | Vibe Coding |
-|--------|-------|-------------|
-| **Best For** | Large features, multiple files | Quick fixes, optimizations |
-| **Planning** | Upfront requirements and design | Exploratory, iterative |
+| Aspect          | Specs                           | Vibe Coding                        |
+| --------------- | ------------------------------- | ---------------------------------- |
+| **Best For**    | Large features, multiple files  | Quick fixes, optimizations         |
+| **Planning**    | Upfront requirements and design | Exploratory, iterative             |
 | **Consistency** | High - follows defined patterns | Variable - depends on conversation |
-| **Speed** | Slower start, faster overall | Fast start, can slow down |
-| **Complexity** | Handles very complex features | Better for focused problems |
-| **Our Usage** | 80% of major features | 20% refinements and fixes |
+| **Speed**       | Slower start, faster overall    | Fast start, can slow down          |
+| **Complexity**  | Handles very complex features   | Better for focused problems        |
+| **Our Usage**   | 80% of major features           | 20% refinements and fixes          |
 
 ### Key Insight
+
 Specs were the skeleton, vibe coding was the flesh. For a Frankenstein project with many interconnected parts, specs prevented us from creating a monster that couldn't walk. Each spec ensured its subsystem integrated properly with the others.
 
 ## Development Workflow
@@ -166,18 +179,21 @@ Specs were the skeleton, vibe coding was the flesh. For a Frankenstein project w
 ## Metrics
 
 ### Code Generated
+
 - **Total Files**: 150+
 - **Lines of Code**: 15,000+
 - **Spec-Driven**: ~80% of major features
 - **Vibe Coding**: ~20% refinements and fixes
 
 ### Specs Created
+
 - 7 major specs (6 feature specs + 1 refactoring spec)
 - 21 total spec files (requirements + design + tasks)
 - Average 30 tasks per feature spec
 - 90 tasks in refactoring spec (comprehensive testing)
 
 ### Steering Impact
+
 - 3 steering documents
 - Applied to 100% of Kiro interactions
 - Prevented architectural drift across 6 major subsystems
@@ -185,35 +201,43 @@ Specs were the skeleton, vibe coding was the flesh. For a Frankenstein project w
 ## Why This Demonstrates Kiro's Power
 
 ### 1. Taming Complexity
+
 AIKEEDO is genuinely complex - multiple AI providers, enterprise architecture, complex billing, multi-tenancy. Kiro's combination of specs and steering made this manageable.
 
 ### 2. Maintaining Consistency
+
 With 150+ files across 6 subsystems, maintaining architectural consistency is hard. Steering docs ensured every file followed the same patterns.
 
 ### 3. Incremental Development
+
 Specs allowed us to build incrementally. Each spec added a major subsystem without breaking existing functionality.
 
 ### 4. Flexibility
+
 When we needed to pivot or optimize, vibe coding let us iterate quickly without rewriting entire specs.
 
 ### 5. The Frankenstein Factor
+
 The real achievement: Kiro helped us stitch together incompatible technologies (serverless + stateful, multiple AI providers, enterprise patterns + modern web) into a cohesive, working system.
 
 ## Current Status & Next Steps
 
 ### ✅ What's Complete
+
 - All 6 core feature modules implemented
 - 150+ files, 15,000+ lines of code
 - Full-stack application with AI, billing, and admin features
 - Working authentication, multi-tenancy, and credit system
 
 ### 🏗️ What's Next (Optional)
+
 - Architecture refactoring spec ready to implement
 - 90 tasks to transform code from "good" to "excellent"
 - Comprehensive testing phase (100% pass rate, ≥90% coverage)
 - Production-ready with zero errors guarantee
 
 ### 📊 Architecture Quality
+
 - **Current**: 3/10 spaghetti (already quite good!)
 - **After Refactoring**: 0/10 spaghetti (textbook Clean Architecture)
 - **Decision**: Ship now or refactor first?

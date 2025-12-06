@@ -30,11 +30,13 @@ The Support Tools interface provides administrators with utilities for customer 
 #### Operations
 
 **Create Announcement**:
+
 ```
 POST /api/admin/announcements
 ```
 
 **Body**:
+
 ```json
 {
   "title": "Scheduled Maintenance",
@@ -47,16 +49,19 @@ POST /api/admin/announcements
 ```
 
 **Update Announcement**:
+
 ```
 PATCH /api/admin/announcements/:id
 ```
 
 **Delete Announcement**:
+
 ```
 DELETE /api/admin/announcements/:id
 ```
 
 **List Announcements**:
+
 ```
 GET /api/admin/announcements?isActive=true
 ```
@@ -108,6 +113,7 @@ GET /api/admin/error-logs
 ```
 
 **Query Parameters**:
+
 - `page` (number): Page number
 - `limit` (number): Results per page
 - `type` (string): Filter by generation type
@@ -117,6 +123,7 @@ GET /api/admin/error-logs
 - `endDate` (string): End date (ISO format)
 
 **Response**:
+
 ```json
 {
   "logs": [
@@ -201,6 +208,7 @@ GET /api/admin/system-health
 ```
 
 **Response**:
+
 ```json
 {
   "status": "healthy",
@@ -249,6 +257,7 @@ GET /api/admin/system-health
 #### Starting Impersonation
 
 **From User Management**:
+
 1. Navigate to `/admin/users`
 2. Find the user
 3. Click "Impersonate"
@@ -256,11 +265,13 @@ GET /api/admin/system-health
 5. Platform loads as that user
 
 **API Endpoint**:
+
 ```
 POST /api/admin/impersonation
 ```
 
 **Body**:
+
 ```json
 {
   "userId": "user-123"
@@ -268,6 +279,7 @@ POST /api/admin/impersonation
 ```
 
 **Response**:
+
 ```json
 {
   "sessionId": "imp-session-123",
@@ -280,21 +292,25 @@ POST /api/admin/impersonation
 #### Ending Impersonation
 
 **Manual**:
+
 1. Click "End Impersonation" button in banner
 2. Confirm action
 3. Return to admin account
 
 **Automatic**:
+
 - Session expires after timeout (1 hour)
 - Admin logs out
 - Browser is closed
 
 **API Endpoint**:
+
 ```
 DELETE /api/admin/impersonation
 ```
 
 **Query Parameters**:
+
 - `sessionId` (string): Impersonation session ID
 
 #### Active Sessions
@@ -306,6 +322,7 @@ GET /api/admin/impersonation
 ```
 
 **Response**:
+
 ```json
 {
   "sessions": [
@@ -333,24 +350,29 @@ GET /api/admin/impersonation
 ## Security Considerations
 
 ### Access Control
+
 - Only admins can access support tools
 - All endpoints protected by `requireAdmin()` middleware
 - Impersonation is restricted to non-admin users
 
 ### Audit Logging
+
 All support tool actions are logged:
+
 - Announcement creation, updates, deletion
 - Error log viewing
 - System health checks
 - Impersonation sessions (start and end)
 
 ### Data Privacy
+
 - Error logs may contain sensitive data
 - Access should be restricted to authorized personnel
 - Consider data retention policies
 - Comply with GDPR and privacy regulations
 
 ### Impersonation Security
+
 - Time-limited sessions prevent abuse
 - All actions during impersonation are logged
 - Cannot impersonate admins

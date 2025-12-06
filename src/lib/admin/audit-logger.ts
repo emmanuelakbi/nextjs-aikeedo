@@ -98,10 +98,7 @@ export async function getAuditLogs(options?: {
  * @param targetId - The ID of the target
  * @returns Array of audit log entries
  */
-export async function getTargetAuditLogs(
-  targetType: string,
-  targetId: string
-) {
+export async function getTargetAuditLogs(targetType: string, targetId: string) {
   return await getAuditLogs({ targetType, targetId });
 }
 

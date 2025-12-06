@@ -12,10 +12,7 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get workspace ID from query params
@@ -38,12 +35,12 @@ export async function GET(request: NextRequest) {
           {
             members: {
               some: {
-                userId: session.user.id
-              }
-            }
-          }
-        ]
-      }
+                userId: session.user.id,
+              },
+            },
+          },
+        ],
+      },
     });
 
     if (!workspace) {
@@ -61,23 +58,22 @@ export async function GET(request: NextRequest) {
       where: { workspaceId },
       orderBy: { createdAt: 'desc' },
       take: limit,
-      skip: offset
+      skip: offset,
     });
 
     const total = await prisma.creditTransaction.count({
-      where: { workspaceId }
+      where: { workspaceId },
     });
 
     return NextResponse.json({
       transactions,
       total,
       limit,
-      offset
+      offset,
     });
-
   } catch (error) {
     console.error('Error retrieving credit transactions:', error);
-    
+
     return NextResponse.json(
       { error: 'Failed to retrieve credit transactions' },
       { status: 500 }

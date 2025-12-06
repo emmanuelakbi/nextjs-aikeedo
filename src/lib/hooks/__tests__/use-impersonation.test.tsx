@@ -38,7 +38,7 @@ describe('useImpersonation', () => {
       } as Response);
 
       expect(fetch).toHaveBeenCalledTimes(0);
-      
+
       // Verify the API endpoint would be called correctly
       await fetch('/api/admin/users/user-1/impersonate', {
         method: 'POST',

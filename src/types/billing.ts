@@ -1,11 +1,11 @@
 /**
  * Billing Module Type Definitions
- * 
+ *
  * These types align with the Prisma schema and design document
  * for the billing module.
  */
 
-import { 
+import {
   Plan as PrismaPlan,
   Subscription as PrismaSubscription,
   Invoice as PrismaInvoice,
@@ -14,15 +14,15 @@ import {
   PlanInterval,
   SubscriptionStatus,
   InvoiceStatus,
-  CreditTransactionType
+  CreditTransactionType,
 } from '@prisma/client';
 
 // Re-export Prisma enums
-export { 
-  PlanInterval, 
-  SubscriptionStatus, 
-  InvoiceStatus, 
-  CreditTransactionType 
+export {
+  PlanInterval,
+  SubscriptionStatus,
+  InvoiceStatus,
+  CreditTransactionType,
 };
 
 // Plan types
@@ -52,7 +52,9 @@ export type CreatePlanInput = {
   stripePriceId: string;
 };
 
-export type UpdatePlanInput = Partial<Omit<CreatePlanInput, 'stripeProductId' | 'stripePriceId'>> & {
+export type UpdatePlanInput = Partial<
+  Omit<CreatePlanInput, 'stripeProductId' | 'stripePriceId'>
+> & {
   isActive?: boolean;
 };
 

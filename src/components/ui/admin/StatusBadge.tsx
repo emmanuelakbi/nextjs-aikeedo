@@ -8,11 +8,11 @@
  * Displays a colored badge for various status types.
  */
 
-type BadgeVariant = 
-  | 'success' 
-  | 'warning' 
-  | 'error' 
-  | 'info' 
+type BadgeVariant =
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info'
   | 'neutral'
   | 'purple'
   | 'blue';
@@ -33,7 +33,11 @@ const variantClasses: Record<BadgeVariant, string> = {
   blue: 'bg-blue-100 text-blue-800',
 };
 
-export function StatusBadge({ children, variant = 'neutral', className = '' }: StatusBadgeProps) {
+export function StatusBadge({
+  children,
+  variant = 'neutral',
+  className = '',
+}: StatusBadgeProps) {
   return (
     <span
       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${variantClasses[variant]} ${className}`}

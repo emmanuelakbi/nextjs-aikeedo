@@ -10,7 +10,7 @@ import * as fc from 'fast-check';
 function calculateCommission(amount: number, rate: number): number {
   if (amount < 0) throw new Error('Amount must be non-negative');
   if (rate < 0 || rate > 100) throw new Error('Rate must be between 0 and 100');
-  
+
   return Math.floor((amount * rate) / 100);
 }
 
@@ -49,13 +49,10 @@ describe('Commission Processor - Property-Based Tests', () => {
     it('should return zero for zero amount', () => {
       // Property: Zero amount should always result in zero commission
       fc.assert(
-        fc.property(
-          fc.integer({ min: 0, max: 100 }),
-          (rate) => {
-            const commission = calculateCommission(0, rate);
-            expect(commission).toBe(0);
-          }
-        ),
+        fc.property(fc.integer({ min: 0, max: 100 }), (rate) => {
+          const commission = calculateCommission(0, rate);
+          expect(commission).toBe(0);
+        }),
         { numRuns: 100 }
       );
     });
@@ -63,13 +60,10 @@ describe('Commission Processor - Property-Based Tests', () => {
     it('should return zero for zero rate', () => {
       // Property: Zero rate should always result in zero commission
       fc.assert(
-        fc.property(
-          fc.integer({ min: 0, max: 1000000 }),
-          (amount) => {
-            const commission = calculateCommission(amount, 0);
-            expect(commission).toBe(0);
-          }
-        ),
+        fc.property(fc.integer({ min: 0, max: 1000000 }), (amount) => {
+          const commission = calculateCommission(amount, 0);
+          expect(commission).toBe(0);
+        }),
         { numRuns: 100 }
       );
     });
@@ -77,13 +71,10 @@ describe('Commission Processor - Property-Based Tests', () => {
     it('should return full amount for 100% rate', () => {
       // Property: 100% rate should return the full amount
       fc.assert(
-        fc.property(
-          fc.integer({ min: 0, max: 1000000 }),
-          (amount) => {
-            const commission = calculateCommission(amount, 100);
-            expect(commission).toBe(amount);
-          }
-        ),
+        fc.property(fc.integer({ min: 0, max: 1000000 }), (amount) => {
+          const commission = calculateCommission(amount, 100);
+          expect(commission).toBe(amount);
+        }),
         { numRuns: 100 }
       );
     });
@@ -97,10 +88,10 @@ describe('Commission Processor - Property-Based Tests', () => {
           (amount, rate) => {
             const commission1 = calculateCommission(amount, rate);
             const commission2 = calculateCommission(amount, rate * 2);
-            
+
             // Skip if commission1 is too small (rounding dominates)
             if (commission1 < 10) return;
-            
+
             // Allow for rounding differences - use wider tolerance
             const ratio = commission2 / commission1;
             expect(ratio).toBeGreaterThanOrEqual(1.8);
@@ -120,10 +111,12 @@ describe('Commission Processor - Property-Based Tests', () => {
           (amount, rate) => {
             const commission1 = calculateCommission(amount, rate);
             const commission2 = calculateCommission(amount * 2, rate);
-            
+
             // Due to floor rounding, commission2 might be commission1 * 2 or commission1 * 2 + 1
             // Allow for 1 cent difference due to rounding
-            expect(Math.abs(commission2 - (commission1 * 2))).toBeLessThanOrEqual(1);
+            expect(Math.abs(commission2 - commission1 * 2)).toBeLessThanOrEqual(
+              1
+            );
           }
         ),
         { numRuns: 100 }
@@ -151,7 +144,9 @@ describe('Commission Processor - Property-Based Tests', () => {
           fc.integer({ min: -1000000, max: -1 }),
           fc.integer({ min: 0, max: 100 }),
           (amount, rate) => {
-            expect(() => calculateCommission(amount, rate)).toThrow('Amount must be non-negative');
+            expect(() => calculateCommission(amount, rate)).toThrow(
+              'Amount must be non-negative'
+            );
           }
         ),
         { numRuns: 100 }
@@ -164,7 +159,9 @@ describe('Commission Processor - Property-Based Tests', () => {
           fc.integer({ min: 0, max: 1000000 }),
           fc.integer({ min: 101, max: 200 }),
           (amount, rate) => {
-            expect(() => calculateCommission(amount, rate)).toThrow('Rate must be between 0 and 100');
+            expect(() => calculateCommission(amount, rate)).toThrow(
+              'Rate must be between 0 and 100'
+            );
           }
         ),
         { numRuns: 100 }
@@ -180,8 +177,10 @@ describe('Commission Processor - Property-Based Tests', () => {
           fc.integer({ min: 0, max: 100 }),
           (amount1, amount2, rate) => {
             const combined = calculateCommission(amount1 + amount2, rate);
-            const separate = calculateCommission(amount1, rate) + calculateCommission(amount2, rate);
-            
+            const separate =
+              calculateCommission(amount1, rate) +
+              calculateCommission(amount2, rate);
+
             // Allow for rounding differences of 1 cent
             expect(Math.abs(combined - separate)).toBeLessThanOrEqual(1);
           }
@@ -204,14 +203,11 @@ describe('Commission Processor - Property-Based Tests', () => {
     it('should return higher rates for higher tiers', () => {
       // Property: Higher tier should always have higher or equal rate
       fc.assert(
-        fc.property(
-          fc.integer({ min: 1, max: 2 }),
-          (tier) => {
-            const rate1 = getTierRate(tier);
-            const rate2 = getTierRate(tier + 1);
-            expect(rate2).toBeGreaterThanOrEqual(rate1);
-          }
-        ),
+        fc.property(fc.integer({ min: 1, max: 2 }), (tier) => {
+          const rate1 = getTierRate(tier);
+          const rate2 = getTierRate(tier + 1);
+          expect(rate2).toBeGreaterThanOrEqual(rate1);
+        }),
         { numRuns: 100 }
       );
     });

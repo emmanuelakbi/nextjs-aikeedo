@@ -1,11 +1,11 @@
 /**
  * Architecture Tests - Layer Dependencies
- * 
+ *
  * These tests validate that our Clean Architecture principles are maintained:
  * 1. Domain layer has no infrastructure dependencies
  * 2. Application layer (use cases) only imports from domain
  * 3. API routes use DI container instead of direct repository instantiation
- * 
+ *
  * Requirements: 10.1, 10.2, 10.3, 10.4
  */
 
@@ -26,7 +26,11 @@ function getTypeScriptFiles(dir: string, fileList: string[] = []): string[] {
 
     if (stat.isDirectory()) {
       // Skip node_modules, .next, and test directories
-      if (!file.startsWith('.') && file !== 'node_modules' && file !== '__tests__') {
+      if (
+        !file.startsWith('.') &&
+        file !== 'node_modules' &&
+        file !== '__tests__'
+      ) {
         getTypeScriptFiles(filePath, fileList);
       }
     } else if (file.endsWith('.ts') || file.endsWith('.tsx')) {
@@ -215,15 +219,20 @@ describe('Architecture Tests - Layer Dependencies', () => {
     /**
      * Property 1: Repository Interface Import Purity
      * Feature: architecture-refactoring, Property 1: Repository Interface Import Purity
-     * 
+     *
      * For any use case file, all repository imports should come from @/domain/ paths,
      * not from @/infrastructure/ paths.
-     * 
+     *
      * Validates: Requirements 1.2, 5.1, 5.5
      */
     it('Property 1: all use case repository imports come from domain layer', () => {
-      const useCasesDir = path.join(process.cwd(), 'src', 'application', 'use-cases');
-      
+      const useCasesDir = path.join(
+        process.cwd(),
+        'src',
+        'application',
+        'use-cases'
+      );
+
       if (!fs.existsSync(useCasesDir)) {
         // If directory doesn't exist, test passes vacuously
         return;
@@ -233,63 +242,67 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       // Property: For ALL use case files
       fc.assert(
-        fc.property(
-          fc.constantFrom(...useCaseFiles),
-          (useCaseFile) => {
-            const content = fs.readFileSync(useCaseFile, 'utf-8');
-            const fileName = path.basename(useCaseFile);
-            const relativePath = useCaseFile.replace(process.cwd(), '');
+        fc.property(fc.constantFrom(...useCaseFiles), (useCaseFile) => {
+          const content = fs.readFileSync(useCaseFile, 'utf-8');
+          const fileName = path.basename(useCaseFile);
+          const relativePath = useCaseFile.replace(process.cwd(), '');
 
-            // Extract all imports
-            const imports = extractImports(useCaseFile);
+          // Extract all imports
+          const imports = extractImports(useCaseFile);
 
-            // Filter for repository-related imports
-            const repositoryImports = imports.filter((imp) => {
-              const lowerImp = imp.toLowerCase();
-              return (
-                lowerImp.includes('repository') &&
-                !lowerImp.includes('node_modules') &&
-                !imp.startsWith('.')
+          // Filter for repository-related imports
+          const repositoryImports = imports.filter((imp) => {
+            const lowerImp = imp.toLowerCase();
+            return (
+              lowerImp.includes('repository') &&
+              !lowerImp.includes('node_modules') &&
+              !imp.startsWith('.')
+            );
+          });
+
+          // Check each repository import
+          for (const repoImport of repositoryImports) {
+            // Property: Repository imports must come from domain, not infrastructure
+            const isFromInfrastructure = isInfrastructureImport(repoImport);
+            const isFromDomain =
+              repoImport.includes('/domain/') ||
+              repoImport.includes('@/domain/');
+
+            if (isFromInfrastructure) {
+              console.error(
+                `❌ Use case ${fileName} imports repository from infrastructure: ${repoImport}`
               );
-            });
+              console.error(
+                `   Expected: Import from domain layer (e.g., @/domain/*/repositories/I*Repository)`
+              );
+              return false;
+            }
 
-            // Check each repository import
-            for (const repoImport of repositoryImports) {
-              // Property: Repository imports must come from domain, not infrastructure
-              const isFromInfrastructure = isInfrastructureImport(repoImport);
-              const isFromDomain = 
-                repoImport.includes('/domain/') ||
-                repoImport.includes('@/domain/');
-
-              if (isFromInfrastructure) {
-                console.error(
-                  `❌ Use case ${fileName} imports repository from infrastructure: ${repoImport}`
+            // If it's a repository import and not from infrastructure, it should be from domain
+            if (
+              repositoryImports.length > 0 &&
+              !isFromDomain &&
+              !isFromInfrastructure
+            ) {
+              // This might be a relative import, check if it resolves to infrastructure
+              if (repoImport.startsWith('.')) {
+                // For relative imports, we need to check the actual file path
+                const resolvedPath = path.resolve(
+                  path.dirname(useCaseFile),
+                  repoImport
                 );
-                console.error(
-                  `   Expected: Import from domain layer (e.g., @/domain/*/repositories/I*Repository)`
-                );
-                return false;
-              }
-
-              // If it's a repository import and not from infrastructure, it should be from domain
-              if (repositoryImports.length > 0 && !isFromDomain && !isFromInfrastructure) {
-                // This might be a relative import, check if it resolves to infrastructure
-                if (repoImport.startsWith('.')) {
-                  // For relative imports, we need to check the actual file path
-                  const resolvedPath = path.resolve(path.dirname(useCaseFile), repoImport);
-                  if (resolvedPath.includes('/infrastructure/')) {
-                    console.error(
-                      `❌ Use case ${fileName} imports repository from infrastructure via relative path: ${repoImport}`
-                    );
-                    return false;
-                  }
+                if (resolvedPath.includes('/infrastructure/')) {
+                  console.error(
+                    `❌ Use case ${fileName} imports repository from infrastructure via relative path: ${repoImport}`
+                  );
+                  return false;
                 }
               }
             }
-
-            return true;
           }
-        ),
+
+          return true;
+        }),
         { numRuns: useCaseFiles.length > 0 ? useCaseFiles.length : 1 }
       );
     });
@@ -297,15 +310,20 @@ describe('Architecture Tests - Layer Dependencies', () => {
     /**
      * Property 5: Use Case Constructor Injection
      * Feature: architecture-refactoring, Property 5: Use Case Constructor Injection
-     * 
-     * For any use case class, repository dependencies should be declared as 
+     *
+     * For any use case class, repository dependencies should be declared as
      * constructor parameters with domain interface types.
-     * 
+     *
      * Validates: Requirements 3.1, 5.2
      */
     it('Property 5: all use cases use constructor injection for repository dependencies', () => {
-      const useCasesDir = path.join(process.cwd(), 'src', 'application', 'use-cases');
-      
+      const useCasesDir = path.join(
+        process.cwd(),
+        'src',
+        'application',
+        'use-cases'
+      );
+
       if (!fs.existsSync(useCasesDir)) {
         // If directory doesn't exist, test passes vacuously
         return;
@@ -315,133 +333,135 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       // Property: For ALL use case files
       fc.assert(
-        fc.property(
-          fc.constantFrom(...useCaseFiles),
-          (useCaseFile) => {
-            const content = fs.readFileSync(useCaseFile, 'utf-8');
-            const fileName = path.basename(useCaseFile);
+        fc.property(fc.constantFrom(...useCaseFiles), (useCaseFile) => {
+          const content = fs.readFileSync(useCaseFile, 'utf-8');
+          const fileName = path.basename(useCaseFile);
 
-            // Find the use case class definition
-            const classRegex = /export\s+class\s+(\w+UseCase)\s*{/;
-            const classMatch = content.match(classRegex);
+          // Find the use case class definition
+          const classRegex = /export\s+class\s+(\w+UseCase)\s*{/;
+          const classMatch = content.match(classRegex);
 
-            if (!classMatch) {
-              // Not a use case file, skip
-              return true;
+          if (!classMatch) {
+            // Not a use case file, skip
+            return true;
+          }
+
+          const className = classMatch[1];
+
+          // Find the constructor
+          const constructorRegex = /constructor\s*\(([\s\S]*?)\)\s*{/;
+          const constructorMatch = content.match(constructorRegex);
+
+          if (!constructorMatch) {
+            // No constructor found - this might be okay if no dependencies
+            // Check if the class has any repository usage
+            const hasRepositoryUsage =
+              content.includes('Repository') || content.includes('repository');
+
+            if (hasRepositoryUsage) {
+              console.error(
+                `❌ Use case ${className} appears to use repositories but has no constructor`
+              );
+              return false;
             }
 
-            const className = classMatch[1];
+            return true;
+          }
 
-            // Find the constructor
-            const constructorRegex = /constructor\s*\(([\s\S]*?)\)\s*{/;
-            const constructorMatch = content.match(constructorRegex);
+          const constructorParams = constructorMatch[1];
 
-            if (!constructorMatch) {
-              // No constructor found - this might be okay if no dependencies
-              // Check if the class has any repository usage
-              const hasRepositoryUsage = content.includes('Repository') || 
-                                        content.includes('repository');
-              
-              if (hasRepositoryUsage) {
-                console.error(
-                  `❌ Use case ${className} appears to use repositories but has no constructor`
-                );
-                return false;
-              }
-              
-              return true;
+          // Extract repository-related imports
+          const imports = extractImports(useCaseFile);
+          const repositoryImports = imports.filter((imp) => {
+            const lowerImp = imp.toLowerCase();
+            return lowerImp.includes('repository');
+          });
+
+          // If there are repository imports, check constructor parameters
+          if (repositoryImports.length > 0) {
+            // Property 1: Constructor should have parameters (dependency injection)
+            if (constructorParams.trim() === '') {
+              console.error(
+                `❌ Use case ${className} imports repositories but constructor has no parameters`
+              );
+              console.error(
+                `   Expected: Constructor should inject repository dependencies`
+              );
+              return false;
             }
 
-            const constructorParams = constructorMatch[1];
+            // Property 2: Constructor parameters should use 'private readonly' or 'private'
+            // This ensures proper encapsulation
+            const paramLines = constructorParams
+              .split(',')
+              .map((p) => p.trim());
 
-            // Extract repository-related imports
-            const imports = extractImports(useCaseFile);
-            const repositoryImports = imports.filter((imp) => {
-              const lowerImp = imp.toLowerCase();
-              return lowerImp.includes('repository');
-            });
+            for (const param of paramLines) {
+              if (param && param.toLowerCase().includes('repository')) {
+                // Check if it uses private/private readonly
+                const hasPrivate = param.includes('private');
 
-            // If there are repository imports, check constructor parameters
-            if (repositoryImports.length > 0) {
-              // Property 1: Constructor should have parameters (dependency injection)
-              if (constructorParams.trim() === '') {
-                console.error(
-                  `❌ Use case ${className} imports repositories but constructor has no parameters`
-                );
-                console.error(
-                  `   Expected: Constructor should inject repository dependencies`
-                );
-                return false;
-              }
-
-              // Property 2: Constructor parameters should use 'private readonly' or 'private'
-              // This ensures proper encapsulation
-              const paramLines = constructorParams.split(',').map(p => p.trim());
-              
-              for (const param of paramLines) {
-                if (param && param.toLowerCase().includes('repository')) {
-                  // Check if it uses private/private readonly
-                  const hasPrivate = param.includes('private');
-                  
-                  if (!hasPrivate) {
-                    console.error(
-                      `❌ Use case ${className} has repository parameter without 'private' modifier: ${param}`
-                    );
-                    console.error(
-                      `   Expected: Use 'private readonly' for repository dependencies`
-                    );
-                    return false;
-                  }
+                if (!hasPrivate) {
+                  console.error(
+                    `❌ Use case ${className} has repository parameter without 'private' modifier: ${param}`
+                  );
+                  console.error(
+                    `   Expected: Use 'private readonly' for repository dependencies`
+                  );
+                  return false;
                 }
               }
+            }
 
-              // Property 3: Repository parameters should use interface types (typically start with 'I')
-              // or be from domain layer
-              for (const param of paramLines) {
-                if (param && param.toLowerCase().includes('repository')) {
-                  // Extract the type from the parameter
-                  const typeMatch = param.match(/:\s*(\w+)/);
-                  if (typeMatch) {
-                    const typeName = typeMatch[1];
-                    
-                    // Check if this type is imported from domain
-                    const typeImport = imports.find(imp => 
-                      content.includes(`import.*${typeName}.*from.*['"]${imp}['"]`)
-                    );
+            // Property 3: Repository parameters should use interface types (typically start with 'I')
+            // or be from domain layer
+            for (const param of paramLines) {
+              if (param && param.toLowerCase().includes('repository')) {
+                // Extract the type from the parameter
+                const typeMatch = param.match(/:\s*(\w+)/);
+                if (typeMatch) {
+                  const typeName = typeMatch[1];
 
-                    if (typeImport) {
-                      const isFromDomain = 
-                        typeImport.includes('/domain/') ||
-                        typeImport.includes('@/domain/');
-                      
-                      const isFromInfrastructure = isInfrastructureImport(typeImport);
+                  // Check if this type is imported from domain
+                  const typeImport = imports.find((imp) =>
+                    content.includes(
+                      `import.*${typeName}.*from.*['"]${imp}['"]`
+                    )
+                  );
 
-                      if (isFromInfrastructure) {
-                        console.error(
-                          `❌ Use case ${className} injects concrete repository type ${typeName} from infrastructure`
-                        );
-                        console.error(
-                          `   Expected: Inject domain interface (e.g., I${typeName})`
-                        );
-                        return false;
-                      }
+                  if (typeImport) {
+                    const isFromDomain =
+                      typeImport.includes('/domain/') ||
+                      typeImport.includes('@/domain/');
 
-                      // If not from infrastructure and has repository imports, should be from domain
-                      if (!isFromDomain && repositoryImports.length > 0) {
-                        console.error(
-                          `❌ Use case ${className} injects repository type ${typeName} not from domain layer`
-                        );
-                        return false;
-                      }
+                    const isFromInfrastructure =
+                      isInfrastructureImport(typeImport);
+
+                    if (isFromInfrastructure) {
+                      console.error(
+                        `❌ Use case ${className} injects concrete repository type ${typeName} from infrastructure`
+                      );
+                      console.error(
+                        `   Expected: Inject domain interface (e.g., I${typeName})`
+                      );
+                      return false;
+                    }
+
+                    // If not from infrastructure and has repository imports, should be from domain
+                    if (!isFromDomain && repositoryImports.length > 0) {
+                      console.error(
+                        `❌ Use case ${className} injects repository type ${typeName} not from domain layer`
+                      );
+                      return false;
                     }
                   }
                 }
               }
             }
-
-            return true;
           }
-        ),
+
+          return true;
+        }),
         { numRuns: useCaseFiles.length > 0 ? useCaseFiles.length : 1 }
       );
     });
@@ -521,22 +541,22 @@ describe('Architecture Tests - Layer Dependencies', () => {
     /**
      * Property 6: API Route DI Usage
      * Feature: architecture-refactoring, Property 6: API Route DI Usage
-     * 
-     * For any API route that uses a use case, it should obtain the use case instance 
+     *
+     * For any API route that uses a use case, it should obtain the use case instance
      * from the DI container rather than instantiating it directly.
-     * 
+     *
      * Validates: Requirements 3.2, 6.1
      */
     it('Property 6: API routes that use use cases obtain them from DI container', () => {
       const apiDir = path.join(process.cwd(), 'app', 'api');
-      
+
       // Skip if api directory doesn't exist
       if (!fs.existsSync(apiDir)) {
         return;
       }
 
       const apiFiles = getTypeScriptFiles(apiDir);
-      
+
       // Filter out test files
       const routeFiles = apiFiles.filter(
         (file) =>
@@ -551,73 +571,71 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       // Property: For ALL API route files
       fc.assert(
-        fc.property(
-          fc.constantFrom(...routeFiles),
-          (routeFile) => {
-            const content = fs.readFileSync(routeFile, 'utf-8');
-            const fileName = path.basename(routeFile);
-            const relativePath = routeFile.replace(process.cwd(), '');
+        fc.property(fc.constantFrom(...routeFiles), (routeFile) => {
+          const content = fs.readFileSync(routeFile, 'utf-8');
+          const fileName = path.basename(routeFile);
+          const relativePath = routeFile.replace(process.cwd(), '');
 
-            // Check if the route uses use cases
-            const usesUseCases = content.includes('UseCase');
+          // Check if the route uses use cases
+          const usesUseCases = content.includes('UseCase');
 
-            if (!usesUseCases) {
-              // If no use cases are used, property is vacuously true
-              return true;
-            }
-
-            // Property 1: If use cases are used, check for DI container usage
-            // Look for patterns like: container.createXxxUseCase()
-            const usesDIContainer = 
-              content.includes('container.create') ||
-              content.includes('from "@/infrastructure/di/container"') ||
-              content.includes("from '@/infrastructure/di/container'");
-
-            // Property 2: Check for direct use case instantiation (anti-pattern)
-            // Pattern: new XxxUseCase(
-            const directUseCaseInstantiationRegex = /new\s+\w+UseCase\s*\(/g;
-            const hasDirectInstantiation = directUseCaseInstantiationRegex.test(content);
-
-            // If the route uses use cases but doesn't use DI container
-            if (usesUseCases && !usesDIContainer && hasDirectInstantiation) {
-              console.error(
-                `❌ API route ${relativePath} instantiates use cases directly instead of using DI container`
-              );
-              console.error(
-                `   Expected: Use container.createXxxUseCase() from DI container`
-              );
-              console.error(
-                `   Found: Direct instantiation with 'new XxxUseCase(...)'`
-              );
-              return false;
-            }
-
-            // Property 3: Routes that have been refactored should use container
-            // These are the routes we know have been refactored
-            const refactoredRoutes = [
-              'app/api/users/me/route.ts',
-              'app/api/users/me/email/route.ts',
-              'app/api/users/me/password/route.ts',
-              'app/api/workspaces/route.ts',
-            ];
-
-            const isRefactoredRoute = refactoredRoutes.some((route) =>
-              routeFile.endsWith(route.replace('app/api/', ''))
-            );
-
-            if (isRefactoredRoute && !usesDIContainer) {
-              console.error(
-                `❌ Refactored API route ${relativePath} should use DI container`
-              );
-              console.error(
-                `   Expected: import { container } from "@/infrastructure/di/container"`
-              );
-              return false;
-            }
-
+          if (!usesUseCases) {
+            // If no use cases are used, property is vacuously true
             return true;
           }
-        ),
+
+          // Property 1: If use cases are used, check for DI container usage
+          // Look for patterns like: container.createXxxUseCase()
+          const usesDIContainer =
+            content.includes('container.create') ||
+            content.includes('from "@/infrastructure/di/container"') ||
+            content.includes("from '@/infrastructure/di/container'");
+
+          // Property 2: Check for direct use case instantiation (anti-pattern)
+          // Pattern: new XxxUseCase(
+          const directUseCaseInstantiationRegex = /new\s+\w+UseCase\s*\(/g;
+          const hasDirectInstantiation =
+            directUseCaseInstantiationRegex.test(content);
+
+          // If the route uses use cases but doesn't use DI container
+          if (usesUseCases && !usesDIContainer && hasDirectInstantiation) {
+            console.error(
+              `❌ API route ${relativePath} instantiates use cases directly instead of using DI container`
+            );
+            console.error(
+              `   Expected: Use container.createXxxUseCase() from DI container`
+            );
+            console.error(
+              `   Found: Direct instantiation with 'new XxxUseCase(...)'`
+            );
+            return false;
+          }
+
+          // Property 3: Routes that have been refactored should use container
+          // These are the routes we know have been refactored
+          const refactoredRoutes = [
+            'app/api/users/me/route.ts',
+            'app/api/users/me/email/route.ts',
+            'app/api/users/me/password/route.ts',
+            'app/api/workspaces/route.ts',
+          ];
+
+          const isRefactoredRoute = refactoredRoutes.some((route) =>
+            routeFile.endsWith(route.replace('app/api/', ''))
+          );
+
+          if (isRefactoredRoute && !usesDIContainer) {
+            console.error(
+              `❌ Refactored API route ${relativePath} should use DI container`
+            );
+            console.error(
+              `   Expected: import { container } from "@/infrastructure/di/container"`
+            );
+            return false;
+          }
+
+          return true;
+        }),
         { numRuns: routeFiles.length }
       );
     });
@@ -625,21 +643,21 @@ describe('Architecture Tests - Layer Dependencies', () => {
     /**
      * Property 7: No Direct Repository Instantiation in API Routes
      * Feature: architecture-refactoring, Property 7: No Direct Repository Instantiation
-     * 
+     *
      * For any API route, it should not contain `new *Repository()` instantiation calls.
-     * 
+     *
      * Validates: Requirement 6.2
      */
     it('Property 7: API routes do not directly instantiate repositories', () => {
       const apiDir = path.join(process.cwd(), 'app', 'api');
-      
+
       // Skip if api directory doesn't exist
       if (!fs.existsSync(apiDir)) {
         return;
       }
 
       const apiFiles = getTypeScriptFiles(apiDir);
-      
+
       // Filter out test files
       const routeFiles = apiFiles.filter(
         (file) =>
@@ -654,55 +672,50 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       // Property: For ALL API route files
       fc.assert(
-        fc.property(
-          fc.constantFrom(...routeFiles),
-          (routeFile) => {
-            const content = fs.readFileSync(routeFile, 'utf-8');
-            const fileName = path.basename(routeFile);
-            const relativePath = routeFile.replace(process.cwd(), '');
+        fc.property(fc.constantFrom(...routeFiles), (routeFile) => {
+          const content = fs.readFileSync(routeFile, 'utf-8');
+          const fileName = path.basename(routeFile);
+          const relativePath = routeFile.replace(process.cwd(), '');
 
-            // Property: API routes should NOT contain direct repository instantiation
-            // Pattern: new XxxRepository()
-            const repositoryInstantiationRegex = /new\s+\w*Repository\s*\(/g;
-            const matches = content.match(repositoryInstantiationRegex);
+          // Property: API routes should NOT contain direct repository instantiation
+          // Pattern: new XxxRepository()
+          const repositoryInstantiationRegex = /new\s+\w*Repository\s*\(/g;
+          const matches = content.match(repositoryInstantiationRegex);
 
-            if (matches && matches.length > 0) {
-              console.error(
-                `❌ API route ${relativePath} directly instantiates repositories`
-              );
-              console.error(
-                `   Found ${matches.length} instantiation(s): ${matches.join(', ')}`
-              );
-              console.error(
-                `   Expected: Use DI container to obtain repositories through use cases`
-              );
-              console.error(
-                `   Example: const useCase = container.createXxxUseCase();`
-              );
-              
-              // Show the lines where instantiation occurs
-              const lines = content.split('\n');
-              lines.forEach((line, index) => {
-                if (repositoryInstantiationRegex.test(line)) {
-                  console.error(
-                    `   Line ${index + 1}: ${line.trim()}`
-                  );
-                }
-              });
+          if (matches && matches.length > 0) {
+            console.error(
+              `❌ API route ${relativePath} directly instantiates repositories`
+            );
+            console.error(
+              `   Found ${matches.length} instantiation(s): ${matches.join(', ')}`
+            );
+            console.error(
+              `   Expected: Use DI container to obtain repositories through use cases`
+            );
+            console.error(
+              `   Example: const useCase = container.createXxxUseCase();`
+            );
 
-              return false;
-            }
+            // Show the lines where instantiation occurs
+            const lines = content.split('\n');
+            lines.forEach((line, index) => {
+              if (repositoryInstantiationRegex.test(line)) {
+                console.error(`   Line ${index + 1}: ${line.trim()}`);
+              }
+            });
 
-            return true;
+            return false;
           }
-        ),
+
+          return true;
+        }),
         { numRuns: routeFiles.length }
       );
     });
 
     it('should use DI container instead of direct repository instantiation', () => {
       const apiDir = path.join(process.cwd(), 'app', 'api');
-      
+
       // Skip if api directory doesn't exist
       if (!fs.existsSync(apiDir)) {
         return;
@@ -714,7 +727,11 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       apiFiles.forEach((file) => {
         // Skip test files
-        if (file.includes('__tests__') || file.includes('.test.') || file.includes('.spec.')) {
+        if (
+          file.includes('__tests__') ||
+          file.includes('.test.') ||
+          file.includes('.spec.')
+        ) {
           return;
         }
 
@@ -758,7 +775,7 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       refactoredRoutes.forEach((routePath) => {
         const fullPath = path.join(process.cwd(), routePath);
-        
+
         if (!fs.existsSync(fullPath)) {
           return;
         }
@@ -816,9 +833,7 @@ describe('Architecture Tests - Layer Dependencies', () => {
         // Check if it imports from domain
         const imports = extractImports(file);
         const hasDomainImport = imports.some(
-          (imp) =>
-            imp.includes('/domain/') ||
-            imp.includes('@/domain/')
+          (imp) => imp.includes('/domain/') || imp.includes('@/domain/')
         );
 
         if (!hasImplements || !hasDomainImport) {
@@ -841,10 +856,10 @@ describe('Architecture Tests - Layer Dependencies', () => {
     /**
      * Property 4: Repository Implementation Location
      * Feature: architecture-refactoring, Property 4: Repository Implementation Location
-     * 
-     * For any repository implementation, it should be located in 
+     *
+     * For any repository implementation, it should be located in
      * src/infrastructure/repositories/ and implement a corresponding domain interface.
-     * 
+     *
      * Validates: Requirement 1.4
      */
     it('Property 4: all repository implementations are in infrastructure and implement domain interfaces', () => {
@@ -864,99 +879,95 @@ describe('Architecture Tests - Layer Dependencies', () => {
 
       // Property: For ALL repository files in infrastructure/repositories/
       fc.assert(
-        fc.property(
-          fc.constantFrom(...repositoryFiles),
-          (repositoryFile) => {
-            const content = fs.readFileSync(repositoryFile, 'utf-8');
-            const fileName = path.basename(repositoryFile);
-            const relativePath = repositoryFile.replace(process.cwd(), '');
+        fc.property(fc.constantFrom(...repositoryFiles), (repositoryFile) => {
+          const content = fs.readFileSync(repositoryFile, 'utf-8');
+          const fileName = path.basename(repositoryFile);
+          const relativePath = repositoryFile.replace(process.cwd(), '');
 
-            // Skip mapper files, non-repository files, and optimized repositories
-            // Optimized repositories extend base repositories which implement interfaces
-            if (
-              fileName.includes('Mapper') ||
-              fileName.includes('mapper') ||
-              fileName.includes('Optimized') ||
-              fileName.includes('index.ts')
-            ) {
-              return true;
-            }
-
-            // Property 1: File must be in src/infrastructure/repositories/
-            const isInCorrectLocation = relativePath.includes(
-              'src/infrastructure/repositories/'
-            );
-
-            if (!isInCorrectLocation) {
-              console.error(
-                `❌ Repository ${fileName} is not in src/infrastructure/repositories/`
-              );
-              return false;
-            }
-
-            // Property 2: Must implement an interface (contains "implements" keyword)
-            const implementsRegex = /class\s+\w+\s+implements\s+\w+/;
-            const hasImplements = implementsRegex.test(content);
-
-            if (!hasImplements) {
-              console.error(
-                `❌ Repository ${fileName} does not implement an interface`
-              );
-              return false;
-            }
-
-            // Property 3: Must import from domain layer
-            const imports = extractImports(repositoryFile);
-            const hasDomainImport = imports.some(
-              (imp) =>
-                imp.includes('/domain/') || imp.includes('@/domain/')
-            );
-
-            if (!hasDomainImport) {
-              console.error(
-                `❌ Repository ${fileName} does not import from domain layer`
-              );
-              return false;
-            }
-
-            // Property 4: The interface should be from the domain layer
-            // Extract the interface name from implements clause
-            const implementsMatch = content.match(
-              /class\s+\w+\s+implements\s+(\w+)/
-            );
-            if (implementsMatch) {
-              const interfaceName = implementsMatch[1];
-              
-              // Check if there's an import for this interface from domain
-              // Look for imports that contain the interface name and come from domain
-              const interfaceImportRegex = new RegExp(
-                `import[^;]*${interfaceName}[^;]*from\\s*['"]([^'"]+)['"]`,
-                'g'
-              );
-              const interfaceImportMatches = Array.from(
-                content.matchAll(interfaceImportRegex)
-              );
-              
-              const hasInterfaceImport = interfaceImportMatches.some((match) => {
-                const importPath = match[1];
-                // Check if import is from domain (handles both @/domain and relative paths like ../../domain)
-                return (
-                  importPath.includes('/domain/') ||
-                  importPath.includes('@/domain/')
-                );
-              });
-
-              if (!hasInterfaceImport) {
-                console.error(
-                  `❌ Repository ${fileName} implements ${interfaceName} but doesn't import it from domain layer`
-                );
-                return false;
-              }
-            }
-
+          // Skip mapper files, non-repository files, and optimized repositories
+          // Optimized repositories extend base repositories which implement interfaces
+          if (
+            fileName.includes('Mapper') ||
+            fileName.includes('mapper') ||
+            fileName.includes('Optimized') ||
+            fileName.includes('index.ts')
+          ) {
             return true;
           }
-        ),
+
+          // Property 1: File must be in src/infrastructure/repositories/
+          const isInCorrectLocation = relativePath.includes(
+            'src/infrastructure/repositories/'
+          );
+
+          if (!isInCorrectLocation) {
+            console.error(
+              `❌ Repository ${fileName} is not in src/infrastructure/repositories/`
+            );
+            return false;
+          }
+
+          // Property 2: Must implement an interface (contains "implements" keyword)
+          const implementsRegex = /class\s+\w+\s+implements\s+\w+/;
+          const hasImplements = implementsRegex.test(content);
+
+          if (!hasImplements) {
+            console.error(
+              `❌ Repository ${fileName} does not implement an interface`
+            );
+            return false;
+          }
+
+          // Property 3: Must import from domain layer
+          const imports = extractImports(repositoryFile);
+          const hasDomainImport = imports.some(
+            (imp) => imp.includes('/domain/') || imp.includes('@/domain/')
+          );
+
+          if (!hasDomainImport) {
+            console.error(
+              `❌ Repository ${fileName} does not import from domain layer`
+            );
+            return false;
+          }
+
+          // Property 4: The interface should be from the domain layer
+          // Extract the interface name from implements clause
+          const implementsMatch = content.match(
+            /class\s+\w+\s+implements\s+(\w+)/
+          );
+          if (implementsMatch) {
+            const interfaceName = implementsMatch[1];
+
+            // Check if there's an import for this interface from domain
+            // Look for imports that contain the interface name and come from domain
+            const interfaceImportRegex = new RegExp(
+              `import[^;]*${interfaceName}[^;]*from\\s*['"]([^'"]+)['"]`,
+              'g'
+            );
+            const interfaceImportMatches = Array.from(
+              content.matchAll(interfaceImportRegex)
+            );
+
+            const hasInterfaceImport = interfaceImportMatches.some((match) => {
+              const importPath = match[1];
+              // Check if import is from domain (handles both @/domain and relative paths like ../../domain)
+              return (
+                importPath.includes('/domain/') ||
+                importPath.includes('@/domain/')
+              );
+            });
+
+            if (!hasInterfaceImport) {
+              console.error(
+                `❌ Repository ${fileName} implements ${interfaceName} but doesn't import it from domain layer`
+              );
+              return false;
+            }
+          }
+
+          return true;
+        }),
         { numRuns: repositoryFiles.length > 0 ? repositoryFiles.length : 1 }
       );
     });

@@ -1,9 +1,9 @@
 /**
  * Test Dependency Injection Container
- * 
+ *
  * Container implementation for testing that uses mock repositories.
  * Allows overriding specific bindings for test scenarios.
- * 
+ *
  * Requirements: 3.3, 3.5
  */
 
@@ -221,27 +221,27 @@ export interface TestContainer {
 
 /**
  * Test Dependency Injection Container Implementation
- * 
+ *
  * Container for testing that uses mock repositories by default.
  * Allows overriding specific bindings for custom test scenarios.
- * 
+ *
  * Requirements: 3.3, 3.5
- * 
+ *
  * @example
  * ```typescript
  * // Create test container
  * const container = new TestDIContainer();
- * 
+ *
  * // Override a specific repository
  * const customMock = {
  *   findById: vi.fn().mockResolvedValue(mockUser),
  *   // ... other methods
  * };
  * container.setUserRepository(customMock);
- * 
+ *
  * // Create use case with custom mock
  * const useCase = container.createGetUserUseCase();
- * 
+ *
  * // Reset to default mocks
  * container.reset();
  * ```
@@ -400,7 +400,9 @@ export class TestDIContainer implements TestContainer {
   public createUpdateEmailUseCase(): UpdateEmailUseCase {
     // Note: UpdateEmailUseCase requires VerificationTokenRepository
     // For testing, we'll need to handle this separately or mock it
-    throw new Error('UpdateEmailUseCase requires VerificationTokenRepository - use custom mock');
+    throw new Error(
+      'UpdateEmailUseCase requires VerificationTokenRepository - use custom mock'
+    );
   }
 
   public createUpdatePasswordUseCase(): UpdatePasswordUseCase {
@@ -551,20 +553,20 @@ export class TestDIContainer implements TestContainer {
 
 /**
  * Create a new test container instance
- * 
+ *
  * @returns A new TestDIContainer instance with default mock repositories
- * 
+ *
  * @example
  * ```typescript
  * import { createTestContainer } from '@/infrastructure/di/test-container';
- * 
+ *
  * describe('MyUseCase', () => {
  *   let container: TestDIContainer;
- * 
+ *
  *   beforeEach(() => {
  *     container = createTestContainer();
  *   });
- * 
+ *
  *   it('should work with mocks', async () => {
  *     const useCase = container.createGetUserUseCase();
  *     // ... test logic

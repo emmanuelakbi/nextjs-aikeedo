@@ -1,6 +1,6 @@
 /**
  * Billing module exports
- * 
+ *
  * Provides client-side utilities for billing operations
  */
 

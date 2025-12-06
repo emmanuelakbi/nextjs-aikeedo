@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Configuration System Demo
- * 
+ *
  * Demonstrates the configuration system capabilities
  */
 
@@ -11,7 +11,9 @@ console.log('\n🎯 Configuration System Demo\n');
 console.log('═'.repeat(60));
 
 // Show sections
-console.log('\n📦 Configuration Sections (' + Object.keys(appConfig).length + ' total):\n');
+console.log(
+  '\n📦 Configuration Sections (' + Object.keys(appConfig).length + ' total):\n'
+);
 Object.keys(appConfig).forEach((key, index) => {
   console.log(`  ${index + 1}. ${key}`);
 });
@@ -28,15 +30,23 @@ console.log(`  ... and ${Object.keys(appConfig.features).length - 8} more`);
 // Show credit rates
 console.log('\n💰 Credit Rates (sample):\n');
 console.log('  Text Generation:');
-console.log(`    - GPT-4: ${appConfig.credits.text['gpt-4']} credits/1K tokens`);
-console.log(`    - GPT-3.5 Turbo: ${appConfig.credits.text['gpt-3.5-turbo']} credits/1K tokens`);
-console.log(`    - Claude 3 Opus: ${appConfig.credits.text['claude-3-opus']} credits/1K tokens`);
+console.log(
+  `    - GPT-4: ${appConfig.credits.text['gpt-4']} credits/1K tokens`
+);
+console.log(
+  `    - GPT-3.5 Turbo: ${appConfig.credits.text['gpt-3.5-turbo']} credits/1K tokens`
+);
+console.log(
+  `    - Claude 3 Opus: ${appConfig.credits.text['claude-3-opus']} credits/1K tokens`
+);
 console.log('\n  Image Generation:');
 console.log(`    - 1024x1024: ${appConfig.credits.image['1024x1024']} credits`);
 console.log(`    - 512x512: ${appConfig.credits.image['512x512']} credits`);
 console.log('\n  Other Services:');
 console.log(`    - Speech: ${appConfig.credits.speech} credits/1K chars`);
-console.log(`    - Transcription: ${appConfig.credits.transcription} credits/minute`);
+console.log(
+  `    - Transcription: ${appConfig.credits.transcription} credits/minute`
+);
 console.log(`    - Trial Credits: ${appConfig.credits.trialCredits} credits`);
 
 // Show subscription plans
@@ -49,10 +59,14 @@ Object.entries(appConfig.subscriptionPlans).forEach(([key, plan]) => {
 
 // Show affiliate settings
 console.log('\n🤝 Affiliate Program:\n');
-console.log(`  - Commission Rate: ${appConfig.affiliate.commissionRate * 100}%`);
+console.log(
+  `  - Commission Rate: ${appConfig.affiliate.commissionRate * 100}%`
+);
 console.log(`  - Minimum Payout: $${appConfig.affiliate.minimumPayout}`);
 console.log(`  - Cookie Duration: ${appConfig.affiliate.cookieDuration} days`);
-console.log(`  - Commission Duration: ${appConfig.affiliate.commissionDuration} days`);
+console.log(
+  `  - Commission Duration: ${appConfig.affiliate.commissionDuration} days`
+);
 
 // Show rate limits
 console.log('\n⚡ Rate Limits:\n');

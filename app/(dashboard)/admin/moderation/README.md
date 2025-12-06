@@ -13,6 +13,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **Purpose**: Review AI-generated content for policy violations
 
 **Capabilities**:
+
 - View all generations in a paginated list
 - Filter by content type (text, image, speech, transcription)
 - Filter by status (pending, approved, flagged, removed)
@@ -49,6 +50,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **Purpose**: Mark content as potentially violating policies
 
 **Effects**:
+
 - Content is marked as flagged
 - Content remains visible to user (unless removed)
 - Admin can add notes about the violation
@@ -58,6 +60,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **API Endpoint**: `POST /api/admin/moderation/flag`
 
 **Body**:
+
 ```json
 {
   "generationId": "gen-123",
@@ -71,6 +74,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **Purpose**: Hide content from the platform
 
 **Effects**:
+
 - Content is marked as removed
 - Content is hidden from user
 - User cannot access the content
@@ -81,6 +85,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **API Endpoint**: `POST /api/admin/moderation/flag`
 
 **Body**:
+
 ```json
 {
   "generationId": "gen-123",
@@ -94,6 +99,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **Purpose**: Suspend user account for policy violations
 
 **Effects**:
+
 - User account is suspended
 - All active sessions are terminated
 - User cannot log in
@@ -104,6 +110,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **API Endpoint**: `POST /api/admin/moderation/flag`
 
 **Body**:
+
 ```json
 {
   "generationId": "gen-123",
@@ -117,6 +124,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 **Purpose**: Mark content as reviewed and acceptable
 
 **Effects**:
+
 - Content is marked as approved
 - Content remains visible
 - No further action needed
@@ -129,6 +137,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 ### Queue View
 
 **Displayed Information**:
+
 - Generation ID
 - Content type badge
 - User information (name, email)
@@ -141,6 +150,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 ### Filtering Options
 
 **By Type**:
+
 - All types
 - Text only
 - Image only
@@ -148,6 +158,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 - Transcription only
 
 **By Status**:
+
 - All statuses
 - Pending review
 - Approved
@@ -155,6 +166,7 @@ The Content Moderation interface provides tools for administrators to review, fl
 - Removed
 
 **By Date**:
+
 - Last 24 hours
 - Last 7 days
 - Last 30 days
@@ -202,9 +214,11 @@ GET /api/admin/moderation/stats
 ```
 
 **Query Parameters**:
+
 - `days` (number): Number of days to include (default: 30)
 
 **Response**:
+
 ```json
 {
   "total": {
@@ -270,21 +284,25 @@ GET /api/admin/moderation/stats
 ### Policy Enforcement
 
 **First Violation**:
+
 - Content is flagged
 - User receives warning
 - Content may be removed
 
 **Second Violation**:
+
 - Content is removed
 - User receives final warning
 - Account may be temporarily suspended
 
 **Third Violation**:
+
 - Account is permanently suspended
 - All content is reviewed
 - User is banned from platform
 
 **Severe Violations**:
+
 - Immediate account suspension
 - Content is removed
 - Law enforcement may be notified
@@ -298,12 +316,14 @@ GET /api/admin/moderation/queue
 ```
 
 **Query Parameters**:
+
 - `type` (string): Filter by content type
 - `status` (string): Filter by status
 - `limit` (number): Results per page (default: 50)
 - `offset` (number): Pagination offset
 
 **Response**:
+
 ```json
 {
   "items": [
@@ -342,6 +362,7 @@ POST /api/admin/moderation/flag
 ```
 
 **Body**:
+
 ```json
 {
   "generationId": "gen-123",
@@ -351,6 +372,7 @@ POST /api/admin/moderation/flag
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -367,6 +389,7 @@ GET /api/admin/moderation/stats
 ```
 
 **Query Parameters**:
+
 - `days` (number): Number of days to include
 
 **Response**: See [Moderation Statistics](#moderation-statistics) section
@@ -374,24 +397,29 @@ GET /api/admin/moderation/stats
 ## Security Considerations
 
 ### Access Control
+
 - Only admins can access moderation tools
 - All endpoints protected by `requireAdmin()` middleware
 - Moderation actions require admin role
 
 ### Audit Logging
+
 All moderation actions are logged:
+
 - Content flagging (with reason)
 - Content removal (with reason)
 - User bans (with reason)
 - Moderation queue viewing
 
 ### Data Privacy
+
 - Flagged content is preserved for review
 - Removed content is soft-deleted (not permanently deleted)
 - User data is handled according to privacy policies
 - Comply with GDPR and data retention requirements
 
 ### Legal Compliance
+
 - Illegal content is reported to authorities
 - CSAM (Child Sexual Abuse Material) is immediately reported
 - Platform cooperates with law enforcement
@@ -461,6 +489,7 @@ All moderation actions are logged:
 ### AI-Powered Moderation (Future)
 
 Potential automated moderation features:
+
 - Text content analysis for policy violations
 - Image content analysis (NSFW detection)
 - Spam detection
@@ -482,6 +511,7 @@ npm test src/app/api/admin/moderation
 ```
 
 **Test Coverage**:
+
 - Moderation queue retrieval
 - Content flagging
 - Content removal

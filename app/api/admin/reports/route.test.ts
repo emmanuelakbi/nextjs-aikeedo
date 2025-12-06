@@ -46,7 +46,9 @@ describe('Admin Reports API', () => {
   });
 
   it('should return error when dates are missing', async () => {
-    const request = new NextRequest('http://localhost/api/admin/reports?type=revenue');
+    const request = new NextRequest(
+      'http://localhost/api/admin/reports?type=revenue'
+    );
 
     const response = await GET(request);
     const data = await response.json();
@@ -114,8 +116,12 @@ describe('Admin Reports API', () => {
     ];
 
     vi.mocked(prisma.invoice.findMany).mockResolvedValue(mockInvoices as any);
-    vi.mocked(prisma.subscription.findMany).mockResolvedValue(mockSubscriptions as any);
-    vi.mocked(prisma.creditTransaction.findMany).mockResolvedValue(mockCreditTransactions as any);
+    vi.mocked(prisma.subscription.findMany).mockResolvedValue(
+      mockSubscriptions as any
+    );
+    vi.mocked(prisma.creditTransaction.findMany).mockResolvedValue(
+      mockCreditTransactions as any
+    );
 
     const request = new NextRequest(
       'http://localhost/api/admin/reports?type=revenue&startDate=2024-01-01&endDate=2024-01-31'
@@ -151,13 +157,9 @@ describe('Admin Reports API', () => {
       },
     ];
 
-    const mockDailyGrowth = [
-      { createdAt: new Date('2024-01-15'), _count: 1 },
-    ];
+    const mockDailyGrowth = [{ createdAt: new Date('2024-01-15'), _count: 1 }];
 
-    const mockStatusBreakdown = [
-      { status: 'ACTIVE', _count: 1 },
-    ];
+    const mockStatusBreakdown = [{ status: 'ACTIVE', _count: 1 }];
 
     vi.mocked(prisma.user.findMany).mockResolvedValue(mockUsers as any);
     vi.mocked(prisma.user.groupBy)
@@ -203,11 +205,11 @@ describe('Admin Reports API', () => {
       { provider: 'openai', _count: 1, _sum: { credits: 100, tokens: 500 } },
     ];
 
-    const mockByStatus = [
-      { status: 'COMPLETED', _count: 1 },
-    ];
+    const mockByStatus = [{ status: 'COMPLETED', _count: 1 }];
 
-    vi.mocked(prisma.generation.findMany).mockResolvedValue(mockGenerations as any);
+    vi.mocked(prisma.generation.findMany).mockResolvedValue(
+      mockGenerations as any
+    );
     vi.mocked(prisma.generation.groupBy)
       .mockResolvedValueOnce(mockByType as any)
       .mockResolvedValueOnce(mockByProvider as any)
@@ -258,7 +260,9 @@ describe('Admin Reports API', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('Content-Type')).toBe('text/csv');
-    expect(response.headers.get('Content-Disposition')).toContain('revenue-report');
+    expect(response.headers.get('Content-Disposition')).toContain(
+      'revenue-report'
+    );
     expect(text).toContain('SUMMARY');
     expect(text).toContain('INVOICES');
   });

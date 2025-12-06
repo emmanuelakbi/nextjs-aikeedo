@@ -12,7 +12,9 @@ interface DetailedReportProps {
 }
 
 export default function DetailedReport({ data }: DetailedReportProps) {
-  const [filter, setFilter] = useState<'all' | 'PENDING' | 'CONVERTED' | 'CANCELED'>('all');
+  const [filter, setFilter] = useState<
+    'all' | 'PENDING' | 'CONVERTED' | 'CANCELED'
+  >('all');
 
   if (!data || !data.referrals) return null;
 
@@ -36,14 +38,17 @@ export default function DetailedReport({ data }: DetailedReportProps) {
     CANCELED: 'bg-red-100 text-red-800',
   };
 
-  const filteredReferrals = filter === 'all' 
-    ? data.referrals 
-    : data.referrals.filter((r: any) => r.status === filter);
+  const filteredReferrals =
+    filter === 'all'
+      ? data.referrals
+      : data.referrals.filter((r: any) => r.status === filter);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Detailed Report</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Detailed Report
+        </h2>
         <p className="text-gray-600">
           Complete list of all referrals with detailed information
         </p>
@@ -53,7 +58,9 @@ export default function DetailedReport({ data }: DetailedReportProps) {
       <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-600 mb-1">Total Referrals</p>
-          <p className="text-2xl font-bold text-gray-900">{data.referrals.length}</p>
+          <p className="text-2xl font-bold text-gray-900">
+            {data.referrals.length}
+          </p>
         </div>
         <div className="p-4 bg-green-50 rounded-lg">
           <p className="text-sm text-gray-600 mb-1">Converted</p>
@@ -130,7 +137,10 @@ export default function DetailedReport({ data }: DetailedReportProps) {
             </thead>
             <tbody>
               {filteredReferrals.map((referral: any) => (
-                <tr key={referral.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr
+                  key={referral.id}
+                  className="border-b border-gray-100 hover:bg-gray-50"
+                >
                   <td className="py-3 px-4 text-sm text-gray-900">
                     {formatDate(referral.createdAt)}
                   </td>
@@ -139,13 +149,17 @@ export default function DetailedReport({ data }: DetailedReportProps) {
                       <p className="text-sm font-medium text-gray-900">
                         {referral.user.firstName} {referral.user.lastName}
                       </p>
-                      <p className="text-xs text-gray-600">{referral.user.email}</p>
+                      <p className="text-xs text-gray-600">
+                        {referral.user.email}
+                      </p>
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        statusColors[referral.status as keyof typeof statusColors]
+                        statusColors[
+                          referral.status as keyof typeof statusColors
+                        ]
                       }`}
                     >
                       {referral.status}
@@ -158,7 +172,9 @@ export default function DetailedReport({ data }: DetailedReportProps) {
                     {formatCurrency(referral.conversionValue || 0)}
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-600">
-                    {referral.convertedAt ? formatDate(referral.convertedAt) : '-'}
+                    {referral.convertedAt
+                      ? formatDate(referral.convertedAt)
+                      : '-'}
                   </td>
                 </tr>
               ))}
@@ -172,7 +188,8 @@ export default function DetailedReport({ data }: DetailedReportProps) {
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Report Period:</span>
           <span className="font-medium text-gray-900">
-            {new Date(data.startDate).toLocaleDateString()} - {new Date(data.endDate).toLocaleDateString()}
+            {new Date(data.startDate).toLocaleDateString()} -{' '}
+            {new Date(data.endDate).toLocaleDateString()}
           </span>
         </div>
       </div>

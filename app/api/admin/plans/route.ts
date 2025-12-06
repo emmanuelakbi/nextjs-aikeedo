@@ -29,16 +29,16 @@ export async function GET(request: NextRequest) {
   try {
     await requireAdmin();
     const { searchParams } = new URL(request.url);
-    
+
     const isActive = searchParams.get('isActive');
     const interval = searchParams.get('interval');
 
     const where: any = {};
-    
+
     if (isActive !== null) {
       where.isActive = isActive === 'true';
     }
-    
+
     if (interval) {
       where.interval = interval;
     }
@@ -52,10 +52,7 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [
-        { interval: 'asc' },
-        { price: 'asc' },
-      ],
+      orderBy: [{ interval: 'asc' }, { price: 'asc' }],
     });
 
     return NextResponse.json({ plans });

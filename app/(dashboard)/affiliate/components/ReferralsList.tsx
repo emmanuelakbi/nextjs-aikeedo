@@ -7,7 +7,9 @@ interface ReferralsListProps {
   affiliateId: string;
 }
 
-export default async function ReferralsList({ affiliateId: _affiliateId }: ReferralsListProps) {
+export default async function ReferralsList({
+  affiliateId: _affiliateId,
+}: ReferralsListProps) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/affiliate/referrals`,
     {
@@ -78,7 +80,10 @@ export default async function ReferralsList({ affiliateId: _affiliateId }: Refer
         </thead>
         <tbody>
           {referrals.slice(0, 10).map((referral: any) => (
-            <tr key={referral.id} className="border-b border-gray-100 hover:bg-gray-50">
+            <tr
+              key={referral.id}
+              className="border-b border-gray-100 hover:bg-gray-50"
+            >
               <td className="py-3 px-4 text-sm text-gray-900">
                 {formatDate(referral.createdAt)}
               </td>

@@ -1,10 +1,10 @@
 /**
  * User Repository Interface
- * 
+ *
  * Domain-level contract for user data access operations.
  * This interface defines all operations needed to persist and retrieve users
  * without exposing infrastructure implementation details.
- * 
+ *
  * @interface IUserRepository
  */
 
@@ -41,14 +41,14 @@ export interface FindAllOptions {
 
 /**
  * User Repository Interface
- * 
+ *
  * Defines the contract for user data access operations.
  * All implementations must provide these methods.
  */
 export interface IUserRepository {
   /**
    * Persist a user entity
-   * 
+   *
    * @param user - The user entity to save
    * @returns Promise resolving to the saved user
    */
@@ -56,7 +56,7 @@ export interface IUserRepository {
 
   /**
    * Find a user by their unique identifier
-   * 
+   *
    * @param id - The user's unique identifier
    * @returns Promise resolving to the user or null if not found
    */
@@ -64,7 +64,7 @@ export interface IUserRepository {
 
   /**
    * Find a user by their email address
-   * 
+   *
    * @param email - The user's email address
    * @returns Promise resolving to the user or null if not found
    */
@@ -72,7 +72,7 @@ export interface IUserRepository {
 
   /**
    * Delete a user by their unique identifier
-   * 
+   *
    * @param id - The user's unique identifier
    * @returns Promise resolving when deletion is complete
    */
@@ -80,7 +80,7 @@ export interface IUserRepository {
 
   /**
    * Find all users matching the given criteria
-   * 
+   *
    * @param options - Query options (limit, offset, status filter)
    * @returns Promise resolving to array of users
    */
@@ -88,7 +88,7 @@ export interface IUserRepository {
 
   /**
    * Count users matching the given criteria
-   * 
+   *
    * @param filters - Optional status filter
    * @returns Promise resolving to the count
    */
@@ -96,7 +96,7 @@ export interface IUserRepository {
 
   /**
    * Find all users belonging to a workspace
-   * 
+   *
    * @param workspaceId - The workspace identifier
    * @returns Promise resolving to array of users
    */
@@ -104,7 +104,7 @@ export interface IUserRepository {
 
   /**
    * Check if a user exists with the given email
-   * 
+   *
    * @param email - The email address to check
    * @returns Promise resolving to true if exists, false otherwise
    */

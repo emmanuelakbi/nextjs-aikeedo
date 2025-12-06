@@ -71,7 +71,9 @@ export async function POST(request: NextRequest) {
         content: validated.content,
         type: validated.type,
         isActive: validated.isActive,
-        startDate: validated.startDate ? new Date(validated.startDate) : new Date(),
+        startDate: validated.startDate
+          ? new Date(validated.startDate)
+          : new Date(),
         endDate: validated.endDate ? new Date(validated.endDate) : null,
         createdBy: admin.user.id,
       },

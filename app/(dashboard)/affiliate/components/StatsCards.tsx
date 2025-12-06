@@ -62,11 +62,15 @@ export default function StatsCards({ stats }: StatsCardsProps) {
       {cards.map((card) => (
         <div key={card.title} className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-start justify-between mb-4">
-            <div className={`text-3xl p-2 rounded-lg ${colorClasses[card.color as keyof typeof colorClasses]}`}>
+            <div
+              className={`text-3xl p-2 rounded-lg ${colorClasses[card.color as keyof typeof colorClasses]}`}
+            >
               {card.icon}
             </div>
           </div>
-          <h3 className="text-sm font-medium text-gray-600 mb-1">{card.title}</h3>
+          <h3 className="text-sm font-medium text-gray-600 mb-1">
+            {card.title}
+          </h3>
           <p className="text-2xl font-bold text-gray-900 mb-1">{card.value}</p>
           <p className="text-sm text-gray-500">{card.subtitle}</p>
         </div>

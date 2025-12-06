@@ -10,21 +10,29 @@ interface BillingHistoryChartProps {
   totalSpent: number;
 }
 
-export default function BillingHistoryChart({ monthlySpending, totalSpent }: BillingHistoryChartProps) {
+export default function BillingHistoryChart({
+  monthlySpending,
+  totalSpent,
+}: BillingHistoryChartProps) {
   // Sort months chronologically
   const sortedMonths = Object.keys(monthlySpending).sort();
-  
+
   // Get last 12 months
   const last12Months = sortedMonths.slice(-12);
-  
+
   // Find max value for scaling
-  const maxSpending = Math.max(...last12Months.map(month => monthlySpending[month] || 0));
-  
+  const maxSpending = Math.max(
+    ...last12Months.map((month) => monthlySpending[month] || 0)
+  );
+
   // Format month labels
   const formatMonth = (monthStr: string) => {
     const [year, month] = monthStr.split('-');
     const date = new Date(parseInt(year || '0'), parseInt(month || '0') - 1);
-    return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      year: '2-digit',
+    });
   };
 
   return (
@@ -34,10 +42,14 @@ export default function BillingHistoryChart({ monthlySpending, totalSpent }: Bil
         <div className="flex items-end justify-between gap-2 h-64">
           {last12Months.map((month) => {
             const amount = monthlySpending[month] || 0;
-            const heightPercentage = maxSpending > 0 ? (amount / maxSpending) * 100 : 0;
-            
+            const heightPercentage =
+              maxSpending > 0 ? (amount / maxSpending) * 100 : 0;
+
             return (
-              <div key={month} className="flex-1 flex flex-col items-center gap-2">
+              <div
+                key={month}
+                className="flex-1 flex flex-col items-center gap-2"
+              >
                 <div className="w-full flex flex-col justify-end h-full">
                   <div
                     className="w-full bg-blue-500 rounded-t hover:bg-blue-600 transition-colors cursor-pointer relative group"
@@ -62,7 +74,9 @@ export default function BillingHistoryChart({ monthlySpending, totalSpent }: Bil
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t">
         <div className="text-center">
           <p className="text-sm text-gray-600">Total Spent (12 months)</p>
-          <p className="text-2xl font-bold text-gray-900">${(totalSpent / 100).toFixed(2)}</p>
+          <p className="text-2xl font-bold text-gray-900">
+            ${(totalSpent / 100).toFixed(2)}
+          </p>
         </div>
         <div className="text-center">
           <p className="text-sm text-gray-600">Average Monthly</p>
@@ -73,9 +87,12 @@ export default function BillingHistoryChart({ monthlySpending, totalSpent }: Bil
         <div className="text-center">
           <p className="text-sm text-gray-600">Last Month</p>
           <p className="text-2xl font-bold text-gray-900">
-            ${(() => {
+            $
+            {(() => {
               const lastMonth = last12Months[last12Months.length - 1];
-              return lastMonth ? ((monthlySpending[lastMonth] || 0) / 100).toFixed(2) : '0.00';
+              return lastMonth
+                ? ((monthlySpending[lastMonth] || 0) / 100).toFixed(2)
+                : '0.00';
             })()}
           </p>
         </div>

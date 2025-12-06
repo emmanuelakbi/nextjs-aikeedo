@@ -31,7 +31,10 @@ export default function FraudAlerts() {
     }
   };
 
-  const handleAction = async (affiliateId: string, action: 'SUSPEND' | 'BAN' | 'REVIEW') => {
+  const handleAction = async (
+    affiliateId: string,
+    action: 'SUSPEND' | 'BAN' | 'REVIEW'
+  ) => {
     const reason = prompt(`Enter reason for ${action.toLowerCase()}:`);
     if (!reason) return;
 
@@ -122,17 +125,24 @@ export default function FraudAlerts() {
                       {alert.affiliate.code} - {alert.affiliate.user.email}
                     </h3>
                     <p className="text-sm opacity-80">
-                      Risk Level: <span className="font-bold">{alert.riskLevel}</span> (Score: {alert.riskScore})
+                      Risk Level:{' '}
+                      <span className="font-bold">{alert.riskLevel}</span>{' '}
+                      (Score: {alert.riskScore})
                     </p>
                   </div>
                 </div>
 
                 {/* Flags */}
                 <div className="mb-3">
-                  <p className="text-sm font-medium mb-2">Suspicious Activity:</p>
+                  <p className="text-sm font-medium mb-2">
+                    Suspicious Activity:
+                  </p>
                   <ul className="space-y-1">
                     {alert.flags.map((flag: string, index: number) => (
-                      <li key={index} className="text-sm flex items-start gap-2">
+                      <li
+                        key={index}
+                        className="text-sm flex items-start gap-2"
+                      >
                         <span>•</span>
                         <span>{flag}</span>
                       </li>
@@ -144,15 +154,21 @@ export default function FraudAlerts() {
                 <div className="grid grid-cols-4 gap-3 p-3 bg-white/50 rounded-lg">
                   <div>
                     <p className="text-xs opacity-80 mb-1">Referrals</p>
-                    <p className="text-sm font-bold">{alert.metrics.totalReferrals}</p>
+                    <p className="text-sm font-bold">
+                      {alert.metrics.totalReferrals}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs opacity-80 mb-1">Converted</p>
-                    <p className="text-sm font-bold">{alert.metrics.convertedReferrals}</p>
+                    <p className="text-sm font-bold">
+                      {alert.metrics.convertedReferrals}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs opacity-80 mb-1">Conv. Rate</p>
-                    <p className="text-sm font-bold">{alert.metrics.conversionRate}%</p>
+                    <p className="text-sm font-bold">
+                      {alert.metrics.conversionRate}%
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs opacity-80 mb-1">Earnings</p>

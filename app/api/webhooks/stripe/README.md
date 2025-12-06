@@ -17,15 +17,18 @@ POST /api/webhooks/stripe
 ## Supported Events
 
 ### Checkout Events
+
 - `checkout.session.completed` - Creates subscription when checkout is completed
 
 ### Invoice Events
+
 - `invoice.created` - Records new invoice
 - `invoice.finalized` - Updates invoice when finalized
 - `invoice.payment_succeeded` - Activates subscription and allocates credits
 - `invoice.payment_failed` - Updates subscription status to PAST_DUE
 
 ### Subscription Events
+
 - `customer.subscription.created` - Creates subscription record
 - `customer.subscription.updated` - Updates subscription details
 - `customer.subscription.deleted` - Marks subscription as canceled
@@ -39,6 +42,7 @@ POST /api/webhooks/stripe
 ## Webhook Processing Flow
 
 ### 1. Checkout Session Completed
+
 ```
 checkout.session.completed
   → Verify session metadata (workspaceId, planId)
@@ -48,6 +52,7 @@ checkout.session.completed
 ```
 
 ### 2. Invoice Payment Succeeded
+
 ```
 invoice.payment_succeeded
   → Update/create invoice record
@@ -57,6 +62,7 @@ invoice.payment_succeeded
 ```
 
 ### 3. Invoice Payment Failed
+
 ```
 invoice.payment_failed
   → Update invoice record
@@ -64,6 +70,7 @@ invoice.payment_failed
 ```
 
 ### 4. Subscription Updated
+
 ```
 customer.subscription.updated
   → Find existing subscription
@@ -72,6 +79,7 @@ customer.subscription.updated
 ```
 
 ### 5. Subscription Deleted
+
 ```
 customer.subscription.deleted
   → Update subscription status to CANCELED

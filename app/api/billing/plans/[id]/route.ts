@@ -39,7 +39,8 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error getting plan:', error);
-    const status = error instanceof Error && error.message === 'Plan not found' ? 404 : 500;
+    const status =
+      error instanceof Error && error.message === 'Plan not found' ? 404 : 500;
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get plan' },
       { status }
@@ -94,9 +95,12 @@ export async function PATCH(
     });
   } catch (error) {
     console.error('Error updating plan:', error);
-    const status = error instanceof Error && error.message === 'Plan not found' ? 404 : 400;
+    const status =
+      error instanceof Error && error.message === 'Plan not found' ? 404 : 400;
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to update plan' },
+      {
+        error: error instanceof Error ? error.message : 'Failed to update plan',
+      },
       { status }
     );
   }

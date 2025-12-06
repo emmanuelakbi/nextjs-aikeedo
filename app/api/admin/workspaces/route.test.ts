@@ -59,7 +59,9 @@ describe('Admin Workspaces API', () => {
     ];
 
     const prisma = (await import('@/lib/db/prisma')).default;
-    vi.mocked(prisma.workspace.findMany).mockResolvedValue(mockWorkspaces as any);
+    vi.mocked(prisma.workspace.findMany).mockResolvedValue(
+      mockWorkspaces as any
+    );
     vi.mocked(prisma.workspace.count).mockResolvedValue(1);
 
     const request = new NextRequest('http://localhost/api/admin/workspaces');

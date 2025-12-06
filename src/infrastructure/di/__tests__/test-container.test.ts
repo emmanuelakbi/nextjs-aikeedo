@@ -1,6 +1,6 @@
 /**
  * Unit Tests for Test DI Container
- * 
+ *
  * Tests mock repository usage and binding override functionality
  * Requirements: 3.5
  */
@@ -31,7 +31,7 @@ describe('Test DI Container', () => {
   describe('Mock Repository Creation', () => {
     it('should create mock user repository with all required methods', () => {
       const mockRepo = createMockUserRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('findByEmail');
@@ -44,7 +44,7 @@ describe('Test DI Container', () => {
 
     it('should create mock workspace repository with all required methods', () => {
       const mockRepo = createMockWorkspaceRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
@@ -56,7 +56,7 @@ describe('Test DI Container', () => {
 
     it('should create mock document repository with all required methods', () => {
       const mockRepo = createMockDocumentRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
@@ -67,7 +67,7 @@ describe('Test DI Container', () => {
 
     it('should create mock file repository with all required methods', () => {
       const mockRepo = createMockFileRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
@@ -78,7 +78,7 @@ describe('Test DI Container', () => {
 
     it('should create mock conversation repository with all required methods', () => {
       const mockRepo = createMockConversationRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
@@ -90,7 +90,7 @@ describe('Test DI Container', () => {
 
     it('should create mock message repository with all required methods', () => {
       const mockRepo = createMockMessageRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
@@ -100,7 +100,7 @@ describe('Test DI Container', () => {
 
     it('should create mock preset repository with all required methods', () => {
       const mockRepo = createMockPresetRepository();
-      
+
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
@@ -110,7 +110,7 @@ describe('Test DI Container', () => {
 
     it('should create mock file storage with all required methods', () => {
       const mockStorage = createMockFileStorage();
-      
+
       expect(mockStorage).toHaveProperty('upload');
       expect(mockStorage).toHaveProperty('download');
       expect(mockStorage).toHaveProperty('delete');
@@ -133,11 +133,11 @@ describe('Test DI Container', () => {
       // User repository
       expect(container.userRepository).toHaveProperty('findById');
       expect(container.userRepository).toHaveProperty('save');
-      
+
       // Workspace repository
       expect(container.workspaceRepository).toHaveProperty('findById');
       expect(container.workspaceRepository).toHaveProperty('save');
-      
+
       // Document repository
       expect(container.documentRepository).toHaveProperty('findById');
       expect(container.documentRepository).toHaveProperty('save');
@@ -146,7 +146,7 @@ describe('Test DI Container', () => {
     it('should create new container instance via factory function', () => {
       const container1 = createTestContainer();
       const container2 = createTestContainer();
-      
+
       // Each call should create a new container instance
       expect(container1).not.toBe(container2);
     });
@@ -156,7 +156,7 @@ describe('Test DI Container', () => {
     it('should return the same repository instance on multiple accesses', () => {
       const repo1 = container.userRepository;
       const repo2 = container.userRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
@@ -165,7 +165,7 @@ describe('Test DI Container', () => {
       const workspaceRepo1 = container.workspaceRepository;
       const userRepo2 = container.userRepository;
       const workspaceRepo2 = container.workspaceRepository;
-      
+
       expect(userRepo1).toBe(userRepo2);
       expect(workspaceRepo1).toBe(workspaceRepo2);
     });
@@ -183,9 +183,9 @@ describe('Test DI Container', () => {
         findByWorkspace: vi.fn(),
         existsByEmail: vi.fn(),
       };
-      
+
       container.setUserRepository(customMock);
-      
+
       expect(container.userRepository).toBe(customMock);
     });
 
@@ -199,57 +199,57 @@ describe('Test DI Container', () => {
         updateCredits: vi.fn(),
         existsByName: vi.fn(),
       };
-      
+
       container.setWorkspaceRepository(customMock);
-      
+
       expect(container.workspaceRepository).toBe(customMock);
     });
 
     it('should allow overriding document repository', () => {
       const customMock = createMockDocumentRepository();
-      
+
       container.setDocumentRepository(customMock);
-      
+
       expect(container.documentRepository).toBe(customMock);
     });
 
     it('should allow overriding file repository', () => {
       const customMock = createMockFileRepository();
-      
+
       container.setFileRepository(customMock);
-      
+
       expect(container.fileRepository).toBe(customMock);
     });
 
     it('should allow overriding conversation repository', () => {
       const customMock = createMockConversationRepository();
-      
+
       container.setConversationRepository(customMock);
-      
+
       expect(container.conversationRepository).toBe(customMock);
     });
 
     it('should allow overriding message repository', () => {
       const customMock = createMockMessageRepository();
-      
+
       container.setMessageRepository(customMock);
-      
+
       expect(container.messageRepository).toBe(customMock);
     });
 
     it('should allow overriding preset repository', () => {
       const customMock = createMockPresetRepository();
-      
+
       container.setPresetRepository(customMock);
-      
+
       expect(container.presetRepository).toBe(customMock);
     });
 
     it('should allow overriding file storage', () => {
       const customMock = createMockFileStorage();
-      
+
       container.setFileStorage(customMock);
-      
+
       // Note: fileStorage is private, so we verify by creating a use case
       const useCase = container.createUploadFileUseCase();
       expect(useCase).toBeDefined();
@@ -266,12 +266,12 @@ describe('Test DI Container', () => {
         findByWorkspace: vi.fn(),
         existsByEmail: vi.fn(),
       };
-      
+
       container.setUserRepository(customMock);
-      
+
       // Create use case after override
       const useCase = container.createGetUserUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(container.userRepository).toBe(customMock);
     });
@@ -280,13 +280,13 @@ describe('Test DI Container', () => {
       const mock1 = createMockUserRepository();
       const mock2 = createMockUserRepository();
       const mock3 = createMockUserRepository();
-      
+
       container.setUserRepository(mock1);
       expect(container.userRepository).toBe(mock1);
-      
+
       container.setUserRepository(mock2);
       expect(container.userRepository).toBe(mock2);
-      
+
       container.setUserRepository(mock3);
       expect(container.userRepository).toBe(mock3);
     });
@@ -296,14 +296,14 @@ describe('Test DI Container', () => {
     it('should reset all repositories to default mocks', () => {
       const originalUserRepo = container.userRepository;
       const originalWorkspaceRepo = container.workspaceRepository;
-      
+
       // Override repositories
       container.setUserRepository(createMockUserRepository());
       container.setWorkspaceRepository(createMockWorkspaceRepository());
-      
+
       // Reset
       container.reset();
-      
+
       // Should have new instances (not the originals, not the overrides)
       expect(container.userRepository).not.toBe(originalUserRepo);
       expect(container.workspaceRepository).not.toBe(originalWorkspaceRepo);
@@ -312,11 +312,11 @@ describe('Test DI Container', () => {
     it('should reset user repository after override', () => {
       const customMock = createMockUserRepository();
       container.setUserRepository(customMock);
-      
+
       expect(container.userRepository).toBe(customMock);
-      
+
       container.reset();
-      
+
       expect(container.userRepository).not.toBe(customMock);
       expect(container.userRepository).toBeDefined();
     });
@@ -324,11 +324,11 @@ describe('Test DI Container', () => {
     it('should reset workspace repository after override', () => {
       const customMock = createMockWorkspaceRepository();
       container.setWorkspaceRepository(customMock);
-      
+
       expect(container.workspaceRepository).toBe(customMock);
-      
+
       container.reset();
-      
+
       expect(container.workspaceRepository).not.toBe(customMock);
       expect(container.workspaceRepository).toBeDefined();
     });
@@ -338,13 +338,13 @@ describe('Test DI Container', () => {
       container.setUserRepository(createMockUserRepository());
       container.setWorkspaceRepository(createMockWorkspaceRepository());
       container.setDocumentRepository(createMockDocumentRepository());
-      
+
       const userRepoBeforeReset = container.userRepository;
       const workspaceRepoBeforeReset = container.workspaceRepository;
       const documentRepoBeforeReset = container.documentRepository;
-      
+
       container.reset();
-      
+
       // All should be new instances
       expect(container.userRepository).not.toBe(userRepoBeforeReset);
       expect(container.workspaceRepository).not.toBe(workspaceRepoBeforeReset);
@@ -353,7 +353,7 @@ describe('Test DI Container', () => {
 
     it('should maintain repository interface compliance after reset', () => {
       container.reset();
-      
+
       expect(container.userRepository).toHaveProperty('findById');
       expect(container.userRepository).toHaveProperty('save');
       expect(container.workspaceRepository).toHaveProperty('findById');
@@ -364,35 +364,35 @@ describe('Test DI Container', () => {
   describe('Use Case Factory Methods', () => {
     it('should create UpdateProfileUseCase with mock dependencies', () => {
       const useCase = container.createUpdateProfileUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdateProfileUseCase');
     });
 
     it('should create GetUserUseCase with mock dependencies', () => {
       const useCase = container.createGetUserUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('GetUserUseCase');
     });
 
     it('should create UpdatePasswordUseCase with mock dependencies', () => {
       const useCase = container.createUpdatePasswordUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdatePasswordUseCase');
     });
 
     it('should create CreateWorkspaceUseCase with mock dependencies', () => {
       const useCase = container.createCreateWorkspaceUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('CreateWorkspaceUseCase');
     });
 
     it('should create ListWorkspacesUseCase with mock dependencies', () => {
       const useCase = container.createListWorkspacesUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('ListWorkspacesUseCase');
     });
@@ -401,7 +401,7 @@ describe('Test DI Container', () => {
       const createUseCase = container.createCreateDocumentUseCase();
       const getUseCase = container.createGetDocumentUseCase();
       const listUseCase = container.createListDocumentsUseCase();
-      
+
       expect(createUseCase).toBeDefined();
       expect(getUseCase).toBeDefined();
       expect(listUseCase).toBeDefined();
@@ -411,7 +411,7 @@ describe('Test DI Container', () => {
       const uploadUseCase = container.createUploadFileUseCase();
       const listUseCase = container.createListFilesUseCase();
       const deleteUseCase = container.createDeleteFileUseCase();
-      
+
       expect(uploadUseCase).toBeDefined();
       expect(listUseCase).toBeDefined();
       expect(deleteUseCase).toBeDefined();
@@ -421,7 +421,7 @@ describe('Test DI Container', () => {
       const createUseCase = container.createCreateConversationUseCase();
       const getUseCase = container.createGetConversationUseCase();
       const listUseCase = container.createListConversationsUseCase();
-      
+
       expect(createUseCase).toBeDefined();
       expect(getUseCase).toBeDefined();
       expect(listUseCase).toBeDefined();
@@ -431,7 +431,7 @@ describe('Test DI Container', () => {
       const createUseCase = container.createCreatePresetUseCase();
       const getUseCase = container.createGetPresetUseCase();
       const listUseCase = container.createListPresetsUseCase();
-      
+
       expect(createUseCase).toBeDefined();
       expect(getUseCase).toBeDefined();
       expect(listUseCase).toBeDefined();
@@ -440,7 +440,7 @@ describe('Test DI Container', () => {
     it('should create new use case instances on each call', () => {
       const useCase1 = container.createGetUserUseCase();
       const useCase2 = container.createGetUserUseCase();
-      
+
       expect(useCase1).not.toBe(useCase2);
     });
 
@@ -463,11 +463,11 @@ describe('Test DI Container', () => {
         findByWorkspace: vi.fn(),
         existsByEmail: vi.fn(),
       };
-      
+
       container.setUserRepository(customMock);
-      
+
       const useCase = container.createGetUserUseCase();
-      
+
       expect(useCase).toBeDefined();
       // Verify the custom mock is being used
       expect(container.userRepository).toBe(customMock);
@@ -475,7 +475,7 @@ describe('Test DI Container', () => {
 
     it('should allow testing with custom mock behavior', async () => {
       const mockUser = { id: 'test-123', email: 'test@example.com' };
-      
+
       const customMock: IUserRepository = {
         save: vi.fn().mockResolvedValue(mockUser),
         findById: vi.fn().mockResolvedValue(mockUser),
@@ -486,9 +486,9 @@ describe('Test DI Container', () => {
         findByWorkspace: vi.fn().mockResolvedValue([mockUser]),
         existsByEmail: vi.fn().mockResolvedValue(true),
       };
-      
+
       container.setUserRepository(customMock);
-      
+
       // Test that the mock is working
       const result = await container.userRepository.findById('test-123' as any);
       expect(result).toEqual(mockUser);
@@ -498,12 +498,12 @@ describe('Test DI Container', () => {
     it('should allow overriding multiple repositories for complex use cases', () => {
       const customUserMock = createMockUserRepository();
       const customWorkspaceMock = createMockWorkspaceRepository();
-      
+
       container.setUserRepository(customUserMock);
       container.setWorkspaceRepository(customWorkspaceMock);
-      
+
       const useCase = container.createCreateWorkspaceUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(container.userRepository).toBe(customUserMock);
       expect(container.workspaceRepository).toBe(customWorkspaceMock);
@@ -514,7 +514,7 @@ describe('Test DI Container', () => {
     it('should support typical test setup pattern', () => {
       // Typical test setup
       const mockUser = { id: 'user-1', email: 'test@example.com' };
-      
+
       const customMock: IUserRepository = {
         save: vi.fn(),
         findById: vi.fn().mockResolvedValue(mockUser),
@@ -525,11 +525,11 @@ describe('Test DI Container', () => {
         findByWorkspace: vi.fn(),
         existsByEmail: vi.fn(),
       };
-      
+
       container.setUserRepository(customMock);
-      
+
       const useCase = container.createGetUserUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(customMock.findById).toBeDefined();
     });
@@ -539,10 +539,10 @@ describe('Test DI Container', () => {
       const mock1 = createMockUserRepository();
       container.setUserRepository(mock1);
       expect(container.userRepository).toBe(mock1);
-      
+
       // Reset for test isolation
       container.reset();
-      
+
       // Test 2: Should have fresh mocks
       const mock2 = createMockUserRepository();
       container.setUserRepository(mock2);
@@ -553,10 +553,10 @@ describe('Test DI Container', () => {
     it('should support beforeEach pattern for test isolation', () => {
       // Simulate beforeEach
       const freshContainer = createTestContainer();
-      
+
       expect(freshContainer.userRepository).toBeDefined();
       expect(freshContainer.workspaceRepository).toBeDefined();
-      
+
       // Each test gets a fresh container
       const anotherContainer = createTestContainer();
       expect(anotherContainer).not.toBe(freshContainer);
@@ -586,7 +586,9 @@ describe('Test DI Container', () => {
     });
 
     it('should have mock existsByEmail that returns false', async () => {
-      const result = await container.userRepository.existsByEmail('test@example.com' as any);
+      const result = await container.userRepository.existsByEmail(
+        'test@example.com' as any
+      );
       expect(result).toBe(false);
     });
   });

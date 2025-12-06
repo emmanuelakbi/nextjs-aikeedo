@@ -25,7 +25,9 @@ const paddingClasses = {
 
 export function Card({ children, className = '', padding = 'md' }: CardProps) {
   return (
-    <div className={`bg-white rounded-lg shadow ${paddingClasses[padding]} ${className}`}>
+    <div
+      className={`bg-white rounded-lg shadow ${paddingClasses[padding]} ${className}`}
+    >
       {children}
     </div>
   );
@@ -46,9 +48,7 @@ export function CardHeader({ title, subtitle, actions }: CardHeaderProps) {
     <div className="flex justify-between items-start mb-4">
       <div>
         <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-        {subtitle && (
-          <p className="text-sm text-gray-600 mt-1">{subtitle}</p>
-        )}
+        {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
       </div>
       {actions && <div className="flex gap-2">{actions}</div>}
     </div>
@@ -65,13 +65,15 @@ interface CardSectionProps {
   divider?: boolean;
 }
 
-export function CardSection({ 
-  children, 
+export function CardSection({
+  children,
   className = '',
-  divider = false 
+  divider = false,
 }: CardSectionProps) {
   return (
-    <div className={`${divider ? 'border-t border-gray-200 pt-4 mt-4' : ''} ${className}`}>
+    <div
+      className={`${divider ? 'border-t border-gray-200 pt-4 mt-4' : ''} ${className}`}
+    >
       {children}
     </div>
   );
@@ -87,11 +89,7 @@ interface CardGridProps {
   gap?: 'sm' | 'md' | 'lg';
 }
 
-export function CardGrid({ 
-  children, 
-  columns = 3,
-  gap = 'md' 
-}: CardGridProps) {
+export function CardGrid({ children, columns = 3, gap = 'md' }: CardGridProps) {
   const gridCols = {
     1: 'grid-cols-1',
     2: 'grid-cols-1 md:grid-cols-2',

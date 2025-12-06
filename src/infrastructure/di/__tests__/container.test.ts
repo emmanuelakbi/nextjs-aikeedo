@@ -1,6 +1,6 @@
 /**
  * Unit Tests for DI Container
- * 
+ *
  * Tests singleton behavior, lazy loading, and factory methods
  * Requirements: 3.4
  */
@@ -18,7 +18,7 @@ describe('DI Container', () => {
     it('should return the same instance on multiple calls to getInstance', () => {
       const instance1 = DIContainer.getInstance();
       const instance2 = DIContainer.getInstance();
-      
+
       expect(instance1).toBe(instance2);
     });
 
@@ -26,7 +26,7 @@ describe('DI Container', () => {
       const instance1 = DIContainer.getInstance();
       const instance2 = DIContainer.getInstance();
       const instance3 = DIContainer.getInstance();
-      
+
       expect(instance1).toBe(instance2);
       expect(instance2).toBe(instance3);
       expect(instance1).toBe(instance3);
@@ -36,7 +36,7 @@ describe('DI Container', () => {
       const instance1 = DIContainer.getInstance();
       DIContainer.reset();
       const instance2 = DIContainer.getInstance();
-      
+
       expect(instance1).not.toBe(instance2);
     });
   });
@@ -44,74 +44,74 @@ describe('DI Container', () => {
   describe('Lazy Loading - Repository Singletons', () => {
     it('should return the same userRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.userRepository;
       const repo2 = container.userRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should return the same workspaceRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.workspaceRepository;
       const repo2 = container.workspaceRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should return the same documentRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.documentRepository;
       const repo2 = container.documentRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should return the same fileRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.fileRepository;
       const repo2 = container.fileRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should return the same conversationRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.conversationRepository;
       const repo2 = container.conversationRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should return the same messageRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.messageRepository;
       const repo2 = container.messageRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should return the same presetRepository instance on multiple accesses', () => {
       const container = DIContainer.getInstance();
-      
+
       const repo1 = container.presetRepository;
       const repo2 = container.presetRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
 
     it('should maintain repository singletons across container accesses', () => {
       const container1 = DIContainer.getInstance();
       const container2 = DIContainer.getInstance();
-      
+
       const repo1 = container1.userRepository;
       const repo2 = container2.userRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
   });
@@ -120,7 +120,7 @@ describe('DI Container', () => {
     it('should create UpdateProfileUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUpdateProfileUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdateProfileUseCase');
     });
@@ -128,7 +128,7 @@ describe('DI Container', () => {
     it('should create GetUserUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createGetUserUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('GetUserUseCase');
     });
@@ -136,7 +136,7 @@ describe('DI Container', () => {
     it('should create UpdateEmailUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUpdateEmailUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdateEmailUseCase');
     });
@@ -144,17 +144,17 @@ describe('DI Container', () => {
     it('should create UpdatePasswordUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUpdatePasswordUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdatePasswordUseCase');
     });
 
     it('should create new use case instances on each call', () => {
       const container = DIContainer.getInstance();
-      
+
       const useCase1 = container.createUpdateProfileUseCase();
       const useCase2 = container.createUpdateProfileUseCase();
-      
+
       expect(useCase1).not.toBe(useCase2);
     });
   });
@@ -163,7 +163,7 @@ describe('DI Container', () => {
     it('should create CreateWorkspaceUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createCreateWorkspaceUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('CreateWorkspaceUseCase');
     });
@@ -171,7 +171,7 @@ describe('DI Container', () => {
     it('should create ListWorkspacesUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createListWorkspacesUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('ListWorkspacesUseCase');
     });
@@ -179,7 +179,7 @@ describe('DI Container', () => {
     it('should create UpdateWorkspaceUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUpdateWorkspaceUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdateWorkspaceUseCase');
     });
@@ -187,7 +187,7 @@ describe('DI Container', () => {
     it('should create SwitchWorkspaceUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createSwitchWorkspaceUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('SwitchWorkspaceUseCase');
     });
@@ -195,9 +195,11 @@ describe('DI Container', () => {
     it('should create TransferWorkspaceOwnershipUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createTransferWorkspaceOwnershipUseCase();
-      
+
       expect(useCase).toBeDefined();
-      expect(useCase.constructor.name).toBe('TransferWorkspaceOwnershipUseCase');
+      expect(useCase.constructor.name).toBe(
+        'TransferWorkspaceOwnershipUseCase'
+      );
     });
   });
 
@@ -205,7 +207,7 @@ describe('DI Container', () => {
     it('should create CreateDocumentUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createCreateDocumentUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('CreateDocumentUseCase');
     });
@@ -213,7 +215,7 @@ describe('DI Container', () => {
     it('should create GetDocumentUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createGetDocumentUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('GetDocumentUseCase');
     });
@@ -221,7 +223,7 @@ describe('DI Container', () => {
     it('should create ListDocumentsUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createListDocumentsUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('ListDocumentsUseCase');
     });
@@ -229,7 +231,7 @@ describe('DI Container', () => {
     it('should create SearchDocumentsUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createSearchDocumentsUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('SearchDocumentsUseCase');
     });
@@ -237,7 +239,7 @@ describe('DI Container', () => {
     it('should create UpdateDocumentUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUpdateDocumentUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdateDocumentUseCase');
     });
@@ -245,7 +247,7 @@ describe('DI Container', () => {
     it('should create DeleteDocumentUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createDeleteDocumentUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('DeleteDocumentUseCase');
     });
@@ -255,7 +257,7 @@ describe('DI Container', () => {
     it('should create UploadFileUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUploadFileUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UploadFileUseCase');
     });
@@ -263,7 +265,7 @@ describe('DI Container', () => {
     it('should create ListFilesUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createListFilesUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('ListFilesUseCase');
     });
@@ -271,7 +273,7 @@ describe('DI Container', () => {
     it('should create DeleteFileUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createDeleteFileUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('DeleteFileUseCase');
     });
@@ -281,7 +283,7 @@ describe('DI Container', () => {
     it('should create CreateConversationUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createCreateConversationUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('CreateConversationUseCase');
     });
@@ -289,7 +291,7 @@ describe('DI Container', () => {
     it('should create GetConversationUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createGetConversationUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('GetConversationUseCase');
     });
@@ -297,7 +299,7 @@ describe('DI Container', () => {
     it('should create ListConversationsUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createListConversationsUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('ListConversationsUseCase');
     });
@@ -305,7 +307,7 @@ describe('DI Container', () => {
     it('should create DeleteConversationUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createDeleteConversationUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('DeleteConversationUseCase');
     });
@@ -313,7 +315,7 @@ describe('DI Container', () => {
     it('should create AddMessageUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createAddMessageUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('AddMessageUseCase');
     });
@@ -323,7 +325,7 @@ describe('DI Container', () => {
     it('should create CreatePresetUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createCreatePresetUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('CreatePresetUseCase');
     });
@@ -331,7 +333,7 @@ describe('DI Container', () => {
     it('should create GetPresetUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createGetPresetUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('GetPresetUseCase');
     });
@@ -339,7 +341,7 @@ describe('DI Container', () => {
     it('should create ListPresetsUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createListPresetsUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('ListPresetsUseCase');
     });
@@ -347,7 +349,7 @@ describe('DI Container', () => {
     it('should create UpdatePresetUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createUpdatePresetUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('UpdatePresetUseCase');
     });
@@ -355,7 +357,7 @@ describe('DI Container', () => {
     it('should create DeletePresetUseCase with proper dependencies', () => {
       const container = DIContainer.getInstance();
       const useCase = container.createDeletePresetUseCase();
-      
+
       expect(useCase).toBeDefined();
       expect(useCase.constructor.name).toBe('DeletePresetUseCase');
     });
@@ -364,14 +366,14 @@ describe('DI Container', () => {
   describe('Use Case Dependency Injection', () => {
     it('should inject the same repository instance into multiple use cases', () => {
       const container = DIContainer.getInstance();
-      
+
       // Get the repository directly
       const userRepo = container.userRepository;
-      
+
       // Create use cases that depend on userRepository
       const useCase1 = container.createUpdateProfileUseCase();
       const useCase2 = container.createGetUserUseCase();
-      
+
       // Both use cases should receive the same repository instance
       // We can verify this by checking that the repository is a singleton
       expect(container.userRepository).toBe(userRepo);
@@ -379,14 +381,14 @@ describe('DI Container', () => {
 
     it('should inject the same workspace repository into multiple use cases', () => {
       const container = DIContainer.getInstance();
-      
+
       const workspaceRepo = container.workspaceRepository;
-      
+
       // Create use cases that depend on workspaceRepository
       container.createCreateWorkspaceUseCase();
       container.createListWorkspacesUseCase();
       container.createUpdateWorkspaceUseCase();
-      
+
       // Repository should remain the same singleton
       expect(container.workspaceRepository).toBe(workspaceRepo);
     });
@@ -396,19 +398,19 @@ describe('DI Container', () => {
     it('should export a singleton container instance', async () => {
       // Import the exported container
       const { container } = await import('../container');
-      
+
       expect(container).toBeDefined();
       expect(container).toBeInstanceOf(DIContainer);
     });
 
     it('should export a container that behaves as singleton', async () => {
       const { container } = await import('../container');
-      
+
       // The exported container should maintain singleton behavior
       // by returning the same repositories on multiple accesses
       const repo1 = container.userRepository;
       const repo2 = container.userRepository;
-      
+
       expect(repo1).toBe(repo2);
     });
   });
@@ -416,7 +418,7 @@ describe('DI Container', () => {
   describe('Repository Interface Compliance', () => {
     it('should provide repositories that implement domain interfaces', () => {
       const container = DIContainer.getInstance();
-      
+
       // Check that repositories have the expected methods
       expect(container.userRepository).toHaveProperty('findById');
       expect(container.userRepository).toHaveProperty('findByEmail');
@@ -426,7 +428,7 @@ describe('DI Container', () => {
 
     it('should provide workspace repository with expected methods', () => {
       const container = DIContainer.getInstance();
-      
+
       expect(container.workspaceRepository).toHaveProperty('findById');
       expect(container.workspaceRepository).toHaveProperty('save');
       expect(container.workspaceRepository).toHaveProperty('delete');
@@ -435,7 +437,7 @@ describe('DI Container', () => {
 
     it('should provide document repository with expected methods', () => {
       const container = DIContainer.getInstance();
-      
+
       expect(container.documentRepository).toHaveProperty('findById');
       expect(container.documentRepository).toHaveProperty('save');
       expect(container.documentRepository).toHaveProperty('delete');

@@ -92,17 +92,20 @@ nextjs-aikeedo/
 ### Authentication System
 
 **NextAuth.js Configuration**
+
 - Provider: Credentials (email/password)
 - Session strategy: Database sessions
 - JWT for session tokens
 - Custom pages for login, register, error
 
 **Auth Middleware**
+
 - Protects routes requiring authentication
 - Redirects unauthenticated users to login
 - Validates session on each request
 
 **Password Hashing**
+
 - Library: bcrypt
 - Salt rounds: 12
 - Comparison using constant-time algorithm
@@ -110,38 +113,46 @@ nextjs-aikeedo/
 ### User Management
 
 **User Repository Interface**
+
 ```typescript
 interface UserRepository {
-  create(data: CreateUserData): Promise<User>
-  findById(id: string): Promise<User | null>
-  findByEmail(email: string): Promise<User | null>
-  update(id: string, data: UpdateUserData): Promise<User>
-  delete(id: string): Promise<void>
+  create(data: CreateUserData): Promise<User>;
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  update(id: string, data: UpdateUserData): Promise<User>;
+  delete(id: string): Promise<void>;
 }
 ```
 
 **User Service**
+
 ```typescript
 interface UserService {
-  register(email: string, password: string, firstName: string, lastName: string): Promise<User>
-  verifyEmail(token: string): Promise<void>
-  requestPasswordReset(email: string): Promise<void>
-  resetPassword(token: string, newPassword: string): Promise<void>
-  updateProfile(userId: string, data: ProfileData): Promise<User>
+  register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ): Promise<User>;
+  verifyEmail(token: string): Promise<void>;
+  requestPasswordReset(email: string): Promise<void>;
+  resetPassword(token: string, newPassword: string): Promise<void>;
+  updateProfile(userId: string, data: ProfileData): Promise<User>;
 }
 ```
 
 ### Workspace Management
 
 **Workspace Repository Interface**
+
 ```typescript
 interface WorkspaceRepository {
-  create(ownerId: string, name: string): Promise<Workspace>
-  findById(id: string): Promise<Workspace | null>
-  findByUserId(userId: string): Promise<Workspace[]>
-  update(id: string, data: UpdateWorkspaceData): Promise<Workspace>
-  addMember(workspaceId: string, userId: string): Promise<void>
-  removeMember(workspaceId: string, userId: string): Promise<void>
+  create(ownerId: string, name: string): Promise<Workspace>;
+  findById(id: string): Promise<Workspace | null>;
+  findByUserId(userId: string): Promise<Workspace[]>;
+  update(id: string, data: UpdateWorkspaceData): Promise<Workspace>;
+  addMember(workspaceId: string, userId: string): Promise<void>;
+  removeMember(workspaceId: string, userId: string): Promise<void>;
 }
 ```
 
@@ -151,146 +162,161 @@ interface WorkspaceRepository {
 
 ```typescript
 type User = {
-  id: string                    // UUID
-  email: string                 // Unique, validated email
-  emailVerified: Date | null    // Timestamp of verification
-  passwordHash: string          // Bcrypt hash
-  firstName: string
-  lastName: string
-  phoneNumber: string | null
-  language: string              // ISO language code
-  role: 'USER' | 'ADMIN'
-  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
-  apiKey: string | null         // For API access
-  currentWorkspaceId: string    // Active workspace
-  createdAt: Date
-  updatedAt: Date
-  lastSeenAt: Date | null
-}
+  id: string; // UUID
+  email: string; // Unique, validated email
+  emailVerified: Date | null; // Timestamp of verification
+  passwordHash: string; // Bcrypt hash
+  firstName: string;
+  lastName: string;
+  phoneNumber: string | null;
+  language: string; // ISO language code
+  role: 'USER' | 'ADMIN';
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  apiKey: string | null; // For API access
+  currentWorkspaceId: string; // Active workspace
+  createdAt: Date;
+  updatedAt: Date;
+  lastSeenAt: Date | null;
+};
 ```
 
 ### Workspace Entity
 
 ```typescript
 type Workspace = {
-  id: string                    // UUID
-  name: string
-  ownerId: string               // User who owns workspace
-  creditCount: number           // Available credits
-  allocatedCredits: number      // Credits in use
-  isTrialed: boolean            // Has used trial
-  createdAt: Date
-  updatedAt: Date
-  creditsAdjustedAt: Date | null
-}
+  id: string; // UUID
+  name: string;
+  ownerId: string; // User who owns workspace
+  creditCount: number; // Available credits
+  allocatedCredits: number; // Credits in use
+  isTrialed: boolean; // Has used trial
+  createdAt: Date;
+  updatedAt: Date;
+  creditsAdjustedAt: Date | null;
+};
 ```
 
 ### Session Entity
 
 ```typescript
 type Session = {
-  id: string                    // UUID
-  sessionToken: string          // Unique token
-  userId: string
-  expires: Date
-  createdAt: Date
-  updatedAt: Date
-}
+  id: string; // UUID
+  sessionToken: string; // Unique token
+  userId: string;
+  expires: Date;
+  createdAt: Date;
+  updatedAt: Date;
+};
 ```
 
 ### Account Entity (for OAuth future support)
 
 ```typescript
 type Account = {
-  id: string
-  userId: string
-  type: string                  // 'oauth' | 'email'
-  provider: string              // 'google' | 'github' | 'credentials'
-  providerAccountId: string
-  refreshToken: string | null
-  accessToken: string | null
-  expiresAt: number | null
-  tokenType: string | null
-  scope: string | null
-  idToken: string | null
-  sessionState: string | null
-}
+  id: string;
+  userId: string;
+  type: string; // 'oauth' | 'email'
+  provider: string; // 'google' | 'github' | 'credentials'
+  providerAccountId: string;
+  refreshToken: string | null;
+  accessToken: string | null;
+  expiresAt: number | null;
+  tokenType: string | null;
+  scope: string | null;
+  idToken: string | null;
+  sessionState: string | null;
+};
 ```
 
 ### VerificationToken Entity
 
 ```typescript
 type VerificationToken = {
-  identifier: string            // Email address
-  token: string                 // Unique token
-  expires: Date
-  type: 'EMAIL_VERIFICATION' | 'PASSWORD_RESET'
-  createdAt: Date
-}
+  identifier: string; // Email address
+  token: string; // Unique token
+  expires: Date;
+  type: 'EMAIL_VERIFICATION' | 'PASSWORD_RESET';
+  createdAt: Date;
+};
 ```
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Password hashing is irreversible
-*For any* valid password string, after hashing, it should be impossible to retrieve the original password from the hash alone
+
+_For any_ valid password string, after hashing, it should be impossible to retrieve the original password from the hash alone
 **Validates: Requirements 3.4, 12.1**
 
 ### Property 2: Email uniqueness
-*For any* two user registration attempts with the same email address, only the first should succeed and the second should fail with a unique constraint error
+
+_For any_ two user registration attempts with the same email address, only the first should succeed and the second should fail with a unique constraint error
 **Validates: Requirements 3.1**
 
 ### Property 3: Session token uniqueness
-*For any* two session creation attempts, each should generate a unique session token that does not collide with existing tokens
+
+_For any_ two session creation attempts, each should generate a unique session token that does not collide with existing tokens
 **Validates: Requirements 6.1**
 
 ### Property 4: Password verification correctness
-*For any* user with a stored password hash, verifying with the correct password should succeed and verifying with any incorrect password should fail
+
+_For any_ user with a stored password hash, verifying with the correct password should succeed and verifying with any incorrect password should fail
 **Validates: Requirements 3.2, 3.3**
 
 ### Property 5: Email verification token expiration
-*For any* verification token that has expired, attempting to verify an email with that token should fail regardless of whether the token is otherwise valid
+
+_For any_ verification token that has expired, attempting to verify an email with that token should fail regardless of whether the token is otherwise valid
 **Validates: Requirements 4.3**
 
 ### Property 6: Session expiration enforcement
-*For any* session that has passed its expiration date, authentication attempts using that session should fail
+
+_For any_ session that has passed its expiration date, authentication attempts using that session should fail
 **Validates: Requirements 6.4, 6.5**
 
 ### Property 7: Workspace ownership
-*For any* workspace, there should be exactly one owner at any given time, and the owner should be a valid user
+
+_For any_ workspace, there should be exactly one owner at any given time, and the owner should be a valid user
 **Validates: Requirements 8.2**
 
 ### Property 8: Default workspace creation
-*For any* new user registration, the system should automatically create exactly one default workspace named "Personal" owned by that user
+
+_For any_ new user registration, the system should automatically create exactly one default workspace named "Personal" owned by that user
 **Validates: Requirements 8.1**
 
 ### Property 9: Profile update requires authentication
-*For any* profile update request, the request should only succeed if it includes a valid, non-expired session token for the user being updated
+
+_For any_ profile update request, the request should only succeed if it includes a valid, non-expired session token for the user being updated
 **Validates: Requirements 7.2**
 
 ### Property 10: Password change requires current password
-*For any* password change request, the request should only succeed if the provided current password matches the stored password hash
+
+_For any_ password change request, the request should only succeed if the provided current password matches the stored password hash
 **Validates: Requirements 7.4**
 
 ### Property 11: Email change triggers re-verification
-*For any* email address change, the new email should be marked as unverified and a verification email should be sent
+
+_For any_ email address change, the new email should be marked as unverified and a verification email should be sent
 **Validates: Requirements 7.3**
 
 ### Property 12: Password reset invalidates sessions
-*For any* successful password reset, all existing sessions for that user should be invalidated
+
+_For any_ successful password reset, all existing sessions for that user should be invalidated
 **Validates: Requirements 5.5**
 
 ### Property 13: API error responses are consistent
-*For any* API error, the response should include a consistent structure with status code, message, and optional field-specific errors
+
+_For any_ API error, the response should include a consistent structure with status code, message, and optional field-specific errors
 **Validates: Requirements 9.1, 9.2, 9.3**
 
 ### Property 14: Input validation prevents injection
-*For any* user input containing special characters or SQL/script injection attempts, the validation layer should sanitize or reject the input before it reaches the database
+
+_For any_ user input containing special characters or SQL/script injection attempts, the validation layer should sanitize or reject the input before it reaches the database
 **Validates: Requirements 12.4**
 
 ### Property 15: Workspace credit allocation
-*For any* workspace, the sum of allocated credits should never exceed the total available credits
+
+_For any_ workspace, the sum of allocated credits should never exceed the total available credits
 **Validates: Requirements 8.5**
 
 ## Error Handling
@@ -309,13 +335,14 @@ type VerificationToken = {
 ```typescript
 type ErrorResponse = {
   error: {
-    code: string              // Machine-readable error code
-    message: string           // Human-readable message
-    fields?: {                // Field-specific errors
-      [key: string]: string[]
-    }
-  }
-}
+    code: string; // Machine-readable error code
+    message: string; // Human-readable message
+    fields?: {
+      // Field-specific errors
+      [key: string]: string[];
+    };
+  };
+};
 ```
 
 ### Error Handling Strategy
@@ -335,12 +362,14 @@ type ErrorResponse = {
 **Framework**: Vitest
 
 **Coverage Areas**:
+
 - Value object validation (Email, Password, etc.)
 - Domain entity business logic
 - Use case command handlers
 - Utility functions (password hashing, token generation)
 
 **Example Tests**:
+
 - Email value object rejects invalid formats
 - Password hashing produces different hashes for same input
 - User entity validates required fields
@@ -353,6 +382,7 @@ type ErrorResponse = {
 **Configuration**: Minimum 100 iterations per property test
 
 **Property Tests** (matching correctness properties):
+
 - Property 1: Password hashing irreversibility
 - Property 2: Email uniqueness enforcement
 - Property 3: Session token uniqueness
@@ -361,6 +391,7 @@ type ErrorResponse = {
 - Property 15: Workspace credit allocation constraints
 
 Each property test will be tagged with:
+
 ```typescript
 // Feature: nextjs-foundation, Property 1: Password hashing is irreversible
 ```
@@ -370,6 +401,7 @@ Each property test will be tagged with:
 **Framework**: Playwright
 
 **Coverage Areas**:
+
 - Complete authentication flows (register → verify → login)
 - Password reset flow
 - Profile update flow
@@ -381,6 +413,7 @@ Each property test will be tagged with:
 **Framework**: Playwright
 
 **Critical Paths**:
+
 - New user registration through first login
 - Password recovery flow
 - Multi-workspace navigation
@@ -447,12 +480,14 @@ Each property test will be tagged with:
 ### Environment Variables
 
 Required:
+
 - `DATABASE_URL`: PostgreSQL connection string
 - `NEXTAUTH_SECRET`: Random secret for session encryption
 - `NEXTAUTH_URL`: Application URL
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`: Email configuration
 
 Optional:
+
 - `REDIS_URL`: Redis connection for caching
 - `SENTRY_DSN`: Error tracking
 - `RATE_LIMIT_REDIS_URL`: Redis for rate limiting
@@ -480,6 +515,7 @@ The Account entity is designed to support OAuth providers (Google, GitHub, etc.)
 ### API Versioning
 
 API routes are structured to support versioning:
+
 - `/api/v1/users`
 - `/api/v2/users`
 

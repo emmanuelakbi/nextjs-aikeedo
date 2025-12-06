@@ -1,6 +1,6 @@
 /**
  * Domain Types
- * 
+ *
  * Central location for all domain-level type definitions.
  * These types are independent of infrastructure (Prisma, Stripe, etc.)
  * and can be safely imported in any layer including client components.
@@ -139,6 +139,10 @@ export function isPlanInterval(value: string): value is PlanInterval {
   return Object.values(PlanInterval).includes(value as PlanInterval);
 }
 
-export function isSubscriptionStatus(value: string): value is SubscriptionStatus {
-  return Object.values(SubscriptionStatus).includes(value as SubscriptionStatus);
+export function isSubscriptionStatus(
+  value: string
+): value is SubscriptionStatus {
+  return Object.values(SubscriptionStatus).includes(
+    value as SubscriptionStatus
+  );
 }

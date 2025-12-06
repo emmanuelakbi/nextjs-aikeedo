@@ -3,7 +3,7 @@ import { PlanRepository } from '../../../infrastructure/repositories/PlanReposit
 
 /**
  * Activate Plan Use Case
- * 
+ *
  * Activates a deprecated plan, allowing new subscriptions.
  * Requirements: Billing 1.4
  */

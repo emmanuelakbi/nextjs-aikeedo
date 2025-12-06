@@ -100,7 +100,9 @@ async function testReferralTracking() {
     const stats = await getStatsUseCase.execute(affiliateUser.id);
     console.log(`  Total Referrals: ${stats.totalReferrals}`);
     console.log(`  Converted Referrals: ${stats.convertedReferrals}`);
-    console.log(`  Conversion Rate: ${(stats.conversionRate * 100).toFixed(1)}%`);
+    console.log(
+      `  Conversion Rate: ${(stats.conversionRate * 100).toFixed(1)}%`
+    );
     console.log(`  Total Earnings: $${(stats.totalEarnings / 100).toFixed(2)}`);
     console.log('  ✅ Pass\n');
 
@@ -113,7 +115,10 @@ async function testReferralTracking() {
       });
       console.log('  ❌ Fail - Should have thrown error');
     } catch (error) {
-      if (error instanceof Error && error.message === 'Self-referrals are not allowed') {
+      if (
+        error instanceof Error &&
+        error.message === 'Self-referrals are not allowed'
+      ) {
         console.log('  ✅ Pass - Self-referral blocked\n');
       } else {
         throw error;
@@ -129,7 +134,10 @@ async function testReferralTracking() {
       });
       console.log('  ❌ Fail - Should have thrown error');
     } catch (error) {
-      if (error instanceof Error && error.message === 'User was already referred') {
+      if (
+        error instanceof Error &&
+        error.message === 'User was already referred'
+      ) {
         console.log('  ✅ Pass - Duplicate referral blocked\n');
       } else {
         throw error;
@@ -177,7 +185,6 @@ async function testReferralTracking() {
     console.log('  ✓ Self-referral prevention');
     console.log('  ✓ Duplicate referral prevention');
     console.log('  ✓ Invalid code rejection');
-
   } catch (error) {
     console.error('\n❌ Test failed:', error);
     process.exit(1);

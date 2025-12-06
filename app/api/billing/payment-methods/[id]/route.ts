@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 /**
  * Individual Payment Method API Routes
- * 
+ *
  * Handles operations on specific payment methods
  * Requirements: 6.2, 6.3
  */
@@ -29,10 +29,7 @@ export async function PATCH(
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -125,10 +122,7 @@ export async function DELETE(
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -184,4 +178,3 @@ export async function DELETE(
     );
   }
 }
-

@@ -36,7 +36,7 @@ export async function GET(_request: NextRequest) {
       referralUrl,
       commissionRate: affiliate.commissionRate,
       tier: affiliate.tier,
-      
+
       // Text snippets
       textSnippets: [
         {

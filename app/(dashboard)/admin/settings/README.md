@@ -11,6 +11,7 @@ The System Settings interface provides tools for administrators to configure pla
 **Location**: `/admin/settings`
 
 **Capabilities**:
+
 - View all system settings organized by category
 - Create new settings
 - Update existing settings
@@ -89,6 +90,7 @@ The System Settings interface provides tools for administrators to configure pla
 **Purpose**: Add a new system setting
 
 **Required Fields**:
+
 - `key` (string): Unique identifier (e.g., "platform.name")
 - `value` (any): Setting value (string, number, boolean, object)
 - `description` (string): Human-readable description
@@ -98,6 +100,7 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `POST /api/admin/settings`
 
 **Body**:
+
 ```json
 {
   "key": "platform.name",
@@ -113,6 +116,7 @@ The System Settings interface provides tools for administrators to configure pla
 **Purpose**: Modify an existing setting value
 
 **Editable Fields**:
+
 - `value` - The setting value
 - `description` - Setting description
 - `category` - Setting category
@@ -121,6 +125,7 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `POST /api/admin/settings` (upsert)
 
 **Body**:
+
 ```json
 {
   "key": "platform.name",
@@ -134,6 +139,7 @@ The System Settings interface provides tools for administrators to configure pla
 **Purpose**: Remove a setting from the system
 
 **Effects**:
+
 - Setting is permanently deleted
 - Default values may be used if setting is required
 - Action is logged in audit trail
@@ -147,6 +153,7 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `GET /api/admin/settings/:key`
 
 **Response**:
+
 ```json
 {
   "key": "platform.name",
@@ -166,6 +173,7 @@ The System Settings interface provides tools for administrators to configure pla
 **Purpose**: Manage subscription plans available to users
 
 **Plan Fields**:
+
 - Name (e.g., "Pro Plan")
 - Description (optional)
 - Price (in cents, e.g., 2900 = $29.00)
@@ -181,6 +189,7 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `POST /api/admin/plans`
 
 **Body**:
+
 ```json
 {
   "name": "Pro Plan",
@@ -205,6 +214,7 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `PATCH /api/admin/plans/:id`
 
 **Body**:
+
 ```json
 {
   "name": "Pro Plan Updated",
@@ -221,6 +231,7 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `DELETE /api/admin/plans/:id`
 
 **Restrictions**:
+
 - Cannot delete plan with active subscriptions
 - Must deactivate plan first
 - Wait for all subscriptions to end or migrate users
@@ -230,10 +241,12 @@ The System Settings interface provides tools for administrators to configure pla
 **API Endpoint**: `GET /api/admin/plans`
 
 **Query Parameters**:
+
 - `isActive` (boolean): Filter by active status
 - `interval` (string): Filter by billing interval
 
 **Response**:
+
 ```json
 {
   "plans": [
@@ -277,12 +290,15 @@ DELETE /api/admin/plans/:id
 ## Security Considerations
 
 ### Access Control
+
 - Only admins can access settings management
 - All endpoints protected by `requireAdmin()` middleware
 - Sensitive settings (API keys, passwords) are encrypted
 
 ### Audit Logging
+
 All settings management actions are logged:
+
 - Setting creation
 - Setting updates (with old and new values)
 - Setting deletion
@@ -290,6 +306,7 @@ All settings management actions are logged:
 - Plan deletion
 
 ### Sensitive Data
+
 - API keys are encrypted at rest
 - Passwords are never exposed in responses
 - Sensitive settings are marked as non-public
@@ -360,10 +377,8 @@ Environment variables take precedence over database settings:
 
 ```typescript
 // Get setting with fallback
-const apiKey = 
-  process.env.OPENAI_API_KEY || 
-  await getSetting('ai.openai_api_key') || 
-  null;
+const apiKey =
+  process.env.OPENAI_API_KEY || (await getSetting('ai.openai_api_key')) || null;
 ```
 
 ## Setting Naming Convention
@@ -371,6 +386,7 @@ const apiKey =
 Settings follow a hierarchical naming pattern: `{category}.{name}`
 
 **Examples**:
+
 - `platform.name` - Platform name
 - `ai.openai_api_key` - OpenAI API key
 - `billing.default_currency` - Default currency
@@ -393,6 +409,7 @@ npm test src/app/api/admin/settings/route.test.ts
 ```
 
 **Test Coverage**:
+
 - List settings with filtering
 - Create new settings
 - Update existing settings

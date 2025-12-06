@@ -2,7 +2,7 @@ import {
   IVerificationTokenRepository,
   VerificationToken,
   VerificationTokenType,
-  CreateVerificationTokenData
+  CreateVerificationTokenData,
 } from '../../domain/auth/repositories/IVerificationTokenRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';

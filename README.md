@@ -5,6 +5,7 @@ A modern, enterprise-grade AI services platform built with Next.js 14, featuring
 ## 🚀 Quick Setup (5 Minutes)
 
 ### Prerequisites
+
 - Node.js 18+
 - Docker (for PostgreSQL)
 - Git

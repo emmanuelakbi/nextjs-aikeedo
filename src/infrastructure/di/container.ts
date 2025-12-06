@@ -1,9 +1,9 @@
 /**
  * Dependency Injection Container
- * 
+ *
  * Centralized container for managing dependencies and creating use cases.
  * Implements singleton pattern with lazy loading for optimal performance.
- * 
+ *
  * Requirements: 3.1, 3.2, 3.4
  */
 
@@ -125,10 +125,10 @@ export interface Container {
 
 /**
  * Dependency Injection Container Implementation
- * 
+ *
  * Singleton container that manages all application dependencies.
  * Uses lazy loading to instantiate repositories only when needed.
- * 
+ *
  * Requirements: 3.1, 3.2, 3.4
  */
 export class DIContainer implements Container {
@@ -151,7 +151,7 @@ export class DIContainer implements Container {
 
   /**
    * Get the singleton instance of the container
-   * 
+   *
    * @returns The singleton DIContainer instance
    */
   public static getInstance(): DIContainer {
@@ -397,11 +397,11 @@ export class DIContainer implements Container {
 
 /**
  * Export singleton instance for easy access throughout the application
- * 
+ *
  * Usage:
  * ```typescript
  * import { container } from '@/infrastructure/di/container';
- * 
+ *
  * const useCase = container.createGetUserUseCase();
  * const result = await useCase.execute({ userId: '123' });
  * ```

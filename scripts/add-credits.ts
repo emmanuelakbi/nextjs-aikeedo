@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Add Credits Script
- * 
+ *
  * Adds credits to a workspace for testing purposes.
  * Usage: tsx scripts/add-credits.ts <workspace-id> <amount>
  * Or: tsx scripts/add-credits.ts --all <amount>
@@ -67,7 +67,9 @@ async function listWorkspaces() {
   workspaces.forEach((ws) => {
     console.log(`  ${ws.id}`);
     console.log(`  Name: ${ws.name}`);
-    console.log(`  Owner: ${ws.owner.email} (${ws.owner.firstName} ${ws.owner.lastName})`);
+    console.log(
+      `  Owner: ${ws.owner.email} (${ws.owner.firstName} ${ws.owner.lastName})`
+    );
     console.log(`  Credits: ${ws.creditCount}`);
     console.log('');
   });

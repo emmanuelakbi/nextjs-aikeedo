@@ -144,10 +144,7 @@ export function AdminPageExample() {
       <PageHeader
         title="User Management"
         description="Manage all users in the system"
-        breadcrumbs={[
-          { label: 'Admin', href: '/admin' },
-          { label: 'Users' },
-        ]}
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Users' }]}
         actions={
           <>
             <Button variant="secondary">Export</Button>

@@ -7,9 +7,9 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 interface RateLimitConfig {
-  windowMs: number;  // Time window in milliseconds
-  maxRequests: number;  // Max requests per window
-  keyPrefix?: string;  // Key prefix for identification
+  windowMs: number; // Time window in milliseconds
+  maxRequests: number; // Max requests per window
+  keyPrefix?: string; // Key prefix for identification
 }
 
 interface RateLimitEntry {
@@ -39,7 +39,7 @@ export class RateLimiter {
     }
 
     // Remove old timestamps outside the window
-    entry.timestamps = entry.timestamps.filter(ts => ts > windowStart);
+    entry.timestamps = entry.timestamps.filter((ts) => ts > windowStart);
 
     // Check if limit exceeded
     const count = entry.timestamps.length;
@@ -59,7 +59,10 @@ export class RateLimiter {
   static cleanup() {
     const now = Date.now();
     for (const [key, entry] of rateLimitStore.entries()) {
-      if (entry.timestamps.length === 0 || entry.timestamps[entry.timestamps.length - 1] < now - 3600000) {
+      if (
+        entry.timestamps.length === 0 ||
+        entry.timestamps[entry.timestamps.length - 1] < now - 3600000
+      ) {
         rateLimitStore.delete(key);
       }
     }
@@ -107,9 +110,10 @@ export async function withRateLimit(
   identifier?: string
 ): Promise<NextResponse | null> {
   // Get identifier (IP or user ID)
-  const id = identifier || 
-    request.headers.get('x-forwarded-for') || 
-    request.headers.get('x-real-ip') || 
+  const id =
+    identifier ||
+    request.headers.get('x-forwarded-for') ||
+    request.headers.get('x-real-ip') ||
     'unknown';
 
   const result = await rateLimiter.checkLimit(id);
@@ -126,7 +130,9 @@ export async function withRateLimit(
           'X-RateLimit-Limit': rateLimiter['config'].maxRequests.toString(),
           'X-RateLimit-Remaining': '0',
           'X-RateLimit-Reset': result.resetAt.getTime().toString(),
-          'Retry-After': Math.ceil((result.resetAt.getTime() - Date.now()) / 1000).toString(),
+          'Retry-After': Math.ceil(
+            (result.resetAt.getTime() - Date.now()) / 1000
+          ).toString(),
         },
       }
     );

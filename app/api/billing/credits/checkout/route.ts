@@ -4,7 +4,10 @@ import { stripeService } from '@/infrastructure/services/StripeService';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import { formatAmountForStripe } from '@/lib/stripe';
-import { withRateLimit, checkoutRateLimiter } from '@/lib/middleware/rate-limit';
+import {
+  withRateLimit,
+  checkoutRateLimiter,
+} from '@/lib/middleware/rate-limit';
 
 /**
  * POST /api/billing/credits/checkout
@@ -16,22 +19,22 @@ import { withRateLimit, checkoutRateLimiter } from '@/lib/middleware/rate-limit'
 const CREDIT_PRICING = {
   basePrice: 0.01, // $0.01 per credit
   bulkDiscounts: [
-    { minAmount: 1000, discount: 0.05 },   // 5% off for 1000+
-    { minAmount: 5000, discount: 0.10 },   // 10% off for 5000+
-    { minAmount: 10000, discount: 0.15 },  // 15% off for 10000+
+    { minAmount: 1000, discount: 0.05 }, // 5% off for 1000+
+    { minAmount: 5000, discount: 0.1 }, // 10% off for 5000+
+    { minAmount: 10000, discount: 0.15 }, // 15% off for 10000+
   ],
 };
 
 function calculateCreditPrice(creditAmount: number): number {
   let price = CREDIT_PRICING.basePrice;
-  
+
   // Apply bulk discount
   for (const tier of CREDIT_PRICING.bulkDiscounts) {
     if (creditAmount >= tier.minAmount) {
       price = CREDIT_PRICING.basePrice * (1 - tier.discount);
     }
   }
-  
+
   return price;
 }
 
@@ -47,10 +50,7 @@ export async function POST(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // FIX: Apply rate limiting per user
@@ -69,15 +69,16 @@ export async function POST(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { 
+        {
           error: 'Invalid request data',
-          details: validationResult.error.issues 
+          details: validationResult.error.issues,
         },
         { status: 400 }
       );
     }
 
-    const { workspaceId, creditAmount, successUrl, cancelUrl } = validationResult.data;
+    const { workspaceId, creditAmount, successUrl, cancelUrl } =
+      validationResult.data;
 
     // Verify user has access to workspace
     const workspace = await prisma.workspace.findFirst({
@@ -89,12 +90,12 @@ export async function POST(request: NextRequest) {
             members: {
               some: {
                 userId: session.user.id,
-                role: { in: ['OWNER', 'ADMIN'] }
-              }
-            }
-          }
-        ]
-      }
+                role: { in: ['OWNER', 'ADMIN'] },
+              },
+            },
+          },
+        ],
+      },
     });
 
     if (!workspace) {
@@ -110,7 +111,10 @@ export async function POST(request: NextRequest) {
     const amountInCents = formatAmountForStripe(totalAmount);
 
     // Build success and cancel URLs
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.APP_URL || 'http://localhost:3000';
+    const baseUrl =
+      process.env.NEXTAUTH_URL ||
+      process.env.APP_URL ||
+      'http://localhost:3000';
     const defaultSuccessUrl = `${baseUrl}/dashboard/billing?credit_purchase=success&session_id={CHECKOUT_SESSION_ID}`;
     const defaultCancelUrl = `${baseUrl}/dashboard/billing?credit_purchase=canceled`;
 
@@ -156,10 +160,9 @@ export async function POST(request: NextRequest) {
       totalAmount,
       amountInCents,
     });
-
   } catch (error) {
     console.error('Error creating credit checkout session:', error);
-    
+
     // Handle specific error types
     if (error instanceof Error) {
       if (error.message.includes('Stripe is not configured')) {
@@ -168,11 +171,8 @@ export async function POST(request: NextRequest) {
           { status: 503 }
         );
       }
-      
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     return NextResponse.json(

@@ -14,7 +14,11 @@ interface ExportButtonProps {
   period: string;
 }
 
-export default function ExportButton({ reportData, reportType, period }: ExportButtonProps) {
+export default function ExportButton({
+  reportData,
+  reportType,
+  period,
+}: ExportButtonProps) {
   const [exporting, setExporting] = useState(false);
 
   const exportToCSV = () => {
@@ -42,7 +46,7 @@ export default function ExportButton({ reportData, reportType, period }: ExportB
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
-      
+
       link.setAttribute('href', url);
       link.setAttribute('download', filename);
       link.style.visibility = 'hidden';
@@ -76,13 +80,13 @@ Period,${new Date(data.startDate).toLocaleDateString()} - ${new Date(data.endDat
 
 Month,Amount
 `;
-    
+
     data.earningsByMonth.forEach((month: any) => {
       csv += `${month.month},$${month.amountFormatted}\n`;
     });
-    
+
     csv += `\nTotal,$${(data.totalEarnings / 100).toFixed(2)}`;
-    
+
     return csv;
   };
 
@@ -99,11 +103,11 @@ Conversion Rate,${data.conversionRate}%
 
 Week,Conversions
 `;
-    
+
     data.conversionsByWeek.forEach((week: any) => {
       csv += `${week.week},${week.count}\n`;
     });
-    
+
     return csv;
   };
 
@@ -113,13 +117,15 @@ Period,${new Date(data.startDate).toLocaleDateString()} - ${new Date(data.endDat
 
 Date,User Name,Email,Status,Commission,Conversion Value,Converted At
 `;
-    
+
     data.referrals.forEach((ref: any) => {
       const userName = `${ref.user.firstName} ${ref.user.lastName}`;
-      const convertedAt = ref.convertedAt ? new Date(ref.convertedAt).toLocaleDateString() : '-';
+      const convertedAt = ref.convertedAt
+        ? new Date(ref.convertedAt).toLocaleDateString()
+        : '-';
       csv += `${new Date(ref.createdAt).toLocaleDateString()},${userName},${ref.user.email},${ref.status},$${ref.commissionFormatted},$${ref.conversionValueFormatted},${convertedAt}\n`;
     });
-    
+
     return csv;
   };
 

@@ -18,11 +18,11 @@ interface FilterBarProps {
   showActions?: boolean;
 }
 
-export function FilterBar({ 
-  children, 
-  onApply, 
+export function FilterBar({
+  children,
+  onApply,
   onClear,
-  showActions = true 
+  showActions = true,
 }: FilterBarProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow mb-6">
@@ -142,9 +142,5 @@ export function FilterGrid({ children, columns = 4 }: FilterGridProps) {
     4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
   };
 
-  return (
-    <div className={`grid ${gridCols[columns]} gap-4`}>
-      {children}
-    </div>
-  );
+  return <div className={`grid ${gridCols[columns]} gap-4`}>{children}</div>;
 }

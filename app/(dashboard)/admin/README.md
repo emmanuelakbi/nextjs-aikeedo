@@ -57,6 +57,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Overview of key platform metrics and quick actions
 
 **Features**:
+
 - User statistics (total, active, new this month)
 - Workspace statistics (total, active)
 - Subscription statistics (active, MRR, churn rate)
@@ -65,6 +66,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Quick action cards for common tasks
 
 **Key Metrics**:
+
 - Monthly Recurring Revenue (MRR)
 - Churn Rate
 - Active Users
@@ -76,6 +78,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Manage user accounts and permissions
 
 **Features**:
+
 - Search users by email or name
 - Filter by status (active, suspended, inactive) and role
 - Sort by various fields (created date, last seen, etc.)
@@ -87,6 +90,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Delete user accounts
 
 **User Details Include**:
+
 - Basic information (name, email, phone)
 - Account status and role
 - Workspaces owned
@@ -101,6 +105,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Manage workspaces and credit allocations
 
 **Features**:
+
 - Search workspaces by name
 - View workspace details and members
 - Adjust workspace credits (add/subtract)
@@ -109,6 +114,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Delete workspaces
 
 **Workspace Details Include**:
+
 - Owner information
 - Member list
 - Credit balance (subscription + purchased)
@@ -123,6 +129,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Manage subscriptions and billing
 
 **Features**:
+
 - View all subscriptions with filters
 - Filter by status (active, trialing, canceled, etc.)
 - View subscription details and history
@@ -132,6 +139,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Process refunds
 
 **Subscription Details Include**:
+
 - Workspace and owner information
 - Plan details and pricing
 - Billing cycle and renewal date
@@ -140,6 +148,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Credit allocations
 
 **Related Features**:
+
 - Payment history viewing
 - Refund processing
 - Failed payment handling
@@ -151,6 +160,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Configure platform-wide settings
 
 **Features**:
+
 - View all system settings by category
 - Create new settings
 - Update existing settings
@@ -161,6 +171,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Manage email templates
 
 **Setting Categories**:
+
 - General (platform name, contact email)
 - AI Providers (API keys, default models)
 - Billing (currency, tax rates)
@@ -169,6 +180,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Features (enable/disable features)
 
 **Plan Management**:
+
 - Create subscription plans
 - Update plan pricing and features
 - Activate/deactivate plans
@@ -182,6 +194,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Generate comprehensive reports for analysis
 
 **Report Types**:
+
 1. **Revenue Report** - Invoice and subscription revenue breakdown
 2. **User Growth Report** - New user registrations and activity
 3. **AI Usage Report** - Generation statistics by type and provider
@@ -189,6 +202,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 5. **Subscription Report** - New subscriptions, churn, and lifecycle
 
 **Features**:
+
 - Date range selection
 - JSON and CSV export formats
 - Summary metrics
@@ -202,6 +216,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Track all administrative actions for compliance
 
 **Features**:
+
 - View all admin actions with pagination
 - Filter by admin, target type, target ID, action
 - Export audit logs as CSV
@@ -210,6 +225,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Track data changes
 
 **Logged Information**:
+
 - Admin user ID and details
 - Action type (e.g., user.suspend)
 - Target resource type and ID
@@ -225,17 +241,20 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Tools for customer support and system monitoring
 
 **Features**:
+
 - **Announcements**: Create and manage system-wide announcements
 - **Error Logs**: View failed generations and system errors
 - **System Health**: Monitor database, cache, and API health
 - **Impersonation**: Access user accounts for support
 
 **Announcement Types**:
+
 - Info (blue) - General information
 - Warning (yellow) - Important notices
 - Error (red) - Critical alerts
 
 **System Health Checks**:
+
 - Database connectivity
 - Cache availability (Redis)
 - API response times
@@ -248,6 +267,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Review and moderate user-generated content
 
 **Features**:
+
 - View moderation queue
 - Filter by content type and status
 - Flag inappropriate content
@@ -257,12 +277,14 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - Track top flagged users
 
 **Moderation Actions**:
+
 - Flag content for review
 - Remove content from platform
 - Ban user account
 - Add moderation notes
 
 **Statistics**:
+
 - Total flagged content
 - Content by type
 - Top flagged users
@@ -275,6 +297,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 **Purpose**: Manage affiliate program and payouts
 
 **Features**:
+
 - View affiliate statistics
 - Manage payout requests
 - Approve/reject payouts
@@ -283,6 +306,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 - View affiliate performance
 
 **Payout Workflow**:
+
 1. Affiliate requests payout
 2. Admin reviews request
 3. Admin approves or rejects
@@ -341,6 +365,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 ### Audit Logging
 
 Every admin action is automatically logged with:
+
 - Admin user ID
 - Action type
 - Target resource
@@ -382,6 +407,7 @@ Include session cookie in all requests. The API will automatically validate admi
 ### Response Format
 
 **Success Response**:
+
 ```json
 {
   "data": {},
@@ -395,6 +421,7 @@ Include session cookie in all requests. The API will automatically validate admi
 ```
 
 **Error Response**:
+
 ```json
 {
   "error": "Error message",
@@ -459,18 +486,21 @@ npm run test:coverage
 The admin dashboard helps meet various compliance requirements:
 
 ### GDPR (General Data Protection Regulation)
+
 - Audit trail for data access and modifications
 - User data deletion capabilities
 - Data export functionality
 - Consent tracking
 
 ### SOC 2 (Service Organization Control 2)
+
 - Security monitoring and logging
 - Access control enforcement
 - Audit trail for all changes
 - System health monitoring
 
 ### PCI DSS (Payment Card Industry Data Security Standard)
+
 - Secure payment data handling
 - Access logging and monitoring
 - Regular security reviews
@@ -481,18 +511,22 @@ The admin dashboard helps meet various compliance requirements:
 ### Common Issues
 
 **Issue**: Cannot access admin dashboard
+
 - **Solution**: Verify user has ADMIN role in database
 - **Check**: `SELECT role FROM "User" WHERE email = 'your@email.com'`
 
 **Issue**: API returns 403 Forbidden
+
 - **Solution**: Ensure valid session and admin role
 - **Check**: Session cookie is present and valid
 
 **Issue**: Audit logs not appearing
+
 - **Solution**: Verify `logAdminAction()` is called in route handlers
 - **Check**: Database connection and AdminAction table
 
 **Issue**: Reports generation fails
+
 - **Solution**: Check date range format (YYYY-MM-DD)
 - **Check**: Database connectivity and query performance
 
@@ -509,6 +543,7 @@ The admin dashboard helps meet various compliance requirements:
 ## Support
 
 For technical support or questions:
+
 - Review the documentation above
 - Check the [API documentation](../../../api/admin/README.md)
 - Review audit logs for error details

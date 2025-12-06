@@ -45,15 +45,15 @@ The Admin Audit Logging System provides comprehensive tracking and monitoring of
 
 ```typescript
 {
-  id: string;              // Unique identifier
-  adminId: string;         // ID of admin who performed action
-  action: string;          // Action type (e.g., 'user.suspend')
-  targetType: string;      // Type of target (e.g., 'user', 'workspace')
-  targetId: string;        // ID of the target entity
-  changes: Json;           // Object containing the changes made
+  id: string; // Unique identifier
+  adminId: string; // ID of admin who performed action
+  action: string; // Action type (e.g., 'user.suspend')
+  targetType: string; // Type of target (e.g., 'user', 'workspace')
+  targetId: string; // ID of the target entity
+  changes: Json; // Object containing the changes made
   ipAddress: string | null; // IP address of the admin
   userAgent: string | null; // Browser/client user agent
-  createdAt: Date;         // Timestamp of the action
+  createdAt: Date; // Timestamp of the action
 }
 ```
 
@@ -64,6 +64,7 @@ The Admin Audit Logging System provides comprehensive tracking and monitoring of
 Fetch audit logs with optional filtering and pagination.
 
 **Query Parameters:**
+
 - `adminId` (optional): Filter by admin user ID
 - `targetType` (optional): Filter by target type
 - `targetId` (optional): Filter by target ID
@@ -72,6 +73,7 @@ Fetch audit logs with optional filtering and pagination.
 - `offset` (optional): Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "logs": [
@@ -107,12 +109,14 @@ Fetch audit logs with optional filtering and pagination.
 Export audit logs as CSV.
 
 **Query Parameters:**
+
 - Same as GET /api/admin/audit-logs
 - `format` (optional): Export format (default: 'csv')
 - `startDate` (optional): Filter logs from this date
 - `endDate` (optional): Filter logs until this date
 
 **Response:**
+
 - CSV file download with all matching audit logs
 
 ## Utility Functions
@@ -154,12 +158,7 @@ const suspendUser = withAuditLog(
 );
 
 // Usage
-await suspendUser(
-  session.user.id,
-  userId,
-  { status: 'SUSPENDED' },
-  request
-);
+await suspendUser(session.user.id, userId, { status: 'SUSPENDED' }, request);
 ```
 
 ### getAuditLogs
@@ -202,6 +201,7 @@ const adminActions = await getAdminAuditLogs(adminId);
 Actions follow a consistent naming pattern: `{entity}.{operation}`
 
 **Examples:**
+
 - `user.create` - User account created
 - `user.update` - User details updated
 - `user.suspend` - User account suspended
@@ -254,16 +254,19 @@ Interactive interface for viewing and filtering audit logs:
 ## Security Considerations
 
 ### Access Control
+
 - Only users with ADMIN role can access audit logs
 - All endpoints protected by `requireAdmin()` middleware
 - Audit log viewing is itself logged
 
 ### Data Retention
+
 - Audit logs are stored indefinitely by default
 - Consider implementing retention policies for compliance
 - Regular backups recommended for audit trail preservation
 
 ### Privacy
+
 - IP addresses and user agents are stored for security
 - Sensitive data in changes should be sanitized
 - Export functionality should be restricted to authorized personnel
@@ -273,21 +276,25 @@ Interactive interface for viewing and filtering audit logs:
 The audit logging system helps meet various compliance requirements:
 
 ### GDPR (General Data Protection Regulation)
+
 - Tracks data access and modifications
 - Provides audit trail for data subject requests
 - Records consent and deletion actions
 
 ### SOC 2 (Service Organization Control 2)
+
 - Demonstrates security monitoring
 - Tracks administrative access
 - Provides evidence of security controls
 
 ### HIPAA (Health Insurance Portability and Accountability Act)
+
 - Audit trail for protected health information access
 - Tracks administrative actions
 - Supports security incident investigation
 
 ### PCI DSS (Payment Card Industry Data Security Standard)
+
 - Tracks access to cardholder data
 - Monitors administrative actions
 - Supports forensic analysis
@@ -338,6 +345,7 @@ npm test src/app/api/admin/audit-logs/route.test.ts
 ```
 
 Tests cover:
+
 - Fetching logs with default pagination
 - Filtering by admin ID, target type, and action
 - Pagination functionality

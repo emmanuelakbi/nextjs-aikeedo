@@ -49,7 +49,9 @@ export default function ReferralCodeCard({ affiliate }: ReferralCodeCardProps) {
       <div className="space-y-3">
         {/* Referral Code */}
         <div>
-          <label className="text-sm text-blue-100 mb-1 block">Referral Code</label>
+          <label className="text-sm text-blue-100 mb-1 block">
+            Referral Code
+          </label>
           <div className="flex gap-2">
             <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 font-mono text-xl font-bold">
               {affiliate.code}
@@ -66,7 +68,9 @@ export default function ReferralCodeCard({ affiliate }: ReferralCodeCardProps) {
 
         {/* Referral URL */}
         <div>
-          <label className="text-sm text-blue-100 mb-1 block">Referral Link</label>
+          <label className="text-sm text-blue-100 mb-1 block">
+            Referral Link
+          </label>
           <div className="flex gap-2">
             <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 font-mono text-sm truncate">
               {referralUrl}
@@ -85,7 +89,8 @@ export default function ReferralCodeCard({ affiliate }: ReferralCodeCardProps) {
       {affiliate.status !== 'ACTIVE' && (
         <div className="mt-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3">
           <p className="text-sm font-medium">
-            ⚠️ Your affiliate account is currently {affiliate.status.toLowerCase()}
+            ⚠️ Your affiliate account is currently{' '}
+            {affiliate.status.toLowerCase()}
           </p>
         </div>
       )}

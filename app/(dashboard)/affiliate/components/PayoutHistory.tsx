@@ -97,7 +97,11 @@ export default function PayoutHistory({ affiliateId }: PayoutHistoryProps) {
   };
 
   const payouts = data?.payouts || [];
-  const stats = data?.stats || { totalPending: 0, totalPaid: 0, totalRequested: 0 };
+  const stats = data?.stats || {
+    totalPending: 0,
+    totalPaid: 0,
+    totalRequested: 0,
+  };
 
   return (
     <div className="space-y-4">
@@ -105,13 +109,13 @@ export default function PayoutHistory({ affiliateId }: PayoutHistoryProps) {
       <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-1">Available for Payout</h3>
+            <h3 className="font-semibold text-gray-900 mb-1">
+              Available for Payout
+            </h3>
             <p className="text-2xl font-bold text-green-600">
               {formatCurrency(stats.totalPending)}
             </p>
-            <p className="text-sm text-gray-600 mt-1">
-              Minimum payout: $50.00
-            </p>
+            <p className="text-sm text-gray-600 mt-1">Minimum payout: $50.00</p>
           </div>
           <Button
             onClick={requestPayout}
@@ -122,9 +126,7 @@ export default function PayoutHistory({ affiliateId }: PayoutHistoryProps) {
             Request Payout
           </Button>
         </div>
-        {error && (
-          <p className="mt-2 text-sm text-red-600">{error}</p>
-        )}
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
 
       {/* Payout Stats */}
@@ -176,7 +178,10 @@ export default function PayoutHistory({ affiliateId }: PayoutHistoryProps) {
             </thead>
             <tbody>
               {payouts.map((payout: any) => (
-                <tr key={payout.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr
+                  key={payout.id}
+                  className="border-b border-gray-100 hover:bg-gray-50"
+                >
                   <td className="py-3 px-4 text-sm text-gray-900">
                     {formatDate(payout.createdAt)}
                   </td>

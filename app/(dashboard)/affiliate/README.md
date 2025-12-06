@@ -5,6 +5,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 ## Features
 
 ### 1. Affiliate Account Creation
+
 - **Component**: `CreateAffiliateCard`
 - Users can create an affiliate account with a custom referral code
 - Default commission rate: 20%
@@ -12,6 +13,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 - Validates code length (4-20 characters)
 
 ### 2. Referral Code Display
+
 - **Component**: `ReferralCodeCard`
 - Displays referral code and full referral URL
 - One-click copy functionality
@@ -19,6 +21,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 - Status indicator (active/suspended)
 
 ### 3. Statistics Overview
+
 - **Component**: `StatsCards`
 - Total referrals count
 - Conversion rate percentage
@@ -27,6 +30,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 - Visual cards with icons and color coding
 
 ### 4. Earnings Visualization
+
 - **Component**: `EarningsChart`
 - Bar chart showing earnings by month
 - 90-day earnings history
@@ -34,6 +38,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 - Responsive design
 
 ### 5. Referrals List
+
 - **Component**: `ReferralsList`
 - Recent referrals table
 - Status indicators (pending, converted, canceled)
@@ -42,6 +47,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 - Link to view all referrals
 
 ### 6. Payout Management
+
 - **Component**: `PayoutHistory`
 - Request payout functionality
 - Minimum payout: $50.00
@@ -50,6 +56,7 @@ Comprehensive affiliate dashboard for managing referrals, tracking earnings, and
 - Support for PayPal and Stripe
 
 ### 7. Marketing Materials
+
 - **Component**: `MarketingMaterials`
 - Text snippets for sharing
 - Email templates
@@ -79,21 +86,25 @@ The dashboard integrates with the following API endpoints:
 ## Requirements Coverage
 
 ### Requirement 1: Referral Tracking ✓
+
 - Generate unique referral codes
 - Display referral code and URL
 - Track referral signups and conversions
 
 ### Requirement 2: Commission Management ✓
+
 - Display commission rates
 - Show earnings breakdown
 - Track lifetime value
 
 ### Requirement 3: Payout Processing ✓
+
 - Request payouts
 - View payout history
 - Track payout status
 
 ### Requirement 4: Affiliate Dashboard ✓
+
 - Show referral statistics
 - Display earnings
 - Track conversion rates
@@ -103,6 +114,7 @@ The dashboard integrates with the following API endpoints:
 ## Styling
 
 The dashboard uses:
+
 - Tailwind CSS for styling
 - Responsive grid layouts
 - Color-coded status indicators

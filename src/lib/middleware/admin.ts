@@ -13,10 +13,7 @@ import type { NextRequest } from 'next/server';
 /**
  * Admin route patterns
  */
-export const adminRoutes = [
-  '/admin',
-  '/api/admin',
-];
+export const adminRoutes = ['/admin', '/api/admin'];
 
 /**
  * Checks if a path is an admin route

@@ -4,7 +4,7 @@ Get the AIKEEDO platform running in minutes!
 
 ## Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - Docker (for PostgreSQL database)
 - Git
 
@@ -42,6 +42,7 @@ OPENROUTER_API_KEY="your-openrouter-key-here"
 ```
 
 **Optional (for full features):**
+
 - SMTP settings for email verification
 - Stripe keys for payment processing
 - AWS S3 for file storage
@@ -77,6 +78,7 @@ npm run db:seed
 ```
 
 This creates:
+
 - Admin user: `admin@aikeedo.com` / `password123` (1,000 credits)
 - Test user: `user@example.com` / `password123` (100 credits)
 - Sample billing plans
@@ -105,12 +107,14 @@ Open http://localhost:3000 in your browser!
 ## 8. Login and Start Using
 
 **If you used the seed script:**
+
 1. Login with `admin@aikeedo.com` / `password123`
 2. Go to the Chat page
 3. Select a FREE model (Amazon Nova 2 Lite is default)
 4. Start chatting!
 
 **If you registered your own account:**
+
 1. Login with your credentials
 2. Add credits using the command in step 6
 3. Log out and log back in (to refresh session)
@@ -119,6 +123,7 @@ Open http://localhost:3000 in your browser!
 ## Free AI Models Available
 
 All these models are **100% FREE** via OpenRouter (no credit card required):
+
 - **Amazon Nova 2 Lite** (300K context) - Default, best for general chat
 - **Arcee Trinity Mini** - Fast and efficient
 - **TNG R1T Chimera** - Experimental model
@@ -136,6 +141,7 @@ To verify everything works:
 ## Troubleshooting
 
 ### Database Connection Issues
+
 ```bash
 # Check if database is running
 docker ps | grep aikeedo-nextjs-test-db
@@ -148,7 +154,9 @@ docker-compose -f docker-compose.test.yml logs
 ```
 
 ### "No workspace selected" Error
+
 This happens if the user's workspace isn't set. Fix:
+
 ```bash
 # Fix workspace assignment
 docker exec aikeedo-nextjs-test-db psql -U aikeedo -d aikeedo_dev -c "
@@ -163,6 +171,7 @@ WHERE w.\"ownerId\" = u.id
 Then **log out and log back in** to refresh your session.
 
 ### "Insufficient credits" Error
+
 ```bash
 # Add 10,000 credits to all workspaces
 npm run credits:add -- --all 10000
@@ -174,6 +183,7 @@ docker exec aikeedo-nextjs-test-db psql -U aikeedo -d aikeedo_dev -c "UPDATE wor
 Then **log out and log back in** to refresh your session.
 
 ### OpenRouter API Errors
+
 - Verify your `OPENROUTER_API_KEY` is set in `.env`
 - Get a free key from https://openrouter.ai/keys (no credit card required)
 - Check the terminal for detailed error messages
@@ -212,6 +222,7 @@ docker-compose -f docker-compose.test.yml restart    # Restart DB
 ## Support
 
 For issues or questions:
+
 - Check the [docs/](docs/) folder
 - Open an issue on GitHub
 - Review the configuration in `.env.example`

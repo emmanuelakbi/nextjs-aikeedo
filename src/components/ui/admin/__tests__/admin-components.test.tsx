@@ -63,7 +63,9 @@ describe('StatusBadge Helper Functions', () => {
     });
 
     it('returns warning for INCOMPLETE_EXPIRED status', () => {
-      expect(getSubscriptionStatusVariant('INCOMPLETE_EXPIRED')).toBe('warning');
+      expect(getSubscriptionStatusVariant('INCOMPLETE_EXPIRED')).toBe(
+        'warning'
+      );
     });
 
     it('returns neutral for unknown status', () => {

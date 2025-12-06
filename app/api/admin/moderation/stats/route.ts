@@ -90,14 +90,16 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const topFlaggedUsersWithDetails = topFlaggedUsers.map((item: { userId: string; _count: { id: number } }) => {
-      const user = users.find((u: { id: string }) => u.id === item.userId);
-      return {
-        userId: item.userId,
-        flagCount: item._count,
-        user,
-      };
-    });
+    const topFlaggedUsersWithDetails = topFlaggedUsers.map(
+      (item: { userId: string; _count: { id: number } }) => {
+        const user = users.find((u: { id: string }) => u.id === item.userId);
+        return {
+          userId: item.userId,
+          flagCount: item._count,
+          user,
+        };
+      }
+    );
 
     return NextResponse.json({
       period: days,

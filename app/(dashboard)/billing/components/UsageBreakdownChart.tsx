@@ -15,7 +15,9 @@ interface UsageBreakdownChartProps {
   usageData: UsageData[];
 }
 
-export default function UsageBreakdownChart({ usageData }: UsageBreakdownChartProps) {
+export default function UsageBreakdownChart({
+  usageData,
+}: UsageBreakdownChartProps) {
   const colors = [
     'bg-blue-500',
     'bg-green-500',
@@ -36,9 +38,12 @@ export default function UsageBreakdownChart({ usageData }: UsageBreakdownChartPr
         {usageData.map((item, index) => (
           <div key={item.serviceType}>
             <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-gray-700">{item.serviceType}</span>
+              <span className="font-medium text-gray-700">
+                {item.serviceType}
+              </span>
               <span className="text-gray-600">
-                {item.usage.toLocaleString()} credits ({item.percentage.toFixed(1)}%)
+                {item.usage.toLocaleString()} credits (
+                {item.percentage.toFixed(1)}%)
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
@@ -55,7 +60,9 @@ export default function UsageBreakdownChart({ usageData }: UsageBreakdownChartPr
       <div className="pt-4 border-t">
         <div className="flex justify-between">
           <span className="font-semibold text-gray-700">Total Usage</span>
-          <span className="font-bold text-gray-900">{totalUsage.toLocaleString()} credits</span>
+          <span className="font-bold text-gray-900">
+            {totalUsage.toLocaleString()} credits
+          </span>
         </div>
       </div>
 
@@ -63,7 +70,9 @@ export default function UsageBreakdownChart({ usageData }: UsageBreakdownChartPr
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t">
         {usageData.map((item, index) => (
           <div key={item.serviceType} className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded ${colors[index % colors.length]}`} />
+            <div
+              className={`w-3 h-3 rounded ${colors[index % colors.length]}`}
+            />
             <span className="text-xs text-gray-600">{item.serviceType}</span>
           </div>
         ))}

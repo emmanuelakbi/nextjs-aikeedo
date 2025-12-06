@@ -14,7 +14,12 @@ import Button from '@/components/ui/Button';
  * - Export data for analysis
  */
 
-type ReportType = 'revenue' | 'user-growth' | 'ai-usage' | 'financial' | 'subscription';
+type ReportType =
+  | 'revenue'
+  | 'user-growth'
+  | 'ai-usage'
+  | 'financial'
+  | 'subscription';
 
 interface ReportSummary {
   [key: string]: any;
@@ -55,7 +60,9 @@ export function ReportsClient() {
       const data = await response.json();
       setReportData(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate report');
+      setError(
+        err instanceof Error ? err.message : 'Failed to generate report'
+      );
       setReportData(null);
     } finally {
       setLoading(false);
@@ -125,7 +132,10 @@ export function ReportsClient() {
               .replace(/^./, (str) => str.toUpperCase());
 
             let displayValue = value;
-            if (key.toLowerCase().includes('revenue') || key.toLowerCase().includes('amount')) {
+            if (
+              key.toLowerCase().includes('revenue') ||
+              key.toLowerCase().includes('amount')
+            ) {
               displayValue = formatCurrency(value as number);
             } else if (key.toLowerCase().includes('rate')) {
               displayValue = `${(value as number).toFixed(2)}%`;
@@ -183,7 +193,10 @@ export function ReportsClient() {
 
                       if (value === null || value === undefined) {
                         displayValue = '-';
-                      } else if (key.toLowerCase().includes('date') || key.toLowerCase().includes('at')) {
+                      } else if (
+                        key.toLowerCase().includes('date') ||
+                        key.toLowerCase().includes('at')
+                      ) {
                         displayValue = formatDate(value as string);
                       } else if (
                         key.toLowerCase().includes('amount') ||
@@ -210,7 +223,8 @@ export function ReportsClient() {
             </table>
             {items.length > 50 && (
               <p className="text-sm text-gray-600 mt-4 text-center">
-                Showing first 50 of {items.length} records. Export to CSV for full data.
+                Showing first 50 of {items.length} records. Export to CSV for
+                full data.
               </p>
             )}
           </div>
@@ -329,7 +343,9 @@ export function ReportsClient() {
               d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No report generated</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            No report generated
+          </h3>
           <p className="mt-1 text-sm text-gray-500">
             Select a report type and date range to generate a report
           </p>

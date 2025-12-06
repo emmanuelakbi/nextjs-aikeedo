@@ -4,7 +4,7 @@ import { PlanInterval } from '@prisma/client';
 
 /**
  * Create Plan Use Case
- * 
+ *
  * Creates a new subscription plan.
  * Requirements: Billing 1.1, 1.2
  */
@@ -44,7 +44,9 @@ export class CreatePlanUseCase {
     }
 
     if (input.creditCount !== null && input.creditCount < 0) {
-      throw new Error('Credit count must be non-negative or null for unlimited');
+      throw new Error(
+        'Credit count must be non-negative or null for unlimited'
+      );
     }
 
     if (!input.stripeProductId?.trim()) {

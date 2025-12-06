@@ -45,7 +45,10 @@ export interface DetailedInvoice extends InvoiceDetails {
 }
 
 export class InvoiceServiceError extends Error {
-  constructor(message: string, public readonly code?: string) {
+  constructor(
+    message: string,
+    public readonly code?: string
+  ) {
     super(message);
     this.name = 'InvoiceServiceError';
   }
@@ -59,7 +62,9 @@ export class InvoiceService {
    * @param stripeInvoice - Stripe invoice object
    * @returns Created or updated invoice
    */
-  async syncInvoiceFromStripe(stripeInvoice: Stripe.Invoice): Promise<InvoiceDetails> {
+  async syncInvoiceFromStripe(
+    stripeInvoice: Stripe.Invoice
+  ): Promise<InvoiceDetails> {
     try {
       // Find workspace by subscription ID
       const subscriptionId = stripeInvoice.subscription as string | undefined;
@@ -169,16 +174,20 @@ export class InvoiceService {
       }
 
       // Fetch full invoice details from Stripe
-      const stripeInvoice = await stripeService.retrieveInvoice(invoice.stripeInvoiceId);
+      const stripeInvoice = await stripeService.retrieveInvoice(
+        invoice.stripeInvoiceId
+      );
 
       // Extract line items
       // Requirements: 5.4 - Include itemized charges
-      const lineItems: InvoiceLineItem[] = stripeInvoice.lines.data.map((line) => ({
-        description: line.description || 'No description',
-        amount: line.amount,
-        quantity: line.quantity || 1,
-        unitAmount: (line.price?.unit_amount || line.amount) as number,
-      }));
+      const lineItems: InvoiceLineItem[] = stripeInvoice.lines.data.map(
+        (line) => ({
+          description: line.description || 'No description',
+          amount: line.amount,
+          quantity: line.quantity || 1,
+          unitAmount: (line.price?.unit_amount || line.amount) as number,
+        })
+      );
 
       // Calculate totals
       const subtotal = stripeInvoice.subtotal || 0;
@@ -191,8 +200,10 @@ export class InvoiceService {
         ? await stripeService.retrieveCustomer(customerId)
         : null;
 
-      const customerEmail = customer && 'email' in customer ? customer.email : null;
-      const customerName = customer && 'name' in customer ? customer.name : null;
+      const customerEmail =
+        customer && 'email' in customer ? customer.email : null;
+      const customerName =
+        customer && 'name' in customer ? customer.name : null;
 
       return {
         ...invoice,
@@ -276,7 +287,9 @@ export class InvoiceService {
       }
 
       // Otherwise, fetch from Stripe
-      const stripeInvoice = await stripeService.retrieveInvoice(invoice.stripeInvoiceId);
+      const stripeInvoice = await stripeService.retrieveInvoice(
+        invoice.stripeInvoiceId
+      );
 
       if (!stripeInvoice.invoice_pdf) {
         throw new InvoiceServiceError(
@@ -324,7 +337,9 @@ export class InvoiceService {
       }
 
       // Otherwise, fetch from Stripe
-      const stripeInvoice = await stripeService.retrieveInvoice(invoice.stripeInvoiceId);
+      const stripeInvoice = await stripeService.retrieveInvoice(
+        invoice.stripeInvoiceId
+      );
 
       if (!stripeInvoice.hosted_invoice_url) {
         throw new InvoiceServiceError(
@@ -381,14 +396,18 @@ export class InvoiceService {
       });
 
       if (!workspace) {
-        throw new InvoiceServiceError('Workspace not found', 'WORKSPACE_NOT_FOUND');
+        throw new InvoiceServiceError(
+          'Workspace not found',
+          'WORKSPACE_NOT_FOUND'
+        );
       }
 
       // Get detailed invoice for email
       const detailedInvoice = await this.getDetailedInvoice(invoiceId);
 
       // Send email using email service
-      const { sendInvoiceEmail: sendInvoiceEmailHelper } = await import('../../lib/email');
+      const { sendInvoiceEmail: sendInvoiceEmailHelper } =
+        await import('../../lib/email');
       await sendInvoiceEmailHelper(workspace.owner.email, {
         firstName: workspace.owner.firstName,
         invoiceNumber: invoice.stripeInvoiceId,
@@ -425,7 +444,9 @@ export class InvoiceService {
     workspaceId: string,
     limit: number = 10
   ): Promise<InvoiceDetails[]> {
-    const { invoices } = await this.listInvoicesByWorkspace(workspaceId, { limit });
+    const { invoices } = await this.listInvoicesByWorkspace(workspaceId, {
+      limit,
+    });
     return invoices;
   }
 
@@ -471,7 +492,9 @@ export class InvoiceService {
    * @param status - Stripe invoice status
    * @returns Our invoice status
    */
-  private mapStripeInvoiceStatus(status: Stripe.Invoice.Status | null): InvoiceStatus {
+  private mapStripeInvoiceStatus(
+    status: Stripe.Invoice.Status | null
+  ): InvoiceStatus {
     if (!status) return 'DRAFT';
 
     const statusMap: Record<Stripe.Invoice.Status, InvoiceStatus> = {

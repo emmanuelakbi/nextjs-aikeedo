@@ -13,9 +13,7 @@ import Spinner from '@/components/ui/Spinner';
 import ModelSelector, {
   AIModel,
 } from '@/components/ui/generation/ModelSelector';
-import PresetSelector, {
-  Preset,
-} from '@/components/ui/presets/PresetSelector';
+import PresetSelector, { Preset } from '@/components/ui/presets/PresetSelector';
 
 interface GeneratedImage {
   id: string;

@@ -5,9 +5,9 @@ import { SubscriptionStatus } from '@prisma/client';
 
 /**
  * Unit Tests for TrialService
- * 
+ *
  * Tests trial period management and eligibility checks
- * 
+ *
  * Requirements: 8.1, 8.2, 8.3, 8.4, 8.5
  */
 
@@ -33,7 +33,10 @@ describe('TrialService', () => {
   }
 
   // Helper to create a test workspace
-  async function createTestWorkspace(ownerId: string, isTrialed: boolean = false) {
+  async function createTestWorkspace(
+    ownerId: string,
+    isTrialed: boolean = false
+  ) {
     const workspace = await prisma.workspace.create({
       data: {
         name: `Test Workspace ${Date.now()}`,
@@ -418,7 +421,9 @@ describe('TrialService', () => {
       const user = await createTestUser();
       const workspace = await createTestWorkspace(user.id, true);
 
-      const eligibility = await trialService.checkTrialEligibility(workspace.id);
+      const eligibility = await trialService.checkTrialEligibility(
+        workspace.id
+      );
       const status = await trialService.getTrialStatus(workspace.id);
 
       expect(eligibility.isEligible).toBe(false);

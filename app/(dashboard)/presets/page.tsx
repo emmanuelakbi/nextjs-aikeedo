@@ -10,9 +10,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import PresetCard from '@/components/ui/presets/PresetCard';
-import PresetForm, {
-  PresetFormData,
-} from '@/components/ui/presets/PresetForm';
+import PresetForm, { PresetFormData } from '@/components/ui/presets/PresetForm';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';

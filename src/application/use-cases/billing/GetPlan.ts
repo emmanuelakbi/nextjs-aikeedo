@@ -3,7 +3,7 @@ import { PlanRepository } from '../../../infrastructure/repositories/PlanReposit
 
 /**
  * Get Plan Use Case
- * 
+ *
  * Retrieves a single subscription plan by ID.
  * Requirements: Billing 1.5
  */

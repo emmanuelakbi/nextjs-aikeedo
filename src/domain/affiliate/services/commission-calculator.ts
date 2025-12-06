@@ -90,9 +90,7 @@ export function calculateCreditPurchaseCommission(
  * Calculate refund adjustment
  * Returns negative commission to reverse the original commission
  */
-export function calculateRefundAdjustment(
-  originalCommission: number
-): number {
+export function calculateRefundAdjustment(originalCommission: number): number {
   return -originalCommission;
 }
 

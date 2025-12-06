@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     // Calculate date range
     const now = new Date();
     let startDate = new Date();
-    
+
     switch (period) {
       case '7d':
         startDate.setDate(now.getDate() - 7);
@@ -190,11 +190,12 @@ async function generateEarningsReport(affiliateId: string, startDate: Date) {
 
   // Group by month
   const earningsByMonth: Record<string, number> = {};
-  
+
   referrals.forEach((r) => {
     const date = r.convertedAt || r.createdAt;
     const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    earningsByMonth[monthKey] = (earningsByMonth[monthKey] || 0) + (r.commission || 0);
+    earningsByMonth[monthKey] =
+      (earningsByMonth[monthKey] || 0) + (r.commission || 0);
   });
 
   return {
@@ -203,7 +204,10 @@ async function generateEarningsReport(affiliateId: string, startDate: Date) {
       amount,
       amountFormatted: `$${(amount / 100).toFixed(2)}`,
     })),
-    totalEarnings: Object.values(earningsByMonth).reduce((sum, amt) => sum + amt, 0),
+    totalEarnings: Object.values(earningsByMonth).reduce(
+      (sum, amt) => sum + amt,
+      0
+    ),
   };
 }
 
@@ -223,7 +227,7 @@ async function generateConversionsReport(affiliateId: string, startDate: Date) {
 
   // Group conversions by week
   const conversionsByWeek: Record<string, number> = {};
-  
+
   referrals
     .filter((r) => r.status === 'CONVERTED' && r.convertedAt)
     .forEach((r) => {
@@ -236,10 +240,12 @@ async function generateConversionsReport(affiliateId: string, startDate: Date) {
 
   return {
     byStatus,
-    conversionsByWeek: Object.entries(conversionsByWeek).map(([week, count]) => ({
-      week,
-      count,
-    })),
+    conversionsByWeek: Object.entries(conversionsByWeek).map(
+      ([week, count]) => ({
+        week,
+        count,
+      })
+    ),
     conversionRate:
       referrals.length > 0
         ? ((byStatus.converted / referrals.length) * 100).toFixed(2)

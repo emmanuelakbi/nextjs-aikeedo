@@ -5,12 +5,14 @@ AIKEEDO is a Next.js-based AI services platform that provides multi-tenant works
 ## Core Features
 
 ### User & Workspace Management
+
 - **Multi-tenant Workspaces**: Users can create and manage multiple workspaces with isolated resources and credit allocations
 - **Authentication**: Secure email/password authentication with email verification, password reset, and session management
 - **User Profiles**: Customizable profiles with preferences and settings
 - **Workspace Switching**: Seamless switching between workspaces with context preservation
 
 ### AI Services Integration
+
 - **Unified AI Interface**: Single API for multiple AI providers with automatic failover and error handling
 - **Text Generation**: Chat completions and text generation with streaming support
 - **Image Generation**: AI-powered image creation with DALL-E and other providers
@@ -21,6 +23,7 @@ AIKEEDO is a Next.js-based AI services platform that provides multi-tenant works
 - **Model Caching**: Intelligent caching of AI model responses
 
 ### Billing & Credits System
+
 - **Credit-based Billing**: Flexible credit system with subscription plans and one-time purchases
 - **Subscription Management**: Multiple plan tiers with recurring billing via Stripe
 - **Usage Tracking**: Real-time tracking of credit consumption across all services
@@ -30,6 +33,7 @@ AIKEEDO is a Next.js-based AI services platform that provides multi-tenant works
 - **Credit Purchases**: One-time credit purchases in addition to subscriptions
 
 ### Content Management
+
 - **Document Management**: Create, edit, and organize documents with version history
 - **File Storage**: Secure file upload and storage with S3 or local storage
 - **Conversation History**: Persistent chat conversations with search and filtering
@@ -37,6 +41,7 @@ AIKEEDO is a Next.js-based AI services platform that provides multi-tenant works
 - **Media Processing**: Image and audio file processing and optimization
 
 ### Affiliate Program
+
 - **Referral Tracking**: Cookie-based referral tracking with conversion attribution
 - **Commission Calculation**: Flexible commission rates and calculation rules
 - **Payout Management**: Automated payout processing with Stripe Connect
@@ -44,6 +49,7 @@ AIKEEDO is a Next.js-based AI services platform that provides multi-tenant works
 - **Referral Links**: Custom referral link generation
 
 ### Admin Tools
+
 - **User Impersonation**: Secure admin impersonation for support and debugging
 - **Audit Logging**: Comprehensive audit trail of all system actions
 - **Content Moderation**: Tools for reviewing and moderating user-generated content
@@ -51,6 +57,7 @@ AIKEEDO is a Next.js-based AI services platform that provides multi-tenant works
 - **Support Tools**: Admin utilities for user management and troubleshooting
 
 ### Performance & Security
+
 - **Component Preloading**: Intelligent preloading of components for faster navigation
 - **Lazy Loading**: Code splitting and lazy loading for optimal bundle sizes
 - **Caching Strategies**: Multi-layer caching (Redis, route cache, session cache)
@@ -75,6 +82,7 @@ The platform is **fully configurable without code changes** through a centralize
 - **Email Templates**: Customize transactional email content
 
 **Configuration Commands:**
+
 ```bash
 npm run config:view      # View current configuration
 npm run config:init      # Create custom configuration
@@ -85,6 +93,7 @@ npm run config:diff      # Compare with defaults
 ## Business Model
 
 The platform operates on a **credit-based system** where:
+
 - Users purchase credits through subscriptions or one-time purchases
 - Credits are consumed based on AI service usage (tokens, generations, etc.)
 - Workspaces can have allocated credits from subscriptions plus purchased credits
@@ -113,10 +122,10 @@ The platform operates on a **credit-based system** where:
 - **Maintainability**: Well-documented, modular, and testable code
 - **Configurability**: Customize without code changes through configuration
 
-
 ## User Roles & Permissions
 
 ### User Role
+
 - Create and manage own workspaces
 - Access AI services within credit limits
 - Manage own profile and settings
@@ -125,6 +134,7 @@ The platform operates on a **credit-based system** where:
 - Participate in affiliate program (if enabled)
 
 ### Admin Role
+
 - All user permissions
 - Impersonate users for support
 - View audit logs
@@ -135,6 +145,7 @@ The platform operates on a **credit-based system** where:
 - Configure system settings
 
 ### Workspace Owner
+
 - Manage workspace settings
 - Invite workspace members (if multi-user workspaces enabled)
 - View workspace usage
@@ -144,7 +155,9 @@ The platform operates on a **credit-based system** where:
 ## Credit System Details
 
 ### Credit Consumption
+
 Credits are consumed based on:
+
 - **Text Generation**: Per 1,000 tokens (input + output)
 - **Image Generation**: Per image generated
 - **Speech Synthesis**: Per character or per minute of audio
@@ -152,18 +165,21 @@ Credits are consumed based on:
 - **Voice Cloning**: Per voice created
 
 ### Credit Sources
+
 1. **Subscription Credits**: Allocated monthly based on plan
 2. **Purchased Credits**: One-time credit purchases
 3. **Bonus Credits**: Promotional or referral bonuses
 4. **Trial Credits**: Initial credits for new users
 
 ### Credit Allocation
+
 - Credits are allocated to workspaces
 - Subscription credits reset monthly
 - Purchased credits never expire
 - Credits are consumed in order: trial → subscription → purchased
 
 ### Credit Tracking
+
 - Real-time credit balance updates
 - Usage history with detailed breakdowns
 - Low credit notifications
@@ -172,6 +188,7 @@ Credits are consumed based on:
 ## Subscription Plans
 
 ### Typical Plan Structure
+
 1. **Free/Trial Plan**
    - Limited credits per month
    - Access to basic AI models
@@ -203,6 +220,7 @@ Credits are consumed based on:
 ## Affiliate Program Details
 
 ### How It Works
+
 1. User signs up as affiliate
 2. Receives unique referral link
 3. Shares link with potential customers
@@ -210,11 +228,13 @@ Credits are consumed based on:
 5. Requests payout when threshold reached
 
 ### Commission Structure (Configurable)
+
 - **One-time Purchases**: Percentage of purchase amount
 - **Subscriptions**: Percentage of first payment or recurring
 - **Lifetime Value**: Commission on all payments (optional)
 
 ### Payout Process
+
 1. Affiliate requests payout
 2. Admin reviews request
 3. Payout processed via Stripe Connect
@@ -222,6 +242,7 @@ Credits are consumed based on:
 5. Transaction recorded in system
 
 ### Tracking
+
 - Cookie-based tracking (30-90 days configurable)
 - Conversion attribution
 - Real-time statistics
@@ -230,30 +251,35 @@ Credits are consumed based on:
 ## AI Service Details
 
 ### Text Generation
+
 - **Models**: GPT-3.5, GPT-4, Claude, Gemini, Mistral
 - **Features**: Streaming, system prompts, temperature control
 - **Use Cases**: Chat, content generation, code generation
 - **Credit Cost**: Based on tokens consumed
 
 ### Image Generation
+
 - **Models**: DALL-E 2, DALL-E 3
 - **Features**: Multiple sizes, quality settings
 - **Use Cases**: Art, design, illustrations
 - **Credit Cost**: Per image, varies by size/quality
 
 ### Speech Synthesis
+
 - **Providers**: OpenAI TTS, custom voices
 - **Features**: Multiple voices, languages, speeds
 - **Use Cases**: Audiobooks, voiceovers, accessibility
 - **Credit Cost**: Per character or per minute
 
 ### Transcription
+
 - **Provider**: OpenAI Whisper
 - **Features**: Multiple languages, timestamps
 - **Use Cases**: Meeting notes, subtitles, accessibility
 - **Credit Cost**: Per minute of audio
 
 ### Voice Cloning
+
 - **Features**: Custom voice creation from samples
 - **Use Cases**: Personalized TTS, brand voices
 - **Credit Cost**: Per voice created + usage
@@ -261,6 +287,7 @@ Credits are consumed based on:
 ## Content Management Features
 
 ### Documents
+
 - Create, edit, delete documents
 - Rich text editor
 - Markdown support
@@ -270,6 +297,7 @@ Credits are consumed based on:
 - Export options
 
 ### Files
+
 - Upload images, audio, documents
 - Secure storage (S3 or local)
 - File type validation
@@ -278,6 +306,7 @@ Credits are consumed based on:
 - Presigned URLs for secure access
 
 ### Conversations
+
 - Persistent chat history
 - Search conversations
 - Filter by date, model, workspace
@@ -286,6 +315,7 @@ Credits are consumed based on:
 - Resume conversations
 
 ### Presets
+
 - Save prompt templates
 - Reusable configurations
 - Share within workspace (optional)
@@ -295,6 +325,7 @@ Credits are consumed based on:
 ## Admin Dashboard Features
 
 ### User Management
+
 - View all users
 - Search and filter users
 - Suspend/unsuspend users
@@ -305,6 +336,7 @@ Credits are consumed based on:
 - Verify emails manually
 
 ### Audit Logging
+
 - Track all system actions
 - Filter by user, action, date
 - Export audit logs
@@ -312,6 +344,7 @@ Credits are consumed based on:
 - Compliance reporting
 
 ### Content Moderation
+
 - Review user-generated content
 - Flag inappropriate content
 - Take action (warn, suspend, delete)
@@ -319,6 +352,7 @@ Credits are consumed based on:
 - Automated filtering (optional)
 
 ### Analytics & Reporting
+
 - User registration trends
 - Revenue metrics
 - Credit consumption
@@ -329,6 +363,7 @@ Credits are consumed based on:
 - Custom reports
 
 ### System Health
+
 - Monitor API status
 - Database performance
 - Error rates
@@ -339,6 +374,7 @@ Credits are consumed based on:
 ## Integration Points
 
 ### Payment Processing (Stripe)
+
 - Checkout sessions
 - Subscription management
 - Invoice generation
@@ -347,6 +383,7 @@ Credits are consumed based on:
 - Payout processing
 
 ### Email Service (SMTP)
+
 - Transactional emails
 - Email verification
 - Password reset
@@ -355,6 +392,7 @@ Credits are consumed based on:
 - Custom templates
 
 ### Storage (S3 or Local)
+
 - File uploads
 - Image storage
 - Audio storage
@@ -362,12 +400,14 @@ Credits are consumed based on:
 - Automatic cleanup
 
 ### Caching (Redis)
+
 - Session storage
 - Rate limiting
 - Data caching
 - Queue management
 
 ### AI Providers
+
 - OpenAI API
 - Anthropic API
 - Google AI API
@@ -378,6 +418,7 @@ Credits are consumed based on:
 ## Customization Options
 
 ### Branding
+
 - Application name
 - Logo and favicon
 - Color scheme
@@ -387,12 +428,14 @@ Credits are consumed based on:
 - Privacy policy
 
 ### Features
+
 - Enable/disable features via config
 - Feature flags for gradual rollout
 - A/B testing support
 - Beta features
 
 ### Pricing
+
 - Credit rates per service
 - Subscription plan pricing
 - Affiliate commission rates
@@ -400,6 +443,7 @@ Credits are consumed based on:
 - Tax handling
 
 ### Limits
+
 - Rate limits per endpoint
 - File size limits
 - Credit limits
@@ -407,6 +451,7 @@ Credits are consumed based on:
 - Workspace limits
 
 ### Behavior
+
 - Session duration
 - Password requirements
 - Email verification required
@@ -417,30 +462,35 @@ Credits are consumed based on:
 ## Scalability Considerations
 
 ### Horizontal Scaling
+
 - Stateless API design
 - Session storage in Redis
 - Database connection pooling
 - Load balancer compatible
 
 ### Vertical Scaling
+
 - Efficient database queries
 - Caching strategies
 - Lazy loading
 - Code splitting
 
 ### Database Scaling
+
 - Read replicas support
 - Connection pooling
 - Query optimization
 - Proper indexing
 
 ### Caching Strategy
+
 - Redis for hot data
 - React Query for client cache
 - Route caching for static pages
 - CDN for assets
 
 ### Cost Optimization
+
 - Efficient AI provider usage
 - Image optimization
 - Code splitting
@@ -450,6 +500,7 @@ Credits are consumed based on:
 ## Compliance & Legal
 
 ### Data Privacy
+
 - GDPR compliance ready
 - User data export
 - Right to deletion
@@ -457,6 +508,7 @@ Credits are consumed based on:
 - Cookie consent (implement as needed)
 
 ### Security
+
 - SOC 2 ready architecture
 - Audit logging
 - Encryption at rest
@@ -464,6 +516,7 @@ Credits are consumed based on:
 - Regular security updates
 
 ### Terms of Service
+
 - Customizable terms
 - Acceptable use policy
 - Refund policy
@@ -472,6 +525,7 @@ Credits are consumed based on:
 ## Future Enhancements (Roadmap Ideas)
 
 ### Planned Features
+
 - Multi-user workspaces with roles
 - API access for developers
 - Webhook support
@@ -482,6 +536,7 @@ Credits are consumed based on:
 - Browser extensions
 
 ### Integration Opportunities
+
 - Zapier integration
 - Slack integration
 - Discord integration
@@ -490,6 +545,7 @@ Credits are consumed based on:
 - VS Code extension
 
 ### Advanced Features
+
 - A/B testing framework
 - Feature flags system
 - Advanced reporting

@@ -32,10 +32,7 @@ export async function GET(_request: NextRequest) {
     console.error('Get affiliate stats error:', error);
 
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 404 });
     }
 
     return NextResponse.json(

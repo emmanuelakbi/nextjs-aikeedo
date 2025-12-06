@@ -16,9 +16,7 @@ import ModelSelector, {
 import ParameterControls, {
   GenerationParameters,
 } from '@/components/ui/generation/ParameterControls';
-import PresetSelector, {
-  Preset,
-} from '@/components/ui/presets/PresetSelector';
+import PresetSelector, { Preset } from '@/components/ui/presets/PresetSelector';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 

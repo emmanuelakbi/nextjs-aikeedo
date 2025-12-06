@@ -30,7 +30,10 @@ export interface TestFixtures {
  * Create a test user and workspace with proper relationships
  */
 export async function createTestFixtures(
-  overrides?: Partial<{ user: Partial<TestUser>; workspace: Partial<TestWorkspace> }>
+  overrides?: Partial<{
+    user: Partial<TestUser>;
+    workspace: Partial<TestWorkspace>;
+  }>
 ): Promise<TestFixtures> {
   const userId = crypto.randomUUID();
   const workspaceId = crypto.randomUUID();
@@ -87,7 +90,9 @@ export async function createTestFixtures(
 /**
  * Create a minimal test user (without workspace)
  */
-export async function createTestUser(email?: string): Promise<{ id: string; email: string; cleanup: () => Promise<void> }> {
+export async function createTestUser(
+  email?: string
+): Promise<{ id: string; email: string; cleanup: () => Promise<void> }> {
   const userId = crypto.randomUUID();
   const hashedPassword = await bcrypt.hash('Test123!@#', 10);
 

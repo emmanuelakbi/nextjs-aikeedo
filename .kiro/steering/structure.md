@@ -76,6 +76,7 @@ Core business logic, framework-agnostic:
 - **`repositories/`**: Interfaces for data access (no implementations)
 
 **Rules**:
+
 - No dependencies on other layers
 - Pure TypeScript, no framework code
 - Highly testable
@@ -89,6 +90,7 @@ Orchestrates domain objects to fulfill use cases:
 - **`queries/`**: Request objects for read operations
 
 **Rules**:
+
 - Depends only on domain layer
 - Coordinates domain entities
 - Defines transaction boundaries
@@ -102,6 +104,7 @@ Technical implementations:
 - **`adapters/`**: Convert between layers
 
 **Rules**:
+
 - Implements domain interfaces
 - Contains framework-specific code
 - No business logic
@@ -126,7 +129,7 @@ Cross-cutting concerns and utilities:
 - **`storage/`**: File storage abstraction (S3, local), presigned URLs
 - **`testing/`**: Test helpers, factories, property-based testing utilities, test fixtures, test database
 - **`validation/`**: Zod schemas for all inputs, credit validation
-- **Root utilities**: 
+- **Root utilities**:
   - `api-client.ts`: Type-safe API client with React Query
   - `config.ts`: Configuration loader and manager
   - `env.ts`: Environment variable validation
@@ -146,6 +149,7 @@ Cross-cutting concerns and utilities:
 - **`[feature]/`**: Feature-specific component groups
 
 **Component Guidelines**:
+
 - Use Server Components by default, Client Components only when needed
 - Co-locate styles with components using Tailwind
 - Export components as named exports
@@ -155,6 +159,7 @@ Cross-cutting concerns and utilities:
 ### `/src/types/` - TypeScript Types
 
 Global type definitions and type augmentations:
+
 - `next-auth.d.ts`: NextAuth type extensions
 - `billing.ts`: Billing-related types
 - `affiliate.ts`: Affiliate system types
@@ -174,6 +179,7 @@ Global type definitions and type augmentations:
 ### `/docs/` - Documentation
 
 Comprehensive documentation:
+
 - `SETUP.md`: Installation and setup guide
 - `API.md`: Complete API endpoint reference
 - `ARCHITECTURE.md`: System architecture and design patterns
@@ -195,6 +201,7 @@ Comprehensive documentation:
 ### `/config/` - Configuration System
 
 Centralized configuration management:
+
 - **`app.config.ts`**: Default application configuration
 - **`config-loader.ts`**: Configuration loading and merging logic
 - **`custom.config.example.ts`**: Example custom configuration
@@ -205,6 +212,7 @@ Centralized configuration management:
 ### `/scripts/` - Utility Scripts
 
 Development and testing utilities:
+
 - `test-db.sh`: Docker test database management (start, stop, restart, reset, logs, status)
 - `verify-setup.js`: Setup verification script
 - `config-manager.ts`: Configuration management CLI
@@ -224,6 +232,7 @@ import { Button } from '@/components/ui/Button';
 ```
 
 Available aliases:
+
 - `@/*` → `./src/*`
 - `@/app/*` → `./app/*`
 - `@/components/*` → `./src/components/*`
@@ -249,6 +258,7 @@ Available aliases:
 - **Not Found**: `not-found.tsx` in folder
 
 **Examples**:
+
 - Component: `src/components/ui/Button.tsx`
 - Service: `src/lib/email/email-service.ts`
 - Hook: `src/lib/hooks/useAuth.ts`
@@ -316,6 +326,7 @@ Follow this order for imports:
 6. **Styles**: CSS/SCSS imports last
 
 **Example**:
+
 ```typescript
 import { useState } from 'react';
 import { redirect } from 'next/navigation';
@@ -337,6 +348,7 @@ import type { User } from '@/domain/user/entities/User';
 - **Test Database**: Docker-based PostgreSQL for isolated testing
 
 **Testing Best Practices**:
+
 - Write tests for all business logic
 - Use property-based testing for domain entities
 - Mock external services (AI providers, Stripe, email)
@@ -355,12 +367,14 @@ import type { User } from '@/domain/user/entities/User';
 ## Best Practices & Conventions
 
 ### Code Organization
+
 - Keep files focused and single-purpose
 - Co-locate related files (components, tests, styles)
 - Use barrel exports (`index.ts`) for clean imports
 - Organize by feature, not by file type
 
 ### TypeScript
+
 - Enable strict mode (already configured)
 - Use explicit return types for functions
 - Prefer interfaces over types for object shapes
@@ -368,6 +382,7 @@ import type { User } from '@/domain/user/entities/User';
 - Avoid `any` - use `unknown` if type is truly unknown
 
 ### React & Next.js
+
 - Use Server Components by default
 - Add `'use client'` only when needed (hooks, events, browser APIs)
 - Prefer async Server Components over `useEffect` for data fetching
@@ -375,6 +390,7 @@ import type { User } from '@/domain/user/entities/User';
 - Implement proper loading and error states
 
 ### API Routes
+
 - Validate all inputs with Zod schemas
 - Use proper HTTP status codes
 - Return consistent error responses
@@ -382,6 +398,7 @@ import type { User } from '@/domain/user/entities/User';
 - Add authentication checks at the route level
 
 ### Database
+
 - Use Prisma transactions for multi-step operations
 - Implement proper indexes for query performance
 - Use connection pooling in production
@@ -389,6 +406,7 @@ import type { User } from '@/domain/user/entities/User';
 - Use soft deletes for important data
 
 ### Security
+
 - Validate and sanitize all user inputs
 - Use parameterized queries (Prisma handles this)
 - Implement CSRF protection on mutations
@@ -397,6 +415,7 @@ import type { User } from '@/domain/user/entities/User';
 - Log security-relevant events
 
 ### Performance
+
 - Lazy load components not needed on initial render
 - Preload critical routes and components
 - Implement proper caching strategies
@@ -405,6 +424,7 @@ import type { User } from '@/domain/user/entities/User';
 - Monitor bundle sizes
 
 ### Error Handling
+
 - Use custom error classes for different error types
 - Log errors with context
 - Return user-friendly error messages
@@ -412,12 +432,12 @@ import type { User } from '@/domain/user/entities/User';
 - Handle async errors properly
 
 ### Git Workflow
+
 - Use conventional commit messages
 - Keep commits atomic and focused
 - Write descriptive commit messages
 - Review changes before committing
 - Run tests before pushing
-
 
 ## Common Patterns
 
@@ -617,16 +637,14 @@ export function handleApiError(error: unknown) {
 
   // Unknown errors
   console.error('Unexpected error:', error);
-  return NextResponse.json(
-    { error: 'Internal server error' },
-    { status: 500 }
-  );
+  return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
 }
 ```
 
 ## Troubleshooting Common Issues
 
 ### Database Connection Issues
+
 - Verify `DATABASE_URL` in `.env`
 - Ensure PostgreSQL is running
 - Check network connectivity
@@ -634,18 +652,21 @@ export function handleApiError(error: unknown) {
 - Run `npm run db:generate` after schema changes
 
 ### Build Errors
+
 - Clear `.next` folder: `rm -rf .next`
 - Regenerate Prisma client: `npm run db:generate`
 - Check TypeScript errors: `npm run type-check`
 - Verify all dependencies installed: `npm install`
 
 ### Authentication Issues
+
 - Verify `NEXTAUTH_SECRET` is set
 - Check `NEXTAUTH_URL` matches your domain
 - Clear browser cookies
 - Check session expiration settings
 
 ### AI Provider Errors
+
 - Verify API keys are correct
 - Check API key permissions
 - Monitor rate limits
@@ -653,6 +674,7 @@ export function handleApiError(error: unknown) {
 - Review error logs for details
 
 ### Performance Issues
+
 - Enable Redis caching
 - Check database query performance
 - Review bundle size: `npm run build`
@@ -660,6 +682,7 @@ export function handleApiError(error: unknown) {
 - Monitor server resources
 
 ### Test Failures
+
 - Start test database: `npm run test-db:start`
 - Reset test database: `npm run test-db:reset`
 - Check test isolation

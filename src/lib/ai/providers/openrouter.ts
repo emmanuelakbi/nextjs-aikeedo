@@ -1,6 +1,6 @@
 /**
  * OpenRouter AI Provider
- * 
+ *
  * Unified API gateway for multiple AI providers
  * Supports: OpenAI, Anthropic, Google, Meta, Mistral, and 100+ models
  */
@@ -54,7 +54,7 @@ interface OpenRouterResponse {
 
 /**
  * OpenRouter Text Generation Service
- * 
+ *
  * Provides access to 100+ models through a single API
  */
 export class OpenRouterTextGenerationService implements TextGenerationService {
@@ -67,7 +67,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
     if (!env.OPENROUTER_API_KEY) {
       throw new Error('OPENROUTER_API_KEY is not configured');
     }
-    
+
     this.apiKey = env.OPENROUTER_API_KEY;
     this.model = model;
   }
@@ -84,9 +84,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
     prompt: string,
     options?: TextGenerationOptions
   ): Promise<TextGenerationResponse> {
-    const messages: OpenRouterMessage[] = [
-      { role: 'user', content: prompt },
-    ];
+    const messages: OpenRouterMessage[] = [{ role: 'user', content: prompt }];
 
     const request: OpenRouterRequest = {
       model: this.model,
@@ -103,7 +101,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
         'HTTP-Referer': process.env.NEXTAUTH_URL || 'http://localhost:3000',
         'X-Title': 'AIKEEDO',
       },
@@ -146,9 +144,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
     prompt: string,
     options?: TextGenerationOptions
   ): AsyncIterable<TextStreamChunk> {
-    const messages: OpenRouterMessage[] = [
-      { role: 'user', content: prompt },
-    ];
+    const messages: OpenRouterMessage[] = [{ role: 'user', content: prompt }];
 
     const request: OpenRouterRequest = {
       model: this.model,
@@ -165,7 +161,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
         'HTTP-Referer': process.env.NEXTAUTH_URL || 'http://localhost:3000',
         'X-Title': 'AIKEEDO',
       },
@@ -255,7 +251,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
         'HTTP-Referer': process.env.NEXTAUTH_URL || 'http://localhost:3000',
         'X-Title': 'AIKEEDO',
       },
@@ -318,7 +314,7 @@ export class OpenRouterTextGenerationService implements TextGenerationService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
         'HTTP-Referer': process.env.NEXTAUTH_URL || 'http://localhost:3000',
         'X-Title': 'AIKEEDO',
       },

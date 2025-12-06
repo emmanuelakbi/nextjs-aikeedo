@@ -46,7 +46,9 @@ export default function ConversionsReport({ data }: ConversionsReportProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Conversions Report</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Conversions Report
+        </h2>
         <p className="text-gray-600">
           Detailed breakdown of referral conversions
         </p>
@@ -56,8 +58,12 @@ export default function ConversionsReport({ data }: ConversionsReportProps) {
       <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600 mb-1">Overall Conversion Rate</p>
-            <p className="text-4xl font-bold text-blue-600">{conversionRate}%</p>
+            <p className="text-sm text-gray-600 mb-1">
+              Overall Conversion Rate
+            </p>
+            <p className="text-4xl font-bold text-blue-600">
+              {conversionRate}%
+            </p>
             <p className="text-sm text-gray-600 mt-2">
               {byStatus.converted} of {total} referrals converted
             </p>
@@ -68,19 +74,33 @@ export default function ConversionsReport({ data }: ConversionsReportProps) {
 
       {/* Status Breakdown */}
       <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Status Breakdown</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Status Breakdown
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {statusData.map((item) => {
-            const percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0.0';
-            
+            const percentage =
+              total > 0 ? ((item.count / total) * 100).toFixed(1) : '0.0';
+
             return (
-              <div key={item.status} className={`${item.bgColor} border border-gray-200 rounded-lg p-6`}>
+              <div
+                key={item.status}
+                className={`${item.bgColor} border border-gray-200 rounded-lg p-6`}
+              >
                 <div className="flex items-center justify-between mb-3">
-                  <span className={`text-2xl ${item.textColor}`}>{item.icon}</span>
-                  <span className="text-sm font-medium text-gray-600">{percentage}%</span>
+                  <span className={`text-2xl ${item.textColor}`}>
+                    {item.icon}
+                  </span>
+                  <span className="text-sm font-medium text-gray-600">
+                    {percentage}%
+                  </span>
                 </div>
-                <h4 className="text-sm font-medium text-gray-600 mb-1">{item.status}</h4>
-                <p className={`text-3xl font-bold ${item.textColor}`}>{item.count}</p>
+                <h4 className="text-sm font-medium text-gray-600 mb-1">
+                  {item.status}
+                </h4>
+                <p className={`text-3xl font-bold ${item.textColor}`}>
+                  {item.count}
+                </p>
               </div>
             );
           })}
@@ -90,12 +110,16 @@ export default function ConversionsReport({ data }: ConversionsReportProps) {
       {/* Weekly Conversions */}
       {conversionsByWeek && conversionsByWeek.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Conversions</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Weekly Conversions
+          </h3>
           <div className="space-y-3">
             {conversionsByWeek.map((week: any) => {
-              const maxCount = Math.max(...conversionsByWeek.map((w: any) => w.count));
+              const maxCount = Math.max(
+                ...conversionsByWeek.map((w: any) => w.count)
+              );
               const percentage = (week.count / maxCount) * 100;
-              
+
               return (
                 <div key={week.week} className="flex items-center gap-4">
                   <div className="w-28 text-sm text-gray-600 font-medium">
@@ -133,7 +157,8 @@ export default function ConversionsReport({ data }: ConversionsReportProps) {
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Report Period:</span>
           <span className="font-medium text-gray-900">
-            {new Date(data.startDate).toLocaleDateString()} - {new Date(data.endDate).toLocaleDateString()}
+            {new Date(data.startDate).toLocaleDateString()} -{' '}
+            {new Date(data.endDate).toLocaleDateString()}
           </span>
         </div>
       </div>

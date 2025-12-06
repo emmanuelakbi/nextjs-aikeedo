@@ -5,9 +5,11 @@ Comprehensive test suite for affiliate use cases covering all core functionality
 ## Test Files
 
 ### create-affiliate.test.ts
+
 Tests for creating affiliate accounts.
 
 **Coverage:**
+
 - ✓ Create affiliate with valid data
 - ✓ Prevent duplicate affiliate accounts per user
 - ✓ Prevent duplicate referral codes
@@ -17,9 +19,11 @@ Tests for creating affiliate accounts.
 **Requirements:** Affiliate 1 - Generate unique referral codes
 
 ### track-referral.test.ts
+
 Tests for tracking referral signups.
 
 **Coverage:**
+
 - ✓ Track new referrals
 - ✓ Validate affiliate codes
 - ✓ Check affiliate status
@@ -29,9 +33,11 @@ Tests for tracking referral signups.
 **Requirements:** Affiliate 1 - Track referral signups
 
 ### process-commission.test.ts
+
 Tests for commission calculation and processing.
 
 **Coverage:**
+
 - ✓ Process commission for valid referrals
 - ✓ Calculate commission based on rate
 - ✓ Handle different transaction types
@@ -41,9 +47,11 @@ Tests for commission calculation and processing.
 **Requirements:** Affiliate 2 - Calculate commissions on payment events
 
 ### request-payout.test.ts
+
 Tests for payout request functionality.
 
 **Coverage:**
+
 - ✓ Create payout requests
 - ✓ Validate affiliate status
 - ✓ Check sufficient balance
@@ -69,12 +77,14 @@ npm test -- --coverage src/application/use-cases/affiliate/
 ## Test Patterns
 
 ### Unit Tests
+
 - Mock repositories
 - Test business logic in isolation
 - Verify error handling
 - Check edge cases
 
 ### Assertions
+
 - Use descriptive test names
 - Test both success and failure paths
 - Verify repository method calls

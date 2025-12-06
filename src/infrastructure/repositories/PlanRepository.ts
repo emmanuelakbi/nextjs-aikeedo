@@ -1,10 +1,10 @@
 import { Plan, PlanProps } from '../../domain/billing/entities/Plan';
 import { Id } from '../../domain/user/value-objects/Id';
-import { 
+import {
   IPlanRepository,
   CreatePlanData,
   UpdatePlanData,
-  ListPlansOptions
+  ListPlansOptions,
 } from '../../domain/billing/repositories/IPlanRepository';
 import { PlanInterval } from '../../domain/billing/types';
 import { prisma } from '../../lib/db';
@@ -44,7 +44,9 @@ export class PlanRepository implements IPlanRepository {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new Error('Plan with this Stripe product or price ID already exists');
+          throw new Error(
+            'Plan with this Stripe product or price ID already exists'
+          );
         }
       }
       throw new Error(
@@ -279,7 +281,9 @@ export class PlanRepository implements IPlanRepository {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new Error('Plan with this Stripe product or price ID already exists');
+          throw new Error(
+            'Plan with this Stripe product or price ID already exists'
+          );
         }
       }
       throw new Error(

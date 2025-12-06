@@ -5,6 +5,7 @@
 This specification addresses architectural improvements to the AIKEEDO codebase to achieve full compliance with Clean Architecture and Domain-Driven Design (DDD) principles. The current codebase has a solid foundation but has some architectural violations and missing abstractions that prevent it from being a textbook example of Clean Architecture.
 
 The goal is to refactor the codebase incrementally to:
+
 1. Establish proper dependency inversion with repository interfaces
 2. Remove infrastructure dependencies from the domain layer
 3. Implement dependency injection for better testability
@@ -184,22 +185,27 @@ The refactoring will be considered successful when:
 ## Non-Functional Requirements
 
 ### Maintainability
+
 - The refactored code SHALL be easier to understand and modify than the current implementation
 - The architecture SHALL make it obvious where new code should be placed
 
 ### Testability
+
 - The refactored code SHALL have higher test coverage than the current implementation
 - Unit tests SHALL run faster due to better isolation
 
 ### Performance
+
 - The refactoring SHALL NOT negatively impact application performance
 - The DI container SHALL have negligible overhead
 
 ### Backward Compatibility
+
 - The refactoring SHALL NOT break existing API contracts
 - The refactoring SHALL NOT require database migrations
 
 ### Developer Experience
+
 - The new patterns SHALL be documented with clear examples
 - The DI container SHALL provide helpful error messages when misconfigured
 - IDE autocomplete SHALL work seamlessly with the new architecture

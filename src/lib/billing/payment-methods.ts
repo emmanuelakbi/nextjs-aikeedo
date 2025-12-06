@@ -1,6 +1,6 @@
 /**
  * Payment Method Management Utilities
- * 
+ *
  * Client-side utilities for managing payment methods
  * Requirements: 6.1, 6.2, 6.3, 6.4
  */
@@ -51,7 +51,7 @@ export interface PaymentMethodResponse {
 /**
  * List payment methods for a workspace
  * Requirements: 6.1
- * 
+ *
  * @param params - List parameters
  * @returns List of payment methods
  */
@@ -73,7 +73,7 @@ export async function listPaymentMethods(
 /**
  * Add a payment method to a workspace
  * Requirements: 6.1
- * 
+ *
  * @param params - Payment method parameters
  * @returns Created payment method
  */
@@ -99,7 +99,7 @@ export async function addPaymentMethod(
 /**
  * Update a payment method (set as default)
  * Requirements: 6.2
- * 
+ *
  * @param params - Update parameters
  * @returns Updated payment method
  */
@@ -131,7 +131,7 @@ export async function updatePaymentMethod(
 /**
  * Set a payment method as default
  * Requirements: 6.2
- * 
+ *
  * @param paymentMethodId - Payment method ID
  * @param workspaceId - Workspace ID
  * @returns Updated payment method
@@ -150,7 +150,7 @@ export async function setDefaultPaymentMethod(
 /**
  * Remove a payment method
  * Requirements: 6.3
- * 
+ *
  * @param params - Remove parameters
  * @returns Success message
  */
@@ -175,16 +175,14 @@ export async function removePaymentMethod(
 /**
  * Get expiring payment methods
  * Requirements: 6.4
- * 
+ *
  * @param params - Expiring check parameters
  * @returns List of expiring payment methods
  */
 export async function getExpiringPaymentMethods(
   params: ExpiringPaymentMethodsParams
 ): Promise<ExpiringPaymentMethodsResponse> {
-  const daysParam = params.daysThreshold
-    ? `&days=${params.daysThreshold}`
-    : '';
+  const daysParam = params.daysThreshold ? `&days=${params.daysThreshold}` : '';
   const response = await fetch(
     `/api/billing/payment-methods/expiring?workspaceId=${encodeURIComponent(params.workspaceId)}${daysParam}`
   );
@@ -199,14 +197,13 @@ export async function getExpiringPaymentMethods(
 
 /**
  * Format payment method for display
- * 
+ *
  * @param paymentMethod - Payment method
  * @returns Formatted string
  */
 export function formatPaymentMethod(paymentMethod: PaymentMethod): string {
   const brand = paymentMethod.brand
-    ? paymentMethod.brand.charAt(0).toUpperCase() +
-      paymentMethod.brand.slice(1)
+    ? paymentMethod.brand.charAt(0).toUpperCase() + paymentMethod.brand.slice(1)
     : paymentMethod.type;
   const last4 = paymentMethod.last4 || '****';
 
@@ -215,7 +212,7 @@ export function formatPaymentMethod(paymentMethod: PaymentMethod): string {
 
 /**
  * Check if payment method is expired
- * 
+ *
  * @param paymentMethod - Payment method
  * @returns True if expired
  */
@@ -237,7 +234,7 @@ export function isPaymentMethodExpired(paymentMethod: PaymentMethod): boolean {
 
 /**
  * Check if payment method is expiring soon
- * 
+ *
  * @param paymentMethod - Payment method
  * @param daysThreshold - Days before expiry to consider (default: 30)
  * @returns True if expiring soon
@@ -269,7 +266,7 @@ export function isPaymentMethodExpiringSoon(
 
 /**
  * Get expiry display string
- * 
+ *
  * @param paymentMethod - Payment method
  * @returns Expiry string (e.g., "12/2025")
  */
@@ -283,4 +280,3 @@ export function getExpiryDisplay(paymentMethod: PaymentMethod): string | null {
 
   return `${month}/${year}`;
 }
-

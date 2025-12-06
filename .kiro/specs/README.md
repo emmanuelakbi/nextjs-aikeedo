@@ -25,12 +25,14 @@ nextjs-foundation (✅ COMPLETE)
 ## Modules
 
 ### 0. Architecture Refactoring Module 🏗️ RECOMMENDED FIRST
+
 **Location:** `.kiro/specs/architecture-refactoring/`
 **Status:** Ready to implement
 **Dependencies:** None (refactors existing code)
 **Estimated Time:** 12-14 weeks
 
 **What it includes:**
+
 - Repository interface abstraction (domain layer)
 - Domain layer purity (remove infrastructure dependencies)
 - Dependency injection container implementation
@@ -47,12 +49,14 @@ nextjs-foundation (✅ COMPLETE)
 ---
 
 ### 1. Foundation Module ⭐ START HERE (if skipping refactoring)
+
 **Location:** `.kiro/specs/nextjs-foundation/`
 **Status:** ✅ Implemented
 **Dependencies:** None
 **Estimated Time:** 2-3 weeks
 
 **What it includes:**
+
 - Next.js 14 project setup with TypeScript
 - Authentication system (register, login, email verification, password reset)
 - User management and profiles
@@ -67,12 +71,14 @@ nextjs-foundation (✅ COMPLETE)
 ---
 
 ### 2. AI Services Module
+
 **Location:** `.kiro/specs/nextjs-ai-services/`
 **Status:** ✅ Implemented
 **Dependencies:** Foundation module
 **Estimated Time:** 3-4 weeks
 
 **What it includes:**
+
 - OpenAI, Anthropic, Google, Mistral integrations
 - Text generation and chat
 - Image generation
@@ -88,12 +94,14 @@ nextjs-foundation (✅ COMPLETE)
 ---
 
 ### 3. Billing Module
+
 **Location:** `.kiro/specs/nextjs-billing/`
 **Status:** ✅ Implemented
 **Dependencies:** Foundation module
 **Estimated Time:** 2-3 weeks
 
 **What it includes:**
+
 - Stripe integration
 - Subscription management
 - Plan management
@@ -109,12 +117,14 @@ nextjs-foundation (✅ COMPLETE)
 ---
 
 ### 4. Content Management Module
+
 **Location:** `.kiro/specs/nextjs-content-management/`
 **Status:** ✅ Implemented
 **Dependencies:** Foundation + AI Services
 **Estimated Time:** 2 weeks
 
 **What it includes:**
+
 - File upload and storage
 - Document management
 - Preset templates
@@ -127,12 +137,14 @@ nextjs-foundation (✅ COMPLETE)
 ---
 
 ### 5. Affiliate Module
+
 **Location:** `.kiro/specs/nextjs-affiliate/`
 **Status:** ✅ Implemented
 **Dependencies:** Foundation + Billing
 **Estimated Time:** 1-2 weeks
 
 **What it includes:**
+
 - Referral tracking
 - Commission calculations
 - Payout processing
@@ -144,12 +156,14 @@ nextjs-foundation (✅ COMPLETE)
 ---
 
 ### 6. Admin Dashboard Module
+
 **Location:** `.kiro/specs/nextjs-admin-dashboard/`
 **Status:** ✅ Implemented
 **Dependencies:** All above modules
 **Estimated Time:** 2 weeks
 
 **What it includes:**
+
 - User management
 - Workspace management
 - Subscription management
@@ -166,11 +180,13 @@ nextjs-foundation (✅ COMPLETE)
 ## Total Estimated Timeline
 
 ### Original Implementation (COMPLETE ✅)
+
 - **Minimum (core features only):** 8-10 weeks
 - **Complete (all features):** 12-16 weeks
 - **With testing and polish:** 16-20 weeks
 
 ### Architecture Refactoring (OPTIONAL)
+
 - **Full refactoring with comprehensive testing:** 12-14 weeks
 - **Benefits:** Textbook Clean Architecture, easier maintenance, better testability
 - **Current state:** Already good (3/10 spaghetti), refactoring makes it excellent (0/10)
@@ -180,6 +196,7 @@ nextjs-foundation (✅ COMPLETE)
 ### Current Status: All Core Modules Complete! ✅
 
 All 6 core modules have been implemented:
+
 - ✅ Foundation (auth, users, workspaces)
 - ✅ AI Services (OpenAI, Anthropic, Google, Mistral)
 - ✅ Billing (Stripe, subscriptions, credits)
@@ -192,6 +209,7 @@ All 6 core modules have been implemented:
 The codebase is functional and well-structured, but has some architectural improvements that would make it production-grade:
 
 **Option 1: Refactor Now (Recommended for Production)**
+
 1. Open `.kiro/specs/architecture-refactoring/tasks.md`
 2. Click "Start task" on Task 1
 3. Follow the 90-task implementation plan
@@ -200,12 +218,14 @@ The codebase is functional and well-structured, but has some architectural impro
 6. Deploy with confidence
 
 **Option 2: Ship Now, Refactor Later**
+
 1. Run comprehensive tests (see Phase 10 tasks)
 2. Fix any critical issues
 3. Deploy current version
 4. Schedule refactoring for next iteration
 
 **Option 3: Skip Refactoring**
+
 - Current architecture is already good (3/10 spaghetti score)
 - All features work correctly
 - Can ship as-is for MVP
@@ -235,6 +255,7 @@ Each module spec has 3 files:
 ## Key Features Covered
 
 ✅ **Authentication & Users**
+
 - Email/password auth
 - Email verification
 - Password reset
@@ -242,6 +263,7 @@ Each module spec has 3 files:
 - Multi-workspace
 
 ✅ **AI Services**
+
 - Text generation (GPT-4, Claude, Gemini)
 - Image generation (DALL-E, Stable Diffusion)
 - Speech synthesis (ElevenLabs, OpenAI TTS)
@@ -250,6 +272,7 @@ Each module spec has 3 files:
 - Preset templates
 
 ✅ **Billing & Payments**
+
 - Stripe integration
 - Subscription plans
 - Credit purchases
@@ -258,17 +281,20 @@ Each module spec has 3 files:
 - Proration
 
 ✅ **Content Management**
+
 - File uploads
 - Document storage
 - Voice cloning
 - Media processing
 
 ✅ **Affiliate System**
+
 - Referral tracking
 - Commissions
 - Payouts
 
 ✅ **Admin Tools**
+
 - User management
 - Analytics
 - System settings
@@ -277,6 +303,7 @@ Each module spec has 3 files:
 ## Technology Stack
 
 **Frontend:**
+
 - Next.js 14 (App Router)
 - React 18
 - TypeScript
@@ -284,29 +311,35 @@ Each module spec has 3 files:
 - Shadcn/ui components
 
 **Backend:**
+
 - Next.js API Routes
 - Prisma ORM
 - PostgreSQL
 - Redis (caching, rate limiting)
 
 **Authentication:**
+
 - NextAuth.js
 - bcrypt
 - JWT
 
 **Payments:**
+
 - Stripe SDK
 
 **AI Services:**
+
 - OpenAI SDK
 - Anthropic SDK
 - Google Generative AI SDK
 - Mistral SDK
 
 **Storage:**
+
 - S3-compatible (AWS S3, Cloudflare R2)
 
 **Testing:**
+
 - Vitest (unit tests)
 - fast-check (property-based tests)
 - Playwright (e2e tests)
@@ -330,6 +363,7 @@ Each module spec has 3 files:
 4. I'll guide you through each step!
 
 **Questions before starting?**
+
 - Review any spec's requirements.md for details
 - Check design.md for architecture decisions
 - Look at tasks.md for implementation steps

@@ -5,6 +5,7 @@ This directory contains API routes for handling Stripe checkout flows for subscr
 ## Requirements
 
 Implements the following requirements from the billing specification:
+
 - **2.1**: Redirect to Stripe checkout when user selects a plan
 - **2.2**: Create subscription and activate features when payment succeeds
 - **2.3**: Show error and allow retry when payment fails
@@ -22,6 +23,7 @@ Implements the following requirements from the billing specification:
 Creates a Stripe checkout session for subscription.
 
 **Request Body:**
+
 ```json
 {
   "planId": "uuid",
@@ -33,6 +35,7 @@ Creates a Stripe checkout session for subscription.
 ```
 
 **Response:**
+
 ```json
 {
   "sessionId": "cs_test_...",
@@ -43,6 +46,7 @@ Creates a Stripe checkout session for subscription.
 ```
 
 **Validation:**
+
 - User must be authenticated
 - User must have access to the workspace (owner or admin)
 - Workspace must not have an active subscription
@@ -50,6 +54,7 @@ Creates a Stripe checkout session for subscription.
 - Trial is only offered if workspace hasn't used trial before
 
 **Error Responses:**
+
 - `401`: Unauthorized - user not authenticated
 - `400`: Invalid request data or business rule violation
 - `404`: Workspace or plan not found
@@ -60,9 +65,11 @@ Creates a Stripe checkout session for subscription.
 Retrieves checkout session details after successful payment.
 
 **Query Parameters:**
+
 - `session_id`: Stripe checkout session ID
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -81,11 +88,13 @@ Retrieves checkout session details after successful payment.
 ```
 
 **Validation:**
+
 - User must be authenticated
 - Session must belong to the authenticated user
 - Payment must be completed
 
 **Error Responses:**
+
 - `401`: Unauthorized
 - `400`: Invalid session ID or payment not completed
 - `404`: Session not found or access denied
@@ -95,6 +104,7 @@ Retrieves checkout session details after successful payment.
 Creates a Stripe checkout session for one-time credit purchase.
 
 **Request Body:**
+
 ```json
 {
   "workspaceId": "uuid",
@@ -106,23 +116,26 @@ Creates a Stripe checkout session for one-time credit purchase.
 ```
 
 **Response:**
+
 ```json
 {
   "sessionId": "cs_test_...",
   "url": "https://checkout.stripe.com/...",
   "creditAmount": 1000,
-  "totalAmount": 10.00,
+  "totalAmount": 10.0,
   "amountInCents": 1000
 }
 ```
 
 **Validation:**
+
 - User must be authenticated
 - User must have access to the workspace (owner or admin)
 - Credit amount must be between 1 and 1,000,000
 - Price per credit must be positive
 
 **Error Responses:**
+
 - `401`: Unauthorized
 - `400`: Invalid request data
 - `404`: Workspace not found
@@ -182,7 +195,7 @@ if (sessionId) {
     `/api/billing/checkout/success?session_id=${sessionId}`
   );
   const data = await response.json();
-  
+
   if (data.success) {
     // Show success message
     console.log('Subscription created:', data.subscription);

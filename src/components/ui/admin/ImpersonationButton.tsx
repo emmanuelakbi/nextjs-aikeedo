@@ -48,9 +48,7 @@ export function ImpersonationButton({
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-          <h3 className="text-lg font-semibold mb-2">
-            Confirm Impersonation
-          </h3>
+          <h3 className="text-lg font-semibold mb-2">Confirm Impersonation</h3>
           <p className="text-gray-600 mb-4">
             You are about to impersonate <strong>{userName}</strong> (
             {userEmail}). This action will be logged for security purposes.

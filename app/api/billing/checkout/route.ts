@@ -3,7 +3,10 @@ import { auth } from '@/lib/auth';
 import { subscriptionService } from '@/infrastructure/services/SubscriptionService';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
-import { withRateLimit, checkoutRateLimiter } from '@/lib/middleware/rate-limit';
+import {
+  withRateLimit,
+  checkoutRateLimiter,
+} from '@/lib/middleware/rate-limit';
 
 /**
  * POST /api/billing/checkout
@@ -24,10 +27,7 @@ export async function POST(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // FIX: Apply rate limiting per user
@@ -46,15 +46,16 @@ export async function POST(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { 
+        {
           error: 'Invalid request data',
-          details: validationResult.error.issues 
+          details: validationResult.error.issues,
         },
         { status: 400 }
       );
     }
 
-    const { planId, workspaceId, successUrl, cancelUrl, trialDays } = validationResult.data;
+    const { planId, workspaceId, successUrl, cancelUrl, trialDays } =
+      validationResult.data;
 
     // Verify user has access to workspace
     const workspace = await prisma.workspace.findFirst({
@@ -66,15 +67,15 @@ export async function POST(request: NextRequest) {
             members: {
               some: {
                 userId: session.user.id,
-                role: { in: ['OWNER', 'ADMIN'] }
-              }
-            }
-          }
-        ]
+                role: { in: ['OWNER', 'ADMIN'] },
+              },
+            },
+          },
+        ],
       },
       include: {
-        subscription: true
-      }
+        subscription: true,
+      },
     });
 
     if (!workspace) {
@@ -85,9 +86,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if workspace already has active subscription
-    if (workspace.subscription && 
-        (workspace.subscription.status === 'ACTIVE' || 
-         workspace.subscription.status === 'TRIALING')) {
+    if (
+      workspace.subscription &&
+      (workspace.subscription.status === 'ACTIVE' ||
+        workspace.subscription.status === 'TRIALING')
+    ) {
       return NextResponse.json(
         { error: 'Workspace already has an active subscription' },
         { status: 400 }
@@ -96,14 +99,11 @@ export async function POST(request: NextRequest) {
 
     // Verify plan exists and is active
     const plan = await prisma.plan.findUnique({
-      where: { id: planId }
+      where: { id: planId },
     });
 
     if (!plan) {
-      return NextResponse.json(
-        { error: 'Plan not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Plan not found' }, { status: 404 });
     }
 
     if (!plan.isActive) {
@@ -122,10 +122,14 @@ export async function POST(request: NextRequest) {
     });
 
     const hasUserUsedTrial = user?.hasUsedTrial || workspace.isTrialed;
-    const effectiveTrialDays = (trialDays && !hasUserUsedTrial) ? trialDays : undefined;
+    const effectiveTrialDays =
+      trialDays && !hasUserUsedTrial ? trialDays : undefined;
 
     // Build success and cancel URLs
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.APP_URL || 'http://localhost:3000';
+    const baseUrl =
+      process.env.NEXTAUTH_URL ||
+      process.env.APP_URL ||
+      'http://localhost:3000';
     const defaultSuccessUrl = `${baseUrl}/dashboard/billing?success=true&session_id={CHECKOUT_SESSION_ID}`;
     const defaultCancelUrl = `${baseUrl}/dashboard/billing?canceled=true`;
 
@@ -140,7 +144,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId: session.user.id,
         userEmail: session.user.email,
-      }
+      },
     });
 
     return NextResponse.json({
@@ -149,10 +153,9 @@ export async function POST(request: NextRequest) {
       trialOffered: !!effectiveTrialDays,
       trialDays: effectiveTrialDays,
     });
-
   } catch (error) {
     console.error('Error creating checkout session:', error);
-    
+
     // Handle specific error types
     if (error instanceof Error) {
       if (error.message.includes('Stripe is not configured')) {
@@ -161,11 +164,8 @@ export async function POST(request: NextRequest) {
           { status: 503 }
         );
       }
-      
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     return NextResponse.json(

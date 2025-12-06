@@ -126,20 +126,28 @@ export function DataTable<T>({
  */
 
 export const TableCell = {
-  Text: ({ children, className = '' }: { children: ReactNode; className?: string }) => (
-    <div className={`text-sm text-gray-900 ${className}`}>{children}</div>
-  ),
+  Text: ({
+    children,
+    className = '',
+  }: {
+    children: ReactNode;
+    className?: string;
+  }) => <div className={`text-sm text-gray-900 ${className}`}>{children}</div>,
 
-  SubText: ({ children, className = '' }: { children: ReactNode; className?: string }) => (
-    <div className={`text-sm text-gray-500 ${className}`}>{children}</div>
-  ),
+  SubText: ({
+    children,
+    className = '',
+  }: {
+    children: ReactNode;
+    className?: string;
+  }) => <div className={`text-sm text-gray-500 ${className}`}>{children}</div>,
 
-  TwoLine: ({ 
-    primary, 
-    secondary 
-  }: { 
-    primary: ReactNode; 
-    secondary: ReactNode 
+  TwoLine: ({
+    primary,
+    secondary,
+  }: {
+    primary: ReactNode;
+    secondary: ReactNode;
   }) => (
     <div>
       <div className="text-sm font-medium text-gray-900">{primary}</div>
@@ -148,19 +156,17 @@ export const TableCell = {
   ),
 
   Actions: ({ children }: { children: ReactNode }) => (
-    <div className="flex justify-end gap-2 text-sm font-medium">
-      {children}
-    </div>
+    <div className="flex justify-end gap-2 text-sm font-medium">{children}</div>
   ),
 
-  ActionLink: ({ 
-    href, 
-    onClick, 
-    children, 
-    variant = 'primary' 
-  }: { 
-    href?: string; 
-    onClick?: () => void; 
+  ActionLink: ({
+    href,
+    onClick,
+    children,
+    variant = 'primary',
+  }: {
+    href?: string;
+    onClick?: () => void;
     children: ReactNode;
     variant?: 'primary' | 'danger' | 'warning' | 'success';
   }) => {

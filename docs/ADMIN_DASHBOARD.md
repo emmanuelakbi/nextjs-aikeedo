@@ -6,7 +6,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 
 ## Quick Links
 
-- [Admin Dashboard Overview](../src/app/(dashboard)/admin/README.md)
+- [Admin Dashboard Overview](<../src/app/(dashboard)/admin/README.md>)
 - [Admin API Reference](../src/app/api/admin/README.md)
 - [Requirements Document](../.kiro/specs/nextjs-admin-dashboard/requirements.md)
 - [Design Document](../.kiro/specs/nextjs-admin-dashboard/design.md)
@@ -16,7 +16,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 
 ### Core Documentation
 
-1. **[Admin Dashboard Overview](../src/app/(dashboard)/admin/README.md)**
+1. **[Admin Dashboard Overview](<../src/app/(dashboard)/admin/README.md>)**
    - Complete overview of admin dashboard features
    - Access control and security
    - Getting started guide
@@ -30,7 +30,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 
 ### Feature Documentation
 
-3. **[User Management](../src/app/(dashboard)/admin/users/README.md)**
+3. **[User Management](<../src/app/(dashboard)/admin/users/README.md>)**
    - User list and search
    - User details and editing
    - Account suspension and activation
@@ -38,7 +38,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
    - Activity monitoring
    - Impersonation
 
-4. **[Workspace Management](../src/app/(dashboard)/admin/workspaces/README.md)**
+4. **[Workspace Management](<../src/app/(dashboard)/admin/workspaces/README.md>)**
    - Workspace list and search
    - Workspace details
    - Credit management and adjustments
@@ -46,7 +46,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
    - Usage statistics
    - Workspace deletion
 
-5. **[Subscription Management](../src/app/(dashboard)/admin/subscriptions/README.md)**
+5. **[Subscription Management](<../src/app/(dashboard)/admin/subscriptions/README.md>)**
    - Subscription list and filtering
    - Subscription details
    - Cancellation and reactivation
@@ -54,14 +54,14 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
    - Refund processing
    - Failed payment handling
 
-6. **[System Settings](../src/app/(dashboard)/admin/settings/README.md)**
+6. **[System Settings](<../src/app/(dashboard)/admin/settings/README.md>)**
    - Settings management by category
    - Subscription plan management
    - AI provider configuration
    - Email and security settings
    - Feature toggles
 
-7. **[Reports](../src/app/(dashboard)/admin/reports/README.md)**
+7. **[Reports](<../src/app/(dashboard)/admin/reports/README.md>)**
    - Revenue reports
    - User growth reports
    - AI usage reports
@@ -69,19 +69,19 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
    - Subscription reports
    - Export functionality
 
-8. **[Audit Logs](../src/app/(dashboard)/admin/audit-logs/README.md)**
+8. **[Audit Logs](<../src/app/(dashboard)/admin/audit-logs/README.md>)**
    - Audit log viewing and filtering
    - Export functionality
    - Security monitoring
    - Compliance tracking
 
-9. **[Support Tools](../src/app/(dashboard)/admin/support/README.md)**
+9. **[Support Tools](<../src/app/(dashboard)/admin/support/README.md>)**
    - Announcements management
    - Error log monitoring
    - System health checks
    - User impersonation
 
-10. **[Content Moderation](../src/app/(dashboard)/admin/moderation/README.md)**
+10. **[Content Moderation](<../src/app/(dashboard)/admin/moderation/README.md>)**
     - Moderation queue
     - Content flagging and removal
     - User banning
@@ -105,6 +105,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 ### Prerequisites
 
 1. **Admin Role Assignment**
+
    ```sql
    UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
    ```
@@ -141,6 +142,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 ## Key Features
 
 ### User Management
+
 - Search and filter users
 - Edit user details and roles
 - Suspend/activate accounts
@@ -148,6 +150,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 - Impersonate for support
 
 ### Workspace Management
+
 - View all workspaces
 - Adjust credits manually
 - Transfer ownership
@@ -155,6 +158,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 - Delete workspaces
 
 ### Subscription Management
+
 - View all subscriptions
 - Cancel/reactivate subscriptions
 - Process refunds
@@ -162,12 +166,14 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 - View payment history
 
 ### Analytics & Reporting
+
 - Real-time analytics dashboard
 - Generate comprehensive reports
 - Export data (JSON/CSV)
 - Track key metrics (MRR, churn, usage)
 
 ### Content Moderation
+
 - Review generated content
 - Flag inappropriate content
 - Remove policy violations
@@ -175,6 +181,7 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 - Track moderation statistics
 
 ### System Administration
+
 - Configure platform settings
 - Manage subscription plans
 - Monitor system health
@@ -184,18 +191,21 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 ## Security
 
 ### Access Control
+
 - Admin role required for all features
 - Session-based authentication
 - Automatic authorization checks
 - Failed access attempts logged
 
 ### Audit Logging
+
 - All admin actions logged
 - Includes admin ID, action, target, changes
 - IP address and user agent tracked
 - Exportable for compliance
 
 ### Data Protection
+
 - Sensitive data encrypted at rest
 - API keys never exposed
 - GDPR compliant data handling
@@ -204,18 +214,22 @@ The Admin Dashboard is a comprehensive administrative interface for managing the
 ## API Overview
 
 ### Base URL
+
 ```
 /api/admin
 ```
 
 ### Authentication
+
 All endpoints require:
+
 - Valid session cookie
 - User role: ADMIN
 
 ### Response Format
 
 **Success**:
+
 ```json
 {
   "data": {},
@@ -229,6 +243,7 @@ All endpoints require:
 ```
 
 **Error**:
+
 ```json
 {
   "error": "Error message",
@@ -237,6 +252,7 @@ All endpoints require:
 ```
 
 ### Rate Limiting
+
 - Admin routes have higher limits than user routes
 - Still subject to rate limiting
 - Configurable per-endpoint
@@ -273,18 +289,21 @@ Total: 39+ tests passing
 ## Compliance
 
 ### GDPR (General Data Protection Regulation)
+
 - Audit trail for data access
 - User data deletion capabilities
 - Data export functionality
 - Consent tracking
 
 ### SOC 2 (Service Organization Control 2)
+
 - Security monitoring and logging
 - Access control enforcement
 - Audit trail for all changes
 - System health monitoring
 
 ### PCI DSS (Payment Card Industry Data Security Standard)
+
 - Secure payment data handling via Stripe
 - Access logging and monitoring
 - No credit card data stored locally
@@ -293,6 +312,7 @@ Total: 39+ tests passing
 ## Performance
 
 ### Optimization Strategies
+
 - Pagination on all list endpoints
 - Database indexes on frequently queried fields
 - Selective field fetching
@@ -300,6 +320,7 @@ Total: 39+ tests passing
 - Background jobs for heavy operations
 
 ### Monitoring
+
 - Track API response times
 - Monitor error rates
 - Track admin action frequency
@@ -310,21 +331,25 @@ Total: 39+ tests passing
 ### Common Issues
 
 **Cannot access admin dashboard**
+
 - Verify user has ADMIN role in database
 - Check session is valid
 - Verify environment variables
 
 **API returns 403 Forbidden**
+
 - Ensure user is authenticated
 - Verify admin role is set
 - Check session cookie
 
 **Reports generation fails**
+
 - Verify date format (YYYY-MM-DD)
 - Check database connectivity
 - Review query performance
 
 **Impersonation not working**
+
 - Verify target user is not admin
 - Check session timeout settings
 - Review impersonation logs
@@ -332,6 +357,7 @@ Total: 39+ tests passing
 ## Support
 
 ### Getting Help
+
 1. Review relevant documentation section
 2. Check API documentation for endpoint details
 3. Review audit logs for error details
@@ -339,6 +365,7 @@ Total: 39+ tests passing
 5. Contact development team
 
 ### Reporting Issues
+
 - Include error messages
 - Provide steps to reproduce
 - Check audit logs for context
@@ -347,6 +374,7 @@ Total: 39+ tests passing
 ## Future Enhancements
 
 Potential improvements:
+
 - Real-time dashboard updates (WebSockets)
 - Advanced analytics with charts
 - Bulk operations for users/workspaces
@@ -370,6 +398,7 @@ Potential improvements:
 ## Changelog
 
 ### Version 1.0.0 (Initial Release)
+
 - User management interface
 - Workspace management
 - Subscription management

@@ -2,7 +2,12 @@
  * Common types for AI services
  */
 
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'mistral' | 'openrouter';
+export type AIProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'google'
+  | 'mistral'
+  | 'openrouter';
 
 export type ImageSize =
   | '256x256'

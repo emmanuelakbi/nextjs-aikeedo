@@ -109,10 +109,7 @@ export class PaymentMethodService {
       where: {
         workspaceId,
       },
-      orderBy: [
-        { isDefault: 'desc' },
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
     });
   }
 
@@ -302,9 +299,8 @@ export class PaymentMethodService {
     stripeCustomerId: string
   ): Promise<PaymentMethod[]> {
     // Get payment methods from Stripe
-    const stripePaymentMethods = await stripeService.listPaymentMethods(
-      stripeCustomerId
-    );
+    const stripePaymentMethods =
+      await stripeService.listPaymentMethods(stripeCustomerId);
 
     // Get existing payment methods from database
     const existingPaymentMethods = await this.listPaymentMethods(workspaceId);
@@ -347,4 +343,3 @@ export function createPaymentMethodService(
 ): PaymentMethodService {
   return PaymentMethodService.getInstance(prisma);
 }
-

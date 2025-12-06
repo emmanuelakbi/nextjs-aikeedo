@@ -44,12 +44,14 @@ GET /api/billing/plans
 ```
 
 Query parameters:
+
 - `isActive` (boolean): Filter by active status
 - `interval` (string): Filter by interval (MONTH or YEAR)
 - `limit` (number): Maximum number of results
 - `offset` (number): Pagination offset
 
 Response:
+
 ```json
 {
   "plans": [
@@ -81,6 +83,7 @@ GET /api/billing/plans/:id
 ```
 
 Response:
+
 ```json
 {
   "plan": {
@@ -98,6 +101,7 @@ POST /api/billing/plans
 ```
 
 Request body:
+
 ```json
 {
   "name": "Basic Plan",
@@ -128,6 +132,7 @@ PATCH /api/billing/plans/:id
 ```
 
 Request body (all fields optional):
+
 ```json
 {
   "name": "Updated Plan Name",
@@ -213,12 +218,14 @@ This implementation satisfies the following requirements:
 ## Testing
 
 Unit tests are provided for:
+
 - Plan entity creation and validation
 - Plan entity updates
 - Plan deprecation and activation
 - Repository operations
 
 Run tests with:
+
 ```bash
 npm test -- src/domain/billing/entities/Plan.test.ts
 npm test -- src/infrastructure/repositories/PlanRepository.test.ts
@@ -227,6 +234,7 @@ npm test -- src/infrastructure/repositories/PlanRepository.test.ts
 ## Next Steps
 
 The following features will be implemented in subsequent tasks:
+
 - Subscription creation and management
 - Stripe checkout flow integration
 - Webhook handling for payment events

@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 
 /**
  * Billing Dashboard API Route
- * 
+ *
  * Provides comprehensive billing information for dashboard display
  * Requirements: 12.1, 12.2, 12.3, 12.4, 12.5
  */
@@ -19,10 +19,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -73,7 +70,7 @@ export async function GET(request: NextRequest) {
     // Get current period usage
     let currentPeriodUsage = 0;
     let usageByServiceType: any[] = [];
-    
+
     if (currentSubscription) {
       const usageTransactions = await prisma.creditTransaction.findMany({
         where: {
@@ -101,11 +98,14 @@ export async function GET(request: NextRequest) {
         );
       });
 
-      usageByServiceType = Array.from(serviceTypeMap.entries()).map(([type, usage]) => ({
-        serviceType: type,
-        usage,
-        percentage: currentPeriodUsage > 0 ? (usage / currentPeriodUsage) * 100 : 0,
-      }));
+      usageByServiceType = Array.from(serviceTypeMap.entries()).map(
+        ([type, usage]) => ({
+          serviceType: type,
+          usage,
+          percentage:
+            currentPeriodUsage > 0 ? (usage / currentPeriodUsage) * 100 : 0,
+        })
+      );
     }
 
     // Requirements: 12.2 - Show current period charges
@@ -141,18 +141,22 @@ export async function GET(request: NextRequest) {
     });
 
     // Calculate monthly spending
-    const monthlySpending = invoices.reduce((acc, invoice) => {
-      const month = new Date(invoice.createdAt).toISOString().slice(0, 7); // YYYY-MM
-      acc[month] = (acc[month] || 0) + invoice.amount;
-      return acc;
-    }, {} as Record<string, number>);
+    const monthlySpending = invoices.reduce(
+      (acc, invoice) => {
+        const month = new Date(invoice.createdAt).toISOString().slice(0, 7); // YYYY-MM
+        acc[month] = (acc[month] || 0) + invoice.amount;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     // Requirements: 12.5 - Indicate remaining quota
     const creditLimit = currentPlan?.creditCount || null;
     const currentBalance = workspace.creditCount;
-    const remainingQuota = creditLimit !== null 
-      ? Math.max(0, creditLimit - currentPeriodUsage)
-      : null;
+    const remainingQuota =
+      creditLimit !== null
+        ? Math.max(0, creditLimit - currentPeriodUsage)
+        : null;
 
     // Get payment methods
     const paymentMethods = currentSubscription?.stripeCustomerId
@@ -171,27 +175,33 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       // Requirements: 12.1 - Current plan and usage
-      currentPlan: currentPlan ? {
-        id: currentPlan.id,
-        name: currentPlan.name,
-        description: currentPlan.description,
-        price: currentPlan.price,
-        currency: currentPlan.currency,
-        interval: currentPlan.interval,
-        creditCount: currentPlan.creditCount,
-        features: currentPlan.features,
-        limits: currentPlan.limits,
-      } : null,
-      
-      subscription: currentSubscription ? {
-        id: currentSubscription.id,
-        status: currentSubscription.status,
-        currentPeriodStart: currentSubscription.currentPeriodStart.toISOString(),
-        currentPeriodEnd: currentSubscription.currentPeriodEnd.toISOString(),
-        cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd,
-        trialEnd: currentSubscription.trialEnd?.toISOString() || null,
-        daysUntilNextBilling,
-      } : null,
+      currentPlan: currentPlan
+        ? {
+            id: currentPlan.id,
+            name: currentPlan.name,
+            description: currentPlan.description,
+            price: currentPlan.price,
+            currency: currentPlan.currency,
+            interval: currentPlan.interval,
+            creditCount: currentPlan.creditCount,
+            features: currentPlan.features,
+            limits: currentPlan.limits,
+          }
+        : null,
+
+      subscription: currentSubscription
+        ? {
+            id: currentSubscription.id,
+            status: currentSubscription.status,
+            currentPeriodStart:
+              currentSubscription.currentPeriodStart.toISOString(),
+            currentPeriodEnd:
+              currentSubscription.currentPeriodEnd.toISOString(),
+            cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd,
+            trialEnd: currentSubscription.trialEnd?.toISOString() || null,
+            daysUntilNextBilling,
+          }
+        : null,
 
       // Requirements: 12.2 - Current period charges
       currentPeriod: {
@@ -228,9 +238,10 @@ export async function GET(request: NextRequest) {
         limit: creditLimit,
         used: currentPeriodUsage,
         remaining: remainingQuota,
-        percentageUsed: creditLimit !== null && creditLimit > 0
-          ? (currentPeriodUsage / creditLimit) * 100
-          : null,
+        percentageUsed:
+          creditLimit !== null && creditLimit > 0
+            ? (currentPeriodUsage / creditLimit) * 100
+            : null,
       },
 
       paymentMethods,
@@ -252,18 +263,22 @@ export async function GET(request: NextRequest) {
  */
 async function getPaymentMethods(stripeCustomerId: string): Promise<any[]> {
   try {
-    const { stripeService } = await import('@/infrastructure/services/StripeService');
-    const paymentMethods = await stripeService.listPaymentMethods(stripeCustomerId);
-    
+    const { stripeService } =
+      await import('@/infrastructure/services/StripeService');
+    const paymentMethods =
+      await stripeService.listPaymentMethods(stripeCustomerId);
+
     return paymentMethods.data.map((pm: any) => ({
       id: pm.id,
       type: pm.type,
-      card: pm.card ? {
-        brand: pm.card.brand,
-        last4: pm.card.last4,
-        expMonth: pm.card.exp_month,
-        expYear: pm.card.exp_year,
-      } : null,
+      card: pm.card
+        ? {
+            brand: pm.card.brand,
+            last4: pm.card.last4,
+            expMonth: pm.card.exp_month,
+            expYear: pm.card.exp_year,
+          }
+        : null,
       isDefault: pm.id === paymentMethods.data[0]?.id, // First one is typically default
     }));
   } catch (error) {

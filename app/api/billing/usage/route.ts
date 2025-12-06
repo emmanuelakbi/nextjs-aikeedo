@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 /**
  * Usage Tracking API Routes
- * 
+ *
  * Handles usage tracking and overage calculations
  * Requirements: 10.1, 10.2, 10.3, 10.4, 10.5
  */
@@ -20,10 +20,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -104,20 +101,22 @@ export async function GET(request: NextRequest) {
     // Requirements: 10.1, 10.2 - Calculate overage
     let overage = 0;
     let overageCharges = 0;
-    
+
     if (planLimits !== null && totalUsage > planLimits) {
       overage = totalUsage - planLimits;
-      
+
       // Get overage pricing from plan limits
       const planLimitsData = workspace.subscription?.plan?.limits as any;
       const overageRate = planLimitsData?.overageRate || 0.01; // Default $0.01 per credit
-      
+
       // Requirements: 10.2 - Use per-unit pricing
       overageCharges = overage * overageRate;
     }
 
     // Requirements: 12.4 - Show breakdown by service type
-    const usageByType = await prisma.$queryRaw<Array<{ description: string; total: number }>>`
+    const usageByType = await prisma.$queryRaw<
+      Array<{ description: string; total: number }>
+    >`
       SELECT 
         SUBSTRING_INDEX(description, ':', 1) as service_type,
         SUM(ABS(amount)) as total
@@ -133,7 +132,8 @@ export async function GET(request: NextRequest) {
       usage: {
         total: totalUsage,
         limit: planLimits,
-        remaining: planLimits !== null ? Math.max(0, planLimits - totalUsage) : null,
+        remaining:
+          planLimits !== null ? Math.max(0, planLimits - totalUsage) : null,
         currentBalance,
         overage,
         overageCharges,
@@ -141,7 +141,9 @@ export async function GET(request: NextRequest) {
       },
       transactions: usageTransactions.slice(0, 100), // Limit to recent 100
       period: {
-        start: startDate || workspace.subscription?.currentPeriodStart?.toISOString(),
+        start:
+          startDate ||
+          workspace.subscription?.currentPeriodStart?.toISOString(),
         end: endDate || workspace.subscription?.currentPeriodEnd?.toISOString(),
       },
     });

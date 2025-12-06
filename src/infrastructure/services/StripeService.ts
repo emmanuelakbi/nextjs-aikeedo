@@ -12,7 +12,9 @@ import { stripeConfig } from '../../lib/config';
 
 export class StripeNotConfiguredError extends Error {
   constructor() {
-    super('Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.');
+    super(
+      'Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.'
+    );
     this.name = 'StripeNotConfiguredError';
   }
 }

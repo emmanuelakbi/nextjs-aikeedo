@@ -8,7 +8,9 @@
 interface ReportFiltersProps {
   reportType: 'summary' | 'earnings' | 'conversions' | 'detailed';
   period: '7d' | '30d' | '90d' | '1y' | 'all';
-  onReportTypeChange: (type: 'summary' | 'earnings' | 'conversions' | 'detailed') => void;
+  onReportTypeChange: (
+    type: 'summary' | 'earnings' | 'conversions' | 'detailed'
+  ) => void;
   onPeriodChange: (period: '7d' | '30d' | '90d' | '1y' | 'all') => void;
 }
 

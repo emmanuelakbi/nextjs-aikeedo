@@ -326,7 +326,8 @@ export function creditPurchaseReceiptTemplate(data: {
   text: string;
 } {
   const appName = data.appName || 'AIKEEDO';
-  const currencySymbol = data.currency.toUpperCase() === 'USD' ? '$' : data.currency;
+  const currencySymbol =
+    data.currency.toUpperCase() === 'USD' ? '$' : data.currency;
 
   const content = `
     <div>
@@ -439,7 +440,8 @@ export function invoiceEmailTemplate(data: {
   text: string;
 } {
   const appName = data.appName || 'AIKEEDO';
-  const currencySymbol = data.currency.toUpperCase() === 'USD' ? '$' : data.currency;
+  const currencySymbol =
+    data.currency.toUpperCase() === 'USD' ? '$' : data.currency;
   const isPaid = data.paidAt !== null;
   const statusText = isPaid ? 'Paid' : 'Pending';
   const statusColor = isPaid ? '#00A6FB' : '#ACAEAF';

@@ -3,7 +3,7 @@ import { PlanRepository } from '../../../infrastructure/repositories/PlanReposit
 
 /**
  * Update Plan Use Case
- * 
+ *
  * Updates an existing subscription plan.
  * Requirements: Billing 1.3
  */
@@ -35,8 +35,14 @@ export class UpdatePlanUseCase {
       throw new Error('Plan price must be non-negative');
     }
 
-    if (input.creditCount !== undefined && input.creditCount !== null && input.creditCount < 0) {
-      throw new Error('Credit count must be non-negative or null for unlimited');
+    if (
+      input.creditCount !== undefined &&
+      input.creditCount !== null &&
+      input.creditCount < 0
+    ) {
+      throw new Error(
+        'Credit count must be non-negative or null for unlimited'
+      );
     }
 
     // Find existing plan

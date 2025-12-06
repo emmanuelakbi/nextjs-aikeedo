@@ -85,7 +85,9 @@ export function AuditLogsClient() {
       setLogs(data.logs);
       setPagination(data.pagination);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch audit logs');
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch audit logs'
+      );
     } finally {
       setLoading(false);
     }
@@ -129,7 +131,9 @@ export function AuditLogsClient() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to export audit logs');
+      setError(
+        err instanceof Error ? err.message : 'Failed to export audit logs'
+      );
     }
   };
 
@@ -292,7 +296,9 @@ export function AuditLogsClient() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No audit logs</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              No audit logs
+            </h3>
             <p className="mt-1 text-sm text-gray-500">
               No audit logs match your current filters
             </p>
@@ -333,7 +339,9 @@ export function AuditLogsClient() {
                         <div className="text-sm font-medium text-gray-900">
                           {log.admin.firstName} {log.admin.lastName}
                         </div>
-                        <div className="text-sm text-gray-500">{log.admin.email}</div>
+                        <div className="text-sm text-gray-500">
+                          {log.admin.email}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
@@ -345,7 +353,9 @@ export function AuditLogsClient() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{log.targetType}</div>
+                        <div className="text-sm text-gray-900">
+                          {log.targetType}
+                        </div>
                         <div className="text-sm text-gray-500 font-mono">
                           {log.targetId.substring(0, 8)}...
                         </div>
@@ -371,8 +381,11 @@ export function AuditLogsClient() {
             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
               <div className="text-sm text-gray-700">
                 Showing {pagination.offset + 1} to{' '}
-                {Math.min(pagination.offset + pagination.limit, pagination.total)} of{' '}
-                {pagination.total} results
+                {Math.min(
+                  pagination.offset + pagination.limit,
+                  pagination.total
+                )}{' '}
+                of {pagination.total} results
               </div>
               <div className="flex gap-2">
                 <Button
@@ -434,7 +447,9 @@ export function AuditLogsClient() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Admin</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Admin
+                </label>
                 <p className="mt-1 text-sm text-gray-900">
                   {selectedLog.admin.firstName} {selectedLog.admin.lastName} (
                   {selectedLog.admin.email})
@@ -442,15 +457,21 @@ export function AuditLogsClient() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Action</label>
-                <p className="mt-1 text-sm text-gray-900">{selectedLog.action}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Action
+                </label>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedLog.action}
+                </p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Target Type
                 </label>
-                <p className="mt-1 text-sm text-gray-900">{selectedLog.targetType}</p>
+                <p className="mt-1 text-sm text-gray-900">
+                  {selectedLog.targetType}
+                </p>
               </div>
 
               <div>

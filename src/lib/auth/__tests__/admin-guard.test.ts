@@ -178,9 +178,11 @@ describe('Admin Guard', () => {
       const { auth } = await import('../auth');
       vi.mocked(auth).mockResolvedValue(mockAdminSession);
 
-      const mockHandler = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ success: true }), { status: 200 })
-      );
+      const mockHandler = vi
+        .fn()
+        .mockResolvedValue(
+          new Response(JSON.stringify({ success: true }), { status: 200 })
+        );
 
       const wrappedHandler = withAdminAuth(mockHandler);
       const response = await wrappedHandler('arg1', 'arg2');

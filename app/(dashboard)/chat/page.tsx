@@ -52,7 +52,10 @@ const ChatPage: React.FC = () => {
   });
 
   // Model options for each provider
-  const modelOptions: Record<string, Array<{ value: string; label: string }>> = {
+  const modelOptions: Record<
+    string,
+    Array<{ value: string; label: string }>
+  > = {
     openai: [
       { value: 'gpt-4o', label: 'GPT-4o' },
       { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
@@ -73,10 +76,22 @@ const ChatPage: React.FC = () => {
       { value: 'mistral-small-latest', label: 'Mistral Small' },
     ],
     openrouter: [
-      { value: 'amazon/nova-2-lite-v1:free', label: 'Amazon Nova 2 Lite (FREE)' },
-      { value: 'arcee-ai/trinity-mini:free', label: 'Arcee Trinity Mini (FREE)' },
-      { value: 'tngtech/tng-r1t-chimera:free', label: 'TNG R1T Chimera (FREE)' },
-      { value: 'allenai/olmo-3-32b-think:free', label: 'Allen AI OLMo 3 32B (FREE)' },
+      {
+        value: 'amazon/nova-2-lite-v1:free',
+        label: 'Amazon Nova 2 Lite (FREE)',
+      },
+      {
+        value: 'arcee-ai/trinity-mini:free',
+        label: 'Arcee Trinity Mini (FREE)',
+      },
+      {
+        value: 'tngtech/tng-r1t-chimera:free',
+        label: 'TNG R1T Chimera (FREE)',
+      },
+      {
+        value: 'allenai/olmo-3-32b-think:free',
+        label: 'Allen AI OLMo 3 32B (FREE)',
+      },
       { value: 'openai/gpt-4o', label: 'OpenAI GPT-4o' },
       { value: 'openai/gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
       { value: 'anthropic/claude-3.5-sonnet', label: 'Claude 3.5 Sonnet' },
@@ -194,7 +209,7 @@ const ChatPage: React.FC = () => {
       // Get current workspace from session
       const sessionResponse = await fetch('/api/auth/session');
       const sessionData = await sessionResponse.json();
-      
+
       if (!sessionData?.user?.currentWorkspaceId) {
         setError('No workspace selected. Please select a workspace first.');
         return;
@@ -215,7 +230,9 @@ const ChatPage: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to create conversation');
+        throw new Error(
+          errorData.error?.message || 'Failed to create conversation'
+        );
       }
 
       const data = await response.json();
@@ -231,7 +248,9 @@ const ChatPage: React.FC = () => {
       router.push(`/chat?id=${newConversation.id}`);
     } catch (err) {
       console.error('Error creating conversation:', err);
-      setError(err instanceof Error ? err.message : 'Failed to create conversation');
+      setError(
+        err instanceof Error ? err.message : 'Failed to create conversation'
+      );
     }
   };
 
@@ -306,7 +325,7 @@ const ChatPage: React.FC = () => {
       // Get workspace ID from session
       const sessionResponse = await fetch('/api/auth/session');
       const sessionData = await sessionResponse.json();
-      
+
       if (!sessionData?.user?.currentWorkspaceId) {
         setError('No workspace selected. Please select a workspace first.');
         setIsSending(false);
@@ -337,7 +356,8 @@ const ChatPage: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData?.error?.message || 'Failed to send message';
+        const errorMessage =
+          errorData?.error?.message || 'Failed to send message';
         throw new Error(errorMessage);
       }
 

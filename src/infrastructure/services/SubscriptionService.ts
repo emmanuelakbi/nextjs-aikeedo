@@ -51,7 +51,10 @@ export interface SubscriptionDetails {
 }
 
 export class SubscriptionServiceError extends Error {
-  constructor(message: string, public readonly code?: string) {
+  constructor(
+    message: string,
+    public readonly code?: string
+  ) {
     super(message);
     this.name = 'SubscriptionServiceError';
   }
@@ -76,11 +79,17 @@ export class SubscriptionService {
       });
 
       if (!workspace) {
-        throw new SubscriptionServiceError('Workspace not found', 'WORKSPACE_NOT_FOUND');
+        throw new SubscriptionServiceError(
+          'Workspace not found',
+          'WORKSPACE_NOT_FOUND'
+        );
       }
 
       // Check if workspace already has an active subscription
-      if (workspace.subscription && workspace.subscription.status === 'ACTIVE') {
+      if (
+        workspace.subscription &&
+        workspace.subscription.status === 'ACTIVE'
+      ) {
         throw new SubscriptionServiceError(
           'Workspace already has an active subscription',
           'SUBSCRIPTION_EXISTS'
@@ -106,7 +115,8 @@ export class SubscriptionService {
       // Check if workspace has already used trial
       // Requirements: 8.4
       const hasUsedTrial = workspace.isTrialed;
-      const shouldOfferTrial = params.trialDays && params.trialDays > 0 && !hasUsedTrial;
+      const shouldOfferTrial =
+        params.trialDays && params.trialDays > 0 && !hasUsedTrial;
 
       // Create checkout session
       const sessionParams: Stripe.Checkout.SessionCreateParams = {
@@ -176,8 +186,12 @@ export class SubscriptionService {
       const status = this.mapStripeStatus(stripeSubscription.status);
 
       // Convert timestamps
-      const currentPeriodStart = new Date(stripeSubscription.current_period_start * 1000);
-      const currentPeriodEnd = new Date(stripeSubscription.current_period_end * 1000);
+      const currentPeriodStart = new Date(
+        stripeSubscription.current_period_start * 1000
+      );
+      const currentPeriodEnd = new Date(
+        stripeSubscription.current_period_end * 1000
+      );
       const trialEnd = stripeSubscription.trial_end
         ? new Date(stripeSubscription.trial_end * 1000)
         : null;
@@ -258,7 +272,10 @@ export class SubscriptionService {
       });
 
       if (!subscription) {
-        throw new SubscriptionServiceError('Subscription not found', 'SUBSCRIPTION_NOT_FOUND');
+        throw new SubscriptionServiceError(
+          'Subscription not found',
+          'SUBSCRIPTION_NOT_FOUND'
+        );
       }
 
       // Get new plan
@@ -271,7 +288,10 @@ export class SubscriptionService {
       }
 
       if (!newPlan.isActive) {
-        throw new SubscriptionServiceError('Plan is not active', 'PLAN_INACTIVE');
+        throw new SubscriptionServiceError(
+          'Plan is not active',
+          'PLAN_INACTIVE'
+        );
       }
 
       // Get Stripe subscription
@@ -365,13 +385,18 @@ export class SubscriptionService {
       });
 
       if (!subscription) {
-        throw new SubscriptionServiceError('Subscription not found', 'SUBSCRIPTION_NOT_FOUND');
+        throw new SubscriptionServiceError(
+          'Subscription not found',
+          'SUBSCRIPTION_NOT_FOUND'
+        );
       }
 
       // For trialing subscriptions, cancel immediately to prevent charging
       // Requirements: 8.3
       const isTrialing = subscription.status === 'TRIALING';
-      const cancelAtPeriodEnd = isTrialing ? false : (params.cancelAtPeriodEnd ?? true);
+      const cancelAtPeriodEnd = isTrialing
+        ? false
+        : (params.cancelAtPeriodEnd ?? true);
 
       // Cancel in Stripe
       const canceledStripeSubscription = await stripeService.cancelSubscription(
@@ -398,7 +423,9 @@ export class SubscriptionService {
    *
    * @param subscriptionId - Subscription ID
    */
-  async reactivateSubscription(subscriptionId: string): Promise<SubscriptionDetails> {
+  async reactivateSubscription(
+    subscriptionId: string
+  ): Promise<SubscriptionDetails> {
     try {
       // Get subscription
       const subscription = await prisma.subscription.findUnique({
@@ -406,7 +433,10 @@ export class SubscriptionService {
       });
 
       if (!subscription) {
-        throw new SubscriptionServiceError('Subscription not found', 'SUBSCRIPTION_NOT_FOUND');
+        throw new SubscriptionServiceError(
+          'Subscription not found',
+          'SUBSCRIPTION_NOT_FOUND'
+        );
       }
 
       if (!subscription.cancelAtPeriodEnd) {
@@ -417,15 +447,18 @@ export class SubscriptionService {
       }
 
       // Reactivate in Stripe
-      const reactivatedStripeSubscription = await stripeService.updateSubscription(
-        subscription.stripeSubscriptionId,
-        {
-          cancel_at_period_end: false,
-        }
-      );
+      const reactivatedStripeSubscription =
+        await stripeService.updateSubscription(
+          subscription.stripeSubscriptionId,
+          {
+            cancel_at_period_end: false,
+          }
+        );
 
       // Sync the reactivated subscription
-      return await this.syncSubscriptionFromStripe(reactivatedStripeSubscription);
+      return await this.syncSubscriptionFromStripe(
+        reactivatedStripeSubscription
+      );
     } catch (error) {
       if (error instanceof SubscriptionServiceError) {
         throw error;
@@ -482,7 +515,9 @@ export class SubscriptionService {
       return false;
     }
 
-    return subscription.status === 'ACTIVE' || subscription.status === 'TRIALING';
+    return (
+      subscription.status === 'ACTIVE' || subscription.status === 'TRIALING'
+    );
   }
 
   /**
@@ -492,7 +527,10 @@ export class SubscriptionService {
    * @param workspaceId - Workspace ID
    * @param planId - Plan ID
    */
-  private async allocateCredits(workspaceId: string, planId: string): Promise<void> {
+  private async allocateCredits(
+    workspaceId: string,
+    planId: string
+  ): Promise<void> {
     const plan = await prisma.plan.findUnique({
       where: { id: planId },
     });
@@ -507,7 +545,10 @@ export class SubscriptionService {
     });
 
     if (!workspace) {
-      throw new SubscriptionServiceError('Workspace not found', 'WORKSPACE_NOT_FOUND');
+      throw new SubscriptionServiceError(
+        'Workspace not found',
+        'WORKSPACE_NOT_FOUND'
+      );
     }
 
     // Only allocate if plan has credit count (not unlimited)
@@ -546,7 +587,9 @@ export class SubscriptionService {
    *
    * @param stripeStatus - Stripe subscription status
    */
-  private mapStripeStatus(stripeStatus: Stripe.Subscription.Status): SubscriptionStatus {
+  private mapStripeStatus(
+    stripeStatus: Stripe.Subscription.Status
+  ): SubscriptionStatus {
     const statusMap: Record<Stripe.Subscription.Status, SubscriptionStatus> = {
       active: 'ACTIVE',
       canceled: 'CANCELED',

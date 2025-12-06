@@ -282,7 +282,9 @@ export function AnalyticsDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Total Workspaces</span>
-              <span className="font-semibold">{analytics.workspaces.total}</span>
+              <span className="font-semibold">
+                {analytics.workspaces.total}
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">New Workspaces (Period)</span>
@@ -293,7 +295,9 @@ export function AnalyticsDashboard() {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Avg per User</span>
               <span className="font-semibold">
-                {(analytics.workspaces.total / analytics.users.total).toFixed(2)}
+                {(analytics.workspaces.total / analytics.users.total).toFixed(
+                  2
+                )}
               </span>
             </div>
           </div>
@@ -307,7 +311,10 @@ export function AnalyticsDashboard() {
           <h2 className="text-xl font-semibold mb-4">AI Usage by Type</h2>
           <div className="space-y-3">
             {analytics.aiUsage.byType.map((item) => (
-              <div key={item.type} className="flex justify-between items-center">
+              <div
+                key={item.type}
+                className="flex justify-between items-center"
+              >
                 <div>
                   <span className="font-medium">{item.type}</span>
                   <span className="text-sm text-gray-600 ml-2">
@@ -327,7 +334,10 @@ export function AnalyticsDashboard() {
           <h2 className="text-xl font-semibold mb-4">AI Usage by Provider</h2>
           <div className="space-y-3">
             {analytics.aiUsage.byProvider.map((item) => (
-              <div key={item.provider} className="flex justify-between items-center">
+              <div
+                key={item.provider}
+                className="flex justify-between items-center"
+              >
                 <div>
                   <span className="font-medium">{item.provider}</span>
                   <span className="text-sm text-gray-600 ml-2">

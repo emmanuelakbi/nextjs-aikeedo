@@ -1,12 +1,12 @@
 /**
  * Configuration Loader
- * 
+ *
  * Loads and merges configuration from multiple sources:
  * 1. Default configuration (app.config.ts)
  * 2. Environment-specific overrides (config/env/*.ts)
  * 3. Custom configuration file (config/custom.config.ts)
  * 4. Environment variables
- * 
+ *
  * This allows easy customization without modifying core files.
  */
 
@@ -67,11 +67,12 @@ function loadEnvConfig(): DeepPartial<AppConfig> {
  */
 function loadCustomConfig(): DeepPartial<AppConfig> {
   try {
-    // Try to load custom config
-    const customConfig = require('./custom.config');
+    // Try to load custom config (optional file)
+    // Using dynamic require to avoid build warnings when file doesn't exist
+    const customConfig = eval('require')('./custom.config');
     return customConfig.default || customConfig;
   } catch {
-    // No custom config found
+    // No custom config found - this is expected and OK
     return {};
   }
 }
@@ -96,13 +97,18 @@ function loadEnvVarOverrides(): DeepPartial<AppConfig> {
   // Credit rates from env
   if (process.env.CREDIT_TRIAL_AMOUNT) {
     if (!overrides.credits) overrides.credits = {};
-    overrides.credits.trialCredits = parseInt(process.env.CREDIT_TRIAL_AMOUNT, 10);
+    overrides.credits.trialCredits = parseInt(
+      process.env.CREDIT_TRIAL_AMOUNT,
+      10
+    );
   }
 
   // Affiliate commission from env
   if (process.env.AFFILIATE_COMMISSION_RATE) {
     if (!overrides.affiliate) overrides.affiliate = {};
-    overrides.affiliate.commissionRate = parseFloat(process.env.AFFILIATE_COMMISSION_RATE);
+    overrides.affiliate.commissionRate = parseFloat(
+      process.env.AFFILIATE_COMMISSION_RATE
+    );
   }
 
   // Rate limits from env
@@ -195,7 +201,9 @@ export function getConfigValue<T = any>(path: string): T | undefined {
 /**
  * Check if a feature is enabled
  */
-export function isFeatureEnabled(feature: keyof AppConfig['features']): boolean {
+export function isFeatureEnabled(
+  feature: keyof AppConfig['features']
+): boolean {
   const config = getConfig();
   return config.features[feature] === true;
 }

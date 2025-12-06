@@ -39,12 +39,16 @@ export function StatCard({
           <p className="text-sm text-gray-600">{title}</p>
           <p className="text-3xl font-bold mt-2">{value}</p>
           {subtitle && (
-            <p className={`text-sm mt-2 ${trend?.isPositive ? 'text-green-600' : 'text-gray-600'}`}>
+            <p
+              className={`text-sm mt-2 ${trend?.isPositive ? 'text-green-600' : 'text-gray-600'}`}
+            >
               {subtitle}
             </p>
           )}
           {trend && (
-            <p className={`text-sm mt-2 ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
+            <p
+              className={`text-sm mt-2 ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}
+            >
               {trend.isPositive ? '↑' : '↓'} {trend.value}
             </p>
           )}

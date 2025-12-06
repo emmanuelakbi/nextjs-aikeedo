@@ -14,18 +14,18 @@ export async function GET(request: NextRequest) {
   try {
     await requireAdmin();
     const { searchParams } = new URL(request.url);
-    
+
     const type = searchParams.get('type') || undefined;
     const status = searchParams.get('status') || undefined;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
     const where: any = {};
-    
+
     if (type) {
       where.type = type;
     }
-    
+
     if (status) {
       where.status = status;
     }

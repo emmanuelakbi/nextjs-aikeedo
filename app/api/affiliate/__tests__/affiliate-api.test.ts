@@ -38,16 +38,15 @@ describe('Affiliate API Routes', () => {
       const validCodes = ['ABC123', 'TEST', 'MYCODE', 'REF2024'];
       const invalidCodes = ['ab', '123', 'a', '', 'code with spaces'];
 
-      validCodes.forEach(code => {
+      validCodes.forEach((code) => {
         expect(code.length).toBeGreaterThanOrEqual(4);
         expect(code.length).toBeLessThanOrEqual(20);
         expect(/^[A-Z0-9]+$/.test(code)).toBe(true);
       });
 
-      invalidCodes.forEach(code => {
-        const isValid = code.length >= 4 && 
-                       code.length <= 20 && 
-                       /^[A-Z0-9]+$/.test(code);
+      invalidCodes.forEach((code) => {
+        const isValid =
+          code.length >= 4 && code.length <= 20 && /^[A-Z0-9]+$/.test(code);
         expect(isValid).toBe(false);
       });
     });
@@ -83,13 +82,13 @@ describe('Affiliate API Routes', () => {
     it('should handle edge cases', () => {
       // Zero amount
       expect(Math.floor((0 * 20) / 100)).toBe(0);
-      
+
       // Zero rate
       expect(Math.floor((10000 * 0) / 100)).toBe(0);
-      
+
       // 100% rate
       expect(Math.floor((10000 * 100) / 100)).toBe(10000);
-      
+
       // Small amounts
       expect(Math.floor((1 * 20) / 100)).toBe(0);
       expect(Math.floor((10 * 20) / 100)).toBe(2);
@@ -115,7 +114,7 @@ describe('Affiliate API Routes', () => {
 
     it('should validate against available balance', () => {
       const pendingEarnings = 15000; // $150.00
-      
+
       const testCases = [
         { requested: 10000, valid: true },
         { requested: 15000, valid: true },
@@ -141,10 +140,10 @@ describe('Affiliate API Routes', () => {
       ];
 
       validTransitions.forEach(({ from, to, valid }) => {
-        const isValidTransition = 
+        const isValidTransition =
           (from === 'PENDING' && (to === 'CONVERTED' || to === 'CANCELED')) ||
           (from === 'CONVERTED' && to === 'CANCELED');
-        
+
         expect(isValidTransition).toBe(valid);
       });
     });
@@ -157,15 +156,15 @@ describe('Affiliate API Routes', () => {
         pendingEarnings: 30000,
         paidEarnings: 20000,
       };
-      
+
       const newCommission = 5000;
-      
+
       const updated = {
         totalEarnings: affiliate.totalEarnings + newCommission,
         pendingEarnings: affiliate.pendingEarnings + newCommission,
         paidEarnings: affiliate.paidEarnings,
       };
-      
+
       expect(updated.totalEarnings).toBe(55000);
       expect(updated.pendingEarnings).toBe(35000);
       expect(updated.paidEarnings).toBe(20000);
@@ -177,15 +176,15 @@ describe('Affiliate API Routes', () => {
         pendingEarnings: 30000,
         paidEarnings: 20000,
       };
-      
+
       const payoutAmount = 10000;
-      
+
       const updated = {
         totalEarnings: affiliate.totalEarnings,
         pendingEarnings: affiliate.pendingEarnings - payoutAmount,
         paidEarnings: affiliate.paidEarnings + payoutAmount,
       };
-      
+
       expect(updated.totalEarnings).toBe(50000);
       expect(updated.pendingEarnings).toBe(20000);
       expect(updated.paidEarnings).toBe(30000);
@@ -209,7 +208,7 @@ describe('Affiliate API Routes', () => {
     function getDateRange(period: string): { start: Date; end: Date } {
       const now = new Date();
       const start = new Date();
-      
+
       switch (period) {
         case '7d':
           start.setDate(now.getDate() - 7);
@@ -228,13 +227,13 @@ describe('Affiliate API Routes', () => {
         default:
           start.setDate(now.getDate() - 30);
       }
-      
+
       return { start, end: now };
     }
 
     it('should calculate correct date ranges', () => {
       const _now = new Date('2024-01-31T00:00:00Z');
-      
+
       const testCases = [
         { period: '7d', expectedDays: 7 },
         { period: '30d', expectedDays: 30 },
@@ -243,7 +242,9 @@ describe('Affiliate API Routes', () => {
 
       testCases.forEach(({ period, expectedDays }) => {
         const { start, end } = getDateRange(period);
-        const daysDiff = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+        const daysDiff = Math.floor(
+          (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+        );
         expect(daysDiff).toBeGreaterThanOrEqual(expectedDays - 1);
         expect(daysDiff).toBeLessThanOrEqual(expectedDays + 1);
       });

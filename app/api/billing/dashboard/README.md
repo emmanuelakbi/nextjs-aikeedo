@@ -11,9 +11,11 @@ Get comprehensive billing dashboard data for a workspace.
 **Requirements:** 12.1, 12.2, 12.3, 12.4, 12.5
 
 **Query Parameters:**
+
 - `workspaceId` (required): Workspace UUID
 
 **Response:**
+
 ```json
 {
   "currentPlan": {
@@ -101,28 +103,33 @@ Get comprehensive billing dashboard data for a workspace.
 ## Features
 
 ### Current Plan and Usage (Requirement 12.1)
+
 - Shows active subscription plan details
 - Displays current usage statistics
 - Indicates subscription status and trial information
 
 ### Current Period Charges (Requirement 12.2)
+
 - Shows charges for the current billing period
 - Includes base subscription cost
 - Adds overage charges if applicable
 - Displays period start and end dates
 
 ### Billing History (Requirement 12.3)
+
 - Lists past 12 months of invoices
 - Provides monthly spending breakdown
 - Shows total amount spent
 - Includes invoice URLs for downloads
 
 ### Usage Breakdown (Requirement 12.4)
+
 - Shows usage by service type
 - Calculates percentage of total usage per service
 - Provides detailed usage statistics
 
 ### Remaining Quota (Requirement 12.5)
+
 - Displays current credit balance
 - Shows credit limit from plan
 - Calculates remaining quota

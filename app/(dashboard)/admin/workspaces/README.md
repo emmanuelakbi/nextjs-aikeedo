@@ -11,6 +11,7 @@ The Workspace Management interface provides tools for administrators to manage w
 **Location**: `/admin/workspaces`
 
 **Capabilities**:
+
 - View all workspaces in a paginated table
 - Search by workspace name
 - Sort by various fields (created date, name, credits)
@@ -18,6 +19,7 @@ The Workspace Management interface provides tools for administrators to manage w
 - Quick access to workspace details
 
 **Displayed Information**:
+
 - Workspace name
 - Owner name and email
 - Total credits (subscription + purchased)
@@ -82,10 +84,12 @@ The Workspace Management interface provides tools for administrators to manage w
 ### Edit Workspace
 
 **Editable Fields**:
+
 - Workspace name
 - Owner (transfer ownership)
 
 **Validation**:
+
 - Name must not be empty
 - Owner must be a valid user ID
 - Owner must not already own the workspace
@@ -93,6 +97,7 @@ The Workspace Management interface provides tools for administrators to manage w
 **API Endpoint**: `PATCH /api/admin/workspaces/:id`
 
 **Body**:
+
 ```json
 {
   "name": "New Workspace Name",
@@ -105,17 +110,20 @@ The Workspace Management interface provides tools for administrators to manage w
 **Purpose**: Manually add or subtract credits from a workspace
 
 **Use Cases**:
+
 - Compensate for service issues
 - Apply promotional credits
 - Correct billing errors
 - Remove fraudulent credits
 
 **Parameters**:
+
 - Amount (positive or negative number)
 - Type (add or subtract)
 - Reason (required for audit trail)
 
 **Effects**:
+
 - Credits are immediately added/subtracted
 - Transaction is recorded in credit history
 - Action is logged in audit trail
@@ -124,6 +132,7 @@ The Workspace Management interface provides tools for administrators to manage w
 **API Endpoint**: `POST /api/admin/workspaces/:id/credits`
 
 **Body**:
+
 ```json
 {
   "amount": 1000,
@@ -137,18 +146,21 @@ The Workspace Management interface provides tools for administrators to manage w
 **Purpose**: Change the owner of a workspace
 
 **Use Cases**:
+
 - User requests ownership transfer
 - Account consolidation
 - Business ownership changes
 - Support escalations
 
 **Effects**:
+
 - New owner gains full workspace access
 - Previous owner becomes a regular member
 - All workspace data is preserved
 - Subscription remains active
 
 **Restrictions**:
+
 - New owner must be a valid user
 - New owner cannot already own the workspace
 - Action is logged in audit trail
@@ -156,6 +168,7 @@ The Workspace Management interface provides tools for administrators to manage w
 **API Endpoint**: `PATCH /api/admin/workspaces/:id`
 
 **Body**:
+
 ```json
 {
   "ownerId": "new-owner-user-id"
@@ -167,6 +180,7 @@ The Workspace Management interface provides tools for administrators to manage w
 **Purpose**: Permanently remove a workspace and all associated data
 
 **Effects**:
+
 - Workspace is deleted
 - All members are removed
 - All workspace data is deleted (conversations, generations, files, documents)
@@ -175,6 +189,7 @@ The Workspace Management interface provides tools for administrators to manage w
 - Action is irreversible
 
 **Restrictions**:
+
 - Confirmation required
 - All actions are logged
 - Cannot be undone
@@ -186,6 +201,7 @@ The Workspace Management interface provides tools for administrators to manage w
 **Purpose**: Review workspace's platform usage and credit consumption
 
 **Information Shown**:
+
 - Generation statistics by type (text, image, speech, transcription)
 - Credit consumption over time
 - Recent generations with details
@@ -200,11 +216,13 @@ The Workspace Management interface provides tools for administrators to manage w
 ### Search
 
 Search workspaces by:
+
 - Workspace name (partial match)
 - Owner email (partial match)
 - Owner name (partial match)
 
 **Example**: Searching "acme" will find:
+
 - Workspace named "Acme Corp"
 - Workspace owned by acme@example.com
 - Workspace owned by "Acme Admin"
@@ -212,6 +230,7 @@ Search workspaces by:
 ### Sorting
 
 Sort workspaces by:
+
 - Created date (newest/oldest first)
 - Name (A-Z, Z-A)
 - Credits (highest/lowest first)
@@ -226,6 +245,7 @@ GET /api/admin/workspaces
 ```
 
 **Query Parameters**:
+
 - `page` (number): Page number (default: 1)
 - `limit` (number): Results per page (default: 20)
 - `search` (string): Search term for name/owner
@@ -233,6 +253,7 @@ GET /api/admin/workspaces
 - `sortOrder` (string): Sort direction (asc, desc)
 
 **Response**:
+
 ```json
 {
   "workspaces": [
@@ -276,6 +297,7 @@ GET /api/admin/workspaces/:id
 ```
 
 **Response**:
+
 ```json
 {
   "id": "workspace-123",
@@ -298,6 +320,7 @@ PATCH /api/admin/workspaces/:id
 ```
 
 **Body**:
+
 ```json
 {
   "name": "New Workspace Name",
@@ -306,6 +329,7 @@ PATCH /api/admin/workspaces/:id
 ```
 
 **Response**:
+
 ```json
 {
   "id": "workspace-123",
@@ -322,6 +346,7 @@ POST /api/admin/workspaces/:id/credits
 ```
 
 **Body**:
+
 ```json
 {
   "amount": 1000,
@@ -331,6 +356,7 @@ POST /api/admin/workspaces/:id/credits
 ```
 
 **Response**:
+
 ```json
 {
   "workspace": {
@@ -355,6 +381,7 @@ GET /api/admin/workspaces/:id/usage
 ```
 
 **Response**:
+
 ```json
 {
   "generations": {
@@ -378,6 +405,7 @@ DELETE /api/admin/workspaces/:id
 ```
 
 **Response**:
+
 ```json
 {
   "message": "Workspace deleted successfully"
@@ -420,12 +448,15 @@ DELETE /api/admin/workspaces/:id
 ## Security Considerations
 
 ### Access Control
+
 - Only admins can access workspace management
 - All endpoints protected by `requireAdmin()` middleware
 - Workspace owners cannot see admin functions
 
 ### Audit Logging
+
 All workspace management actions are logged:
+
 - Workspace creation
 - Workspace updates (name, owner)
 - Credit adjustments (amount, reason)
@@ -433,6 +464,7 @@ All workspace management actions are logged:
 - Usage queries
 
 ### Data Privacy
+
 - Workspace data is isolated between workspaces
 - Members can only see their workspace data
 - Admins can see all workspace data
@@ -496,6 +528,7 @@ npm test src/app/api/admin/workspaces/route.test.ts
 ```
 
 **Test Coverage**:
+
 - List workspaces with pagination
 - Search and filter functionality
 - Workspace updates and validation

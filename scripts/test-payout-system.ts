@@ -48,7 +48,9 @@ async function testPayoutSystem() {
     });
 
     console.log(`  Created affiliate: ${affiliate.code}`);
-    console.log(`  Pending earnings: $${(affiliate.pendingEarnings / 100).toFixed(2)}`);
+    console.log(
+      `  Pending earnings: $${(affiliate.pendingEarnings / 100).toFixed(2)}`
+    );
     console.log('  ✅ Pass\n');
 
     // Test 2: Request Payout
@@ -68,11 +70,14 @@ async function testPayoutSystem() {
 
     console.log(`  Request success: ${requestResult.success}`);
     console.log(`  Payout ID: ${requestResult.payout?.id}`);
-    console.log(`  Amount: $${(requestResult.payout!.amount / 100).toFixed(2)}`);
+    console.log(
+      `  Amount: $${(requestResult.payout!.amount / 100).toFixed(2)}`
+    );
     console.log(`  Method: ${requestResult.payout?.method}`);
     console.log(`  Status: ${requestResult.payout?.status}`);
 
-    const test2Pass = requestResult.success && requestResult.payout?.status === 'PENDING';
+    const test2Pass =
+      requestResult.success && requestResult.payout?.status === 'PENDING';
     console.log(test2Pass ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     const payoutId = requestResult.payout!.id;
@@ -89,7 +94,9 @@ async function testPayoutSystem() {
     console.log(`  Request success: ${minPayoutResult.success}`);
     console.log(`  Error: ${minPayoutResult.error}`);
 
-    const test3Pass = !minPayoutResult.success && minPayoutResult.error?.includes('Minimum payout');
+    const test3Pass =
+      !minPayoutResult.success &&
+      minPayoutResult.error?.includes('Minimum payout');
     console.log(test3Pass ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 4: Insufficient Earnings
@@ -104,7 +111,9 @@ async function testPayoutSystem() {
     console.log(`  Request success: ${insufficientResult.success}`);
     console.log(`  Error: ${insufficientResult.error}`);
 
-    const test4Pass = !insufficientResult.success && insufficientResult.error?.includes('Insufficient');
+    const test4Pass =
+      !insufficientResult.success &&
+      insufficientResult.error?.includes('Insufficient');
     console.log(test4Pass ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 5: Approve Payout
@@ -120,7 +129,8 @@ async function testPayoutSystem() {
     console.log(`  Approve success: ${approveResult.success}`);
     console.log(`  Status: ${approveResult.payout?.status}`);
 
-    const test5Pass = approveResult.success && approveResult.payout?.status === 'APPROVED';
+    const test5Pass =
+      approveResult.success && approveResult.payout?.status === 'APPROVED';
     console.log(test5Pass ? '  ✅ Pass\n' : '  ❌ Fail\n');
 
     // Test 6: Process Payout
@@ -143,8 +153,12 @@ async function testPayoutSystem() {
       where: { id: affiliate.id },
     });
 
-    console.log(`  Pending earnings: $${(updatedAffiliate!.pendingEarnings / 100).toFixed(2)}`);
-    console.log(`  Paid earnings: $${(updatedAffiliate!.paidEarnings / 100).toFixed(2)}`);
+    console.log(
+      `  Pending earnings: $${(updatedAffiliate!.pendingEarnings / 100).toFixed(2)}`
+    );
+    console.log(
+      `  Paid earnings: $${(updatedAffiliate!.paidEarnings / 100).toFixed(2)}`
+    );
 
     const test6Pass =
       processResult.success &&
@@ -187,7 +201,9 @@ async function testPayoutSystem() {
 
     const stats = await payoutRepo.getStats(affiliate.id);
 
-    console.log(`  Total requested: $${(stats.totalRequested / 100).toFixed(2)}`);
+    console.log(
+      `  Total requested: $${(stats.totalRequested / 100).toFixed(2)}`
+    );
     console.log(`  Total paid: $${(stats.totalPaid / 100).toFixed(2)}`);
     console.log(`  Total pending: $${(stats.totalPending / 100).toFixed(2)}`);
     console.log(`  Total rejected: $${(stats.totalRejected / 100).toFixed(2)}`);

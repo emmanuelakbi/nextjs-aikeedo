@@ -79,8 +79,6 @@ The design focuses on establishing proper abstractions, implementing dependency 
 
 Each domain entity will have a corresponding repository interface.
 
-
-
 #### User Repository Interface
 
 ```typescript
@@ -95,16 +93,16 @@ export interface IUserRepository {
   findById(id: Id): Promise<User | null>;
   findByEmail(email: Email): Promise<User | null>;
   delete(id: Id): Promise<void>;
-  
+
   // Query operations
   findAll(options?: {
     limit?: number;
     offset?: number;
     status?: UserStatus;
   }): Promise<User[]>;
-  
+
   count(filters?: { status?: UserStatus }): Promise<number>;
-  
+
   // Specialized queries
   findByWorkspace(workspaceId: string): Promise<User[]>;
   existsByEmail(email: Email): Promise<boolean>;
@@ -123,11 +121,11 @@ export interface IWorkspaceRepository {
   save(workspace: Workspace): Promise<Workspace>;
   findById(id: Id): Promise<Workspace | null>;
   delete(id: Id): Promise<void>;
-  
+
   // Query operations
   findByOwnerId(ownerId: string): Promise<Workspace[]>;
   findByUserId(userId: string): Promise<Workspace[]>;
-  
+
   // Specialized operations
   updateCredits(id: Id, credits: number): Promise<void>;
   existsByName(name: string, ownerId: string): Promise<boolean>;
@@ -145,12 +143,15 @@ export interface IDocumentRepository {
   save(document: Document): Promise<Document>;
   findById(id: Id): Promise<Document | null>;
   delete(id: Id): Promise<void>;
-  
-  findByWorkspace(workspaceId: string, options?: {
-    limit?: number;
-    offset?: number;
-  }): Promise<Document[]>;
-  
+
+  findByWorkspace(
+    workspaceId: string,
+    options?: {
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<Document[]>;
+
   findByUser(userId: string): Promise<Document[]>;
   search(query: string, workspaceId: string): Promise<Document[]>;
 }
@@ -167,7 +168,7 @@ export interface IFileRepository {
   save(file: File): Promise<File>;
   findById(id: Id): Promise<File | null>;
   delete(id: Id): Promise<void>;
-  
+
   findByWorkspace(workspaceId: string): Promise<File[]>;
   findByUser(userId: string): Promise<File[]>;
   findUnused(olderThan: Date): Promise<File[]>;
@@ -186,10 +187,10 @@ export interface IConversationRepository {
   save(conversation: Conversation): Promise<Conversation>;
   findById(id: Id): Promise<Conversation | null>;
   delete(id: Id): Promise<void>;
-  
+
   findByWorkspace(workspaceId: string): Promise<Conversation[]>;
   findByUser(userId: string): Promise<Conversation[]>;
-  
+
   // Message operations
   addMessage(conversationId: Id, message: Message): Promise<Message>;
   getMessages(conversationId: Id, limit?: number): Promise<Message[]>;
@@ -240,12 +241,12 @@ export interface Container {
   documentRepository: IDocumentRepository;
   fileRepository: IFileRepository;
   conversationRepository: IConversationRepository;
-  
+
   // Services
   storageService: IStorageService;
   emailService: IEmailService;
   creditService: ICreditService;
-  
+
   // Use Cases (optional, can be created on-demand)
   createUser: CreateUserUseCase;
   createWorkspace: CreateWorkspaceUseCase;
@@ -253,39 +254,39 @@ export interface Container {
 
 class DIContainer implements Container {
   private static instance: DIContainer;
-  
+
   // Lazy-loaded singletons
   private _userRepository?: IUserRepository;
   private _workspaceRepository?: IWorkspaceRepository;
-  
+
   private constructor() {}
-  
+
   static getInstance(): DIContainer {
     if (!DIContainer.instance) {
       DIContainer.instance = new DIContainer();
     }
     return DIContainer.instance;
   }
-  
+
   get userRepository(): IUserRepository {
     if (!this._userRepository) {
       this._userRepository = new UserRepository();
     }
     return this._userRepository;
   }
-  
+
   get workspaceRepository(): IWorkspaceRepository {
     if (!this._workspaceRepository) {
       this._workspaceRepository = new WorkspaceRepository();
     }
     return this._workspaceRepository;
   }
-  
+
   // Factory methods for use cases
   createUserUseCase(): CreateUserUseCase {
     return new CreateUserUseCase(this.userRepository);
   }
-  
+
   createWorkspaceUseCase(): CreateWorkspaceUseCase {
     return new CreateWorkspaceUseCase(
       this.workspaceRepository,
@@ -309,7 +310,7 @@ export enum PlanInterval {
   MONTH = 'MONTH',
   YEAR = 'YEAR',
   WEEK = 'WEEK',
-  DAY = 'DAY'
+  DAY = 'DAY',
 }
 
 export enum SubscriptionStatus {
@@ -317,7 +318,7 @@ export enum SubscriptionStatus {
   CANCELED = 'CANCELED',
   PAST_DUE = 'PAST_DUE',
   TRIALING = 'TRIALING',
-  INCOMPLETE = 'INCOMPLETE'
+  INCOMPLETE = 'INCOMPLETE',
 }
 
 // src/infrastructure/repositories/mappers/PlanMapper.ts
@@ -328,97 +329,115 @@ export class PlanMapper {
   static toDomain(prismaInterval: PrismaPlanInterval): DomainPlanInterval {
     return prismaInterval as unknown as DomainPlanInterval;
   }
-  
+
   static toPrisma(domainInterval: DomainPlanInterval): PrismaPlanInterval {
     return domainInterval as unknown as PrismaPlanInterval;
   }
 }
 ```
 
-
-
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Repository Interface Import Purity
-*For any* use case file, all repository imports should come from `@/domain/` paths, not from `@/infrastructure/` paths.
+
+_For any_ use case file, all repository imports should come from `@/domain/` paths, not from `@/infrastructure/` paths.
 **Validates: Requirements 1.2, 5.1, 5.5**
 
 ### Property 2: Domain Layer Import Purity
-*For any* file in `src/domain/`, it should not import from `@prisma/client`, `stripe`, or other infrastructure packages.
+
+_For any_ file in `src/domain/`, it should not import from `@prisma/client`, `stripe`, or other infrastructure packages.
 **Validates: Requirements 2.1, 2.4**
 
 ### Property 3: Repository Interface Completeness
-*For any* domain entity with a repository interface, the interface should include at minimum: `save()`, `findById()`, and `delete()` methods.
+
+_For any_ domain entity with a repository interface, the interface should include at minimum: `save()`, `findById()`, and `delete()` methods.
 **Validates: Requirement 1.3**
 
 ### Property 4: Repository Implementation Location
-*For any* repository implementation, it should be located in `src/infrastructure/repositories/` and implement a corresponding domain interface.
+
+_For any_ repository implementation, it should be located in `src/infrastructure/repositories/` and implement a corresponding domain interface.
 **Validates: Requirement 1.4**
 
 ### Property 5: Use Case Constructor Injection
-*For any* use case class, repository dependencies should be declared as constructor parameters with domain interface types.
+
+_For any_ use case class, repository dependencies should be declared as constructor parameters with domain interface types.
 **Validates: Requirements 3.1, 5.2**
 
 ### Property 6: API Route DI Usage
-*For any* API route that uses a use case, it should obtain the use case instance from the DI container rather than instantiating it directly.
+
+_For any_ API route that uses a use case, it should obtain the use case instance from the DI container rather than instantiating it directly.
 **Validates: Requirements 3.2, 6.1**
 
 ### Property 7: No Direct Repository Instantiation in API Routes
-*For any* API route, it should not contain `new *Repository()` instantiation calls.
+
+_For any_ API route, it should not contain `new *Repository()` instantiation calls.
 **Validates: Requirement 6.2**
 
 ### Property 8: Use Case Service Interface Dependencies
-*For any* use case that depends on external services, it should depend on domain-level service interfaces (I*Service) rather than concrete implementations.
+
+_For any_ use case that depends on external services, it should depend on domain-level service interfaces (I\*Service) rather than concrete implementations.
 **Validates: Requirements 5.3**
 
 ### Property 9: Infrastructure Service Interface Definition
-*For any* infrastructure service that represents a domain concept, a corresponding interface should exist in the domain layer.
+
+_For any_ infrastructure service that represents a domain concept, a corresponding interface should exist in the domain layer.
 **Validates: Requirement 4.5**
 
 ### Property 10: API Route Pattern Consistency
-*For any* API route, it should follow the pattern: authenticate → validate → execute use case → format response.
+
+_For any_ API route, it should follow the pattern: authenticate → validate → execute use case → format response.
 **Validates: Requirement 6.5**
 
 ### Property 11: Repository Interface No Infrastructure Types
-*For any* repository interface in the domain layer, it should not reference infrastructure-specific types (Prisma types, Stripe types, etc.).
+
+_For any_ repository interface in the domain layer, it should not reference infrastructure-specific types (Prisma types, Stripe types, etc.).
 **Validates: Requirement 1.5**
 
 ### Property 12: Use Case Import Restrictions
-*For any* use case, imports should only come from `@/domain/` or other use cases in `@/application/use-cases/`.
+
+_For any_ use case, imports should only come from `@/domain/` or other use cases in `@/application/use-cases/`.
 **Validates: Requirement 5.1**
 
 ### Property 13: Domain Value Object Purity
-*For any* value object in the domain layer, it should not import infrastructure packages and should be immutable.
+
+_For any_ value object in the domain layer, it should not import infrastructure packages and should be immutable.
 **Validates: Requirement 2.5**
 
 ### Property 14: Use Case Composition via Injection
-*For any* use case that depends on another use case, the dependency should be injected through the constructor.
+
+_For any_ use case that depends on another use case, the dependency should be injected through the constructor.
 **Validates: Requirement 5.4**
 
 ### Property 15: API Backward Compatibility
-*For any* API endpoint, the response structure should remain the same before and after refactoring.
+
+_For any_ API endpoint, the response structure should remain the same before and after refactoring.
 **Validates: Requirement 8.2**
 
 ### Property 16: Repository Interface Documentation
-*For any* repository interface, it should have JSDoc comments explaining the contract and usage.
+
+_For any_ repository interface, it should have JSDoc comments explaining the contract and usage.
 **Validates: Requirement 9.3**
 
 ### Property 17: Domain Layer No Infrastructure Imports
-*For any* file in `src/domain/`, it should not import from `@/infrastructure/`.
+
+_For any_ file in `src/domain/`, it should not import from `@/infrastructure/`.
 **Validates: Requirement 2.1**
 
 ### Property 18: Test Coverage Maintenance
-*For any* use case, it should have corresponding test files with adequate coverage.
+
+_For any_ use case, it should have corresponding test files with adequate coverage.
 **Validates: Requirement 8.4**
 
 ### Property 19: Architecture Validation Rules
-*For any* commit, linting rules should verify that domain files don't import infrastructure packages.
+
+_For any_ commit, linting rules should verify that domain files don't import infrastructure packages.
 **Validates: Requirements 10.2, 10.3**
 
 ### Property 20: Cross-Cutting Concerns Location
-*For any* file in `src/lib/`, it should contain only framework-agnostic utilities, not infrastructure-specific implementations.
+
+_For any_ file in `src/lib/`, it should contain only framework-agnostic utilities, not infrastructure-specific implementations.
 **Validates: Requirement 4.4**
 
 ## Error Handling
@@ -441,7 +460,10 @@ export class EntityNotFoundError extends DomainError {
 }
 
 export class ValidationError extends DomainError {
-  constructor(message: string, public readonly field?: string) {
+  constructor(
+    message: string,
+    public readonly field?: string
+  ) {
     super(message);
   }
 }
@@ -458,7 +480,10 @@ export class BusinessRuleViolationError extends DomainError {
 ```typescript
 // src/application/errors/ApplicationError.ts
 export abstract class ApplicationError extends Error {
-  constructor(message: string, public readonly statusCode: number = 500) {
+  constructor(
+    message: string,
+    public readonly statusCode: number = 500
+  ) {
     super(message);
     this.name = this.constructor.name;
   }
@@ -494,10 +519,10 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getCurrentUser();
     const body = await request.json();
-    
+
     const useCase = container.createWorkspaceUseCase();
     const workspace = await useCase.execute(body);
-    
+
     return NextResponse.json({ success: true, data: workspace });
   } catch (error) {
     return handleApiError(error);
@@ -510,6 +535,7 @@ export async function POST(request: NextRequest) {
 ### Unit Testing
 
 **Domain Entities:**
+
 ```typescript
 // src/domain/user/entities/__tests__/User.test.ts
 import { describe, it, expect } from 'vitest';
@@ -521,14 +547,14 @@ describe('User Entity', () => {
   it('should create a valid user', async () => {
     const email = new Email('test@example.com');
     const password = await Password.create('SecurePass123!');
-    
+
     const user = await User.create({
       email,
       password,
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
     });
-    
+
     expect(user.getEmail()).toBe(email);
     expect(user.getFullName()).toBe('John Doe');
   });
@@ -536,6 +562,7 @@ describe('User Entity', () => {
 ```
 
 **Use Cases with Mocked Repositories:**
+
 ```typescript
 // src/application/use-cases/workspace/__tests__/CreateWorkspaceUseCase.test.ts
 import { describe, it, expect, vi } from 'vitest';
@@ -553,24 +580,21 @@ describe('CreateWorkspaceUseCase', () => {
       findByOwnerId: vi.fn(),
       findByUserId: vi.fn(),
       updateCredits: vi.fn(),
-      existsByName: vi.fn().mockResolvedValue(false)
+      existsByName: vi.fn().mockResolvedValue(false),
     };
-    
+
     const mockUserRepo: IUserRepository = {
       findById: vi.fn().mockResolvedValue(mockUser),
       // ... other methods
     };
-    
-    const useCase = new CreateWorkspaceUseCase(
-      mockWorkspaceRepo,
-      mockUserRepo
-    );
-    
+
+    const useCase = new CreateWorkspaceUseCase(mockWorkspaceRepo, mockUserRepo);
+
     const result = await useCase.execute({
       userId: 'user-123',
-      name: 'Test Workspace'
+      name: 'Test Workspace',
     });
-    
+
     expect(mockWorkspaceRepo.save).toHaveBeenCalled();
     expect(result.getName()).toBe('Test Workspace');
   });
@@ -580,6 +604,7 @@ describe('CreateWorkspaceUseCase', () => {
 ### Integration Testing
 
 **Repository Tests:**
+
 ```typescript
 // src/infrastructure/repositories/__tests__/UserRepository.test.ts
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -590,23 +615,23 @@ describe('UserRepository', () => {
   beforeEach(async () => {
     await setupTestDatabase();
   });
-  
+
   afterEach(async () => {
     await teardownTestDatabase();
   });
-  
+
   it('should save and retrieve a user', async () => {
     const repository = new UserRepository();
     const user = await User.create({
       email: new Email('test@example.com'),
       password: await Password.create('SecurePass123!'),
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
     });
-    
+
     await repository.save(user);
     const retrieved = await repository.findById(user.getId());
-    
+
     expect(retrieved).not.toBeNull();
     expect(retrieved?.getEmail().getValue()).toBe('test@example.com');
   });
@@ -634,8 +659,13 @@ describe('User Entity Properties', () => {
         async (emailStr, passwordStr, firstName, lastName) => {
           const email = new Email(emailStr);
           const password = await Password.create(passwordStr);
-          const user = await User.create({ email, password, firstName, lastName });
-          
+          const user = await User.create({
+            email,
+            password,
+            firstName,
+            lastName,
+          });
+
           const retrievedEmail = user.getEmail();
           return retrievedEmail.getValue() === emailStr;
         }
@@ -656,31 +686,30 @@ import fs from 'fs';
 describe('Architecture Rules', () => {
   it('domain layer should not import from infrastructure', async () => {
     const domainFiles = await glob('src/domain/**/*.ts');
-    
+
     for (const file of domainFiles) {
       const content = fs.readFileSync(file, 'utf-8');
-      const hasInfraImport = content.includes("from '@/infrastructure/") ||
-                            content.includes("from '@prisma/client'") ||
-                            content.includes("from 'stripe'");
-      
+      const hasInfraImport =
+        content.includes("from '@/infrastructure/") ||
+        content.includes("from '@prisma/client'") ||
+        content.includes("from 'stripe'");
+
       expect(hasInfraImport).toBe(false);
     }
   });
-  
+
   it('use cases should only import from domain', async () => {
     const useCaseFiles = await glob('src/application/use-cases/**/*.ts');
-    
+
     for (const file of useCaseFiles) {
       const content = fs.readFileSync(file, 'utf-8');
       const hasInfraImport = content.includes("from '@/infrastructure/");
-      
+
       expect(hasInfraImport).toBe(false);
     }
   });
 });
 ```
-
-
 
 ## Migration Strategy
 
@@ -694,6 +723,7 @@ describe('Architecture Rules', () => {
 4. Create type mappers in infrastructure layer
 
 **Deliverables:**
+
 - `src/domain/user/repositories/IUserRepository.ts`
 - `src/domain/workspace/repositories/IWorkspaceRepository.ts`
 - `src/domain/billing/types.ts` (domain enums)
@@ -707,6 +737,7 @@ describe('Architecture Rules', () => {
 4. Verify all tests pass
 
 **Deliverables:**
+
 - Refactored use cases with interface dependencies
 - Updated test files with mocks
 - Test coverage maintained or improved
@@ -721,6 +752,7 @@ describe('Architecture Rules', () => {
 4. Create test container for testing
 
 **Deliverables:**
+
 - `src/infrastructure/di/container.ts`
 - `src/infrastructure/di/test-container.ts`
 - Container documentation
@@ -733,6 +765,7 @@ describe('Architecture Rules', () => {
 4. Verify backward compatibility
 
 **Deliverables:**
+
 - Refactored API routes using DI
 - Updated integration tests
 - API compatibility verified
@@ -747,6 +780,7 @@ describe('Architecture Rules', () => {
 4. Update tests
 
 **Deliverables:**
+
 - Repository interfaces for all domains
 - Updated use cases and tests
 - All tests passing
@@ -759,6 +793,7 @@ describe('Architecture Rules', () => {
 4. Update DI container with service bindings
 
 **Deliverables:**
+
 - Domain service interfaces
 - Updated infrastructure services
 - Updated DI container
@@ -773,6 +808,7 @@ describe('Architecture Rules', () => {
 4. Verify all tests pass
 
 **Deliverables:**
+
 - Reorganized infrastructure layer
 - Updated imports
 - All tests passing
@@ -785,6 +821,7 @@ describe('Architecture Rules', () => {
 4. Performance testing
 
 **Deliverables:**
+
 - Clean `src/lib/` directory
 - Updated exports
 - Performance benchmarks
@@ -799,6 +836,7 @@ describe('Architecture Rules', () => {
 4. Create architecture tests
 
 **Deliverables:**
+
 - `src/lib/testing/factories/` (entity factories)
 - `src/lib/testing/mocks/` (mock repositories)
 - `src/lib/testing/generators/` (PBT generators)
@@ -813,6 +851,7 @@ describe('Architecture Rules', () => {
 5. Final review and sign-off
 
 **Deliverables:**
+
 - Updated documentation
 - ESLint architecture rules
 - Migration guide

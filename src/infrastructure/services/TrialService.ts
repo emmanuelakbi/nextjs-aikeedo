@@ -21,7 +21,10 @@ export interface TrialStatus {
 }
 
 export class TrialServiceError extends Error {
-  constructor(message: string, public readonly code?: string) {
+  constructor(
+    message: string,
+    public readonly code?: string
+  ) {
     super(message);
     this.name = 'TrialServiceError';
   }
@@ -43,7 +46,10 @@ export class TrialService {
       });
 
       if (!workspace) {
-        throw new TrialServiceError('Workspace not found', 'WORKSPACE_NOT_FOUND');
+        throw new TrialServiceError(
+          'Workspace not found',
+          'WORKSPACE_NOT_FOUND'
+        );
       }
 
       // Check if workspace has already used trial
@@ -57,9 +63,11 @@ export class TrialService {
       }
 
       // Check if workspace has an active subscription
-      if (workspace.subscription && 
-          (workspace.subscription.status === 'ACTIVE' || 
-           workspace.subscription.status === 'TRIALING')) {
+      if (
+        workspace.subscription &&
+        (workspace.subscription.status === 'ACTIVE' ||
+          workspace.subscription.status === 'TRIALING')
+      ) {
         return {
           isEligible: false,
           reason: 'Workspace already has an active subscription',
@@ -95,7 +103,11 @@ export class TrialService {
         where: { workspaceId },
       });
 
-      if (!subscription || subscription.status !== 'TRIALING' || !subscription.trialEnd) {
+      if (
+        !subscription ||
+        subscription.status !== 'TRIALING' ||
+        !subscription.trialEnd
+      ) {
         return {
           isActive: false,
           daysRemaining: null,
@@ -152,7 +164,7 @@ export class TrialService {
     const now = new Date();
     const diffTime = trialEnd.getTime() - now.getTime();
     const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     return daysRemaining > 0 ? daysRemaining : 0;
   }
 }

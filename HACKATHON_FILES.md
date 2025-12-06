@@ -5,7 +5,9 @@ This document lists all the essential files for your Kiroween hackathon submissi
 ## 🎯 Core Submission Files
 
 ### 1. **KIROWEEN_SUBMISSION.md** (11K)
+
 Your main submission write-up explaining:
+
 - The Frankenstein project concept
 - How you stitched together multiple AI providers
 - Enterprise architecture implementation
@@ -13,24 +15,31 @@ Your main submission write-up explaining:
 - How Kiro helped you build this
 
 ### 2. **.kiro/README.md** (10K)
+
 Documentation explaining how you used Kiro:
+
 - Specs for structured development
 - Steering files for guidance
 - Vibe coding with AI assistance
 - How Kiro accelerated development
 
 ### 3. **SUBMISSION_CHECKLIST.md** (14K)
+
 Complete checklist for submitting to Devpost:
+
 - All required information
 - Screenshots and demo video checklist
 - Deployment verification
 - Final submission steps
 
 ### 4. **LICENSE** (1K)
+
 MIT license (required for hackathon)
 
 ### 5. **DEPLOYMENT_GUIDE.md** (6.3K)
+
 Guide for deploying the app:
+
 - Vercel deployment
 - Railway deployment
 - Docker deployment
@@ -39,14 +48,18 @@ Guide for deploying the app:
 ## 📚 Supporting Documentation
 
 ### 6. **README.md** (10K)
+
 Main project documentation:
+
 - Project overview
 - Features list
 - Technology stack
 - Architecture overview
 
 ### 7. **QUICK_START.md** (4.1K)
+
 Easy setup guide for judges/users:
+
 - Prerequisites
 - Installation steps
 - Database setup
@@ -56,6 +69,7 @@ Easy setup guide for judges/users:
 ## 🎬 Demo Video
 
 You'll need to create a 3-minute demo video showing:
+
 1. **Introduction** (30s) - What is AIKEEDO?
 2. **Key Features** (90s) - Multi-AI providers, billing, workspaces
 3. **Kiro Usage** (60s) - How Kiro helped build it
@@ -75,7 +89,8 @@ When submitting to Devpost, you'll need:
 
 ✅ **What it does**: Multi-tenant AI platform with unified API for 100+ models
 
-✅ **How we built it**: 
+✅ **How we built it**:
+
 - Next.js 14 with TypeScript
 - Clean Architecture + DDD
 - Multiple AI provider SDKs
@@ -83,31 +98,36 @@ When submitting to Devpost, you'll need:
 - PostgreSQL + Prisma
 - Built with Kiro AI assistance
 
-✅ **Challenges**: 
+✅ **Challenges**:
+
 - Integrating multiple AI providers with different APIs
 - Complex credit system and billing
 - Race conditions in credit allocation
 - Multi-tenant architecture
 
 ✅ **Accomplishments**:
+
 - Unified interface for 100+ AI models
 - Enterprise-grade architecture
 - Complete billing system
 - Admin tools and analytics
 
 ✅ **What we learned**:
+
 - How to integrate multiple AI providers
 - Clean Architecture in practice
 - Using Kiro for rapid development
 - Building production-ready SaaS
 
 ✅ **What's next**:
+
 - More AI providers
 - Advanced analytics
 - Team collaboration features
 - Mobile apps
 
 ✅ **Built With**:
+
 - nextjs
 - typescript
 - react
@@ -123,6 +143,7 @@ When submitting to Devpost, you'll need:
 - kiro
 
 ✅ **Links**:
+
 - GitHub: https://github.com/emmanuelakbi/nextjs-aikeedo
 - Demo Video: [Your YouTube/Loom link]
 - Live Demo: [Your deployment URL if available]
@@ -161,6 +182,7 @@ When submitting to Devpost, you'll need:
 ## 📞 Support
 
 For questions about the submission:
+
 - Check SUBMISSION_CHECKLIST.md for detailed steps
 - Review KIROWEEN_SUBMISSION.md for project details
 - See .kiro/README.md for Kiro usage documentation

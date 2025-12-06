@@ -127,9 +127,9 @@ export async function sendRefundConfirmation(
   }
 ): Promise<void> {
   const appName = data.appName || process.env.APP_NAME || 'AIKEEDO';
-  
+
   const subject = `Refund Confirmation - ${appName}`;
-  
+
   const html = `
     <h2>Refund Processed</h2>
     <p>Hi ${data.firstName},</p>
@@ -144,7 +144,7 @@ export async function sendRefundConfirmation(
     <p>If you have any questions, please contact our support team.</p>
     <p>Best regards,<br>${appName} Team</p>
   `;
-  
+
   const text = `
 Refund Processed
 
@@ -164,7 +164,7 @@ If you have any questions, please contact our support team.
 Best regards,
 ${appName} Team
   `;
-  
+
   await sendEmail({ to, subject, html, text });
 }
 
@@ -188,9 +188,9 @@ export async function sendOverageNotification(
   }
 ): Promise<void> {
   const appName = data.appName || process.env.APP_NAME || 'AIKEEDO';
-  
+
   const subject = `Usage Overage Alert - ${data.workspaceName}`;
-  
+
   const html = `
     <h2>Usage Overage Alert</h2>
     <p>Hi ${data.firstName},</p>
@@ -206,7 +206,7 @@ export async function sendOverageNotification(
     <p>To avoid future overage charges, consider upgrading to a higher plan or monitoring your usage more closely.</p>
     <p>Best regards,<br>${appName} Team</p>
   `;
-  
+
   const text = `
 Usage Overage Alert
 
@@ -227,6 +227,6 @@ To avoid future overage charges, consider upgrading to a higher plan or monitori
 Best regards,
 ${appName} Team
   `;
-  
+
   await sendEmail({ to, subject, html, text });
 }

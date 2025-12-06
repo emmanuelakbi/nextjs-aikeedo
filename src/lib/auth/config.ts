@@ -52,19 +52,22 @@ export const authConfig: NextAuthConfig = {
             console.log('[AUTH] User not found for email:', email);
             return null;
           }
-          
+
           console.log('[AUTH] User found:', user.getId().getValue());
 
           // Verify password (don't validate complexity during login, just check hash)
           const bcrypt = await import('bcrypt');
-          const isValid = await bcrypt.compare(password, user.getPasswordHash());
+          const isValid = await bcrypt.compare(
+            password,
+            user.getPasswordHash()
+          );
 
           if (!isValid) {
             // Invalid password
             console.log('[AUTH] Invalid password for user:', email);
             return null;
           }
-          
+
           console.log('[AUTH] Password valid for user:', email);
 
           // Check if user is active
@@ -137,9 +140,8 @@ export const authConfig: NextAuthConfig = {
       if (session.user && token) {
         session.user.id = token.id as string;
         session.user.role = (token.role as 'USER' | 'ADMIN') || 'USER';
-        session.user.currentWorkspaceId = (token.currentWorkspaceId as
-          | string
-          | null) ?? null;
+        session.user.currentWorkspaceId =
+          (token.currentWorkspaceId as string | null) ?? null;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
       }

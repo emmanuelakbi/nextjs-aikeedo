@@ -829,7 +829,10 @@ export class AIServiceFactory {
     }
 
     // Get models from target provider with the same capability
-    const targetModels = await this.getModelsByProvider(targetProvider, capability);
+    const targetModels = await this.getModelsByProvider(
+      targetProvider,
+      capability
+    );
 
     if (targetModels.length === 0) {
       return null;

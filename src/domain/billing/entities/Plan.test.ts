@@ -120,7 +120,9 @@ describe('Plan Entity', () => {
         stripePriceId: 'price_test',
       });
 
-      expect(() => plan.update({ name: '' })).toThrow('Plan name cannot be empty');
+      expect(() => plan.update({ name: '' })).toThrow(
+        'Plan name cannot be empty'
+      );
     });
   });
 

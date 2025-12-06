@@ -49,13 +49,16 @@ export async function GET(request: NextRequest) {
     });
 
     // Group settings by category
-    const groupedSettings = settings.reduce((acc: any, setting: any) => {
-      if (!acc[setting.category]) {
-        acc[setting.category] = [];
-      }
-      acc[setting.category].push(setting);
-      return acc;
-    }, {} as Record<string, typeof settings>);
+    const groupedSettings = settings.reduce(
+      (acc: any, setting: any) => {
+        if (!acc[setting.category]) {
+          acc[setting.category] = [];
+        }
+        acc[setting.category].push(setting);
+        return acc;
+      },
+      {} as Record<string, typeof settings>
+    );
 
     return NextResponse.json({
       settings,

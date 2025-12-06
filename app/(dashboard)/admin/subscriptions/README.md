@@ -11,6 +11,7 @@ The Subscription Management interface provides tools for administrators to manag
 **Location**: `/admin/subscriptions`
 
 **Capabilities**:
+
 - View all subscriptions in a paginated table
 - Search by workspace name or owner email
 - Filter by status (active, trialing, canceled, past_due, etc.)
@@ -19,6 +20,7 @@ The Subscription Management interface provides tools for administrators to manag
 - Quick access to subscription details
 
 **Displayed Information**:
+
 - Workspace name
 - Owner name and email
 - Plan name and pricing
@@ -83,6 +85,7 @@ The Subscription Management interface provides tools for administrators to manag
 **Purpose**: Cancel a subscription immediately or at period end
 
 **Options**:
+
 1. **Cancel at Period End** (default)
    - Subscription remains active until current period ends
    - User retains access until renewal date
@@ -96,12 +99,14 @@ The Subscription Management interface provides tools for administrators to manag
    - Credits are removed
 
 **Parameters**:
+
 - `immediate` (boolean): Cancel immediately or at period end
 - `reason` (string, optional): Reason for cancellation
 
 **API Endpoint**: `POST /api/admin/subscriptions/:id/cancel`
 
 **Body**:
+
 ```json
 {
   "immediate": false,
@@ -114,17 +119,20 @@ The Subscription Management interface provides tools for administrators to manag
 **Purpose**: Reactivate a canceled subscription
 
 **Use Cases**:
+
 - User changed their mind
 - Cancellation was a mistake
 - Support resolution
 
 **Effects**:
+
 - Subscription status changes to active
 - Billing resumes on next cycle
 - Credits are restored
 - User regains full access
 
 **Restrictions**:
+
 - Can only reactivate canceled subscriptions
 - Must be done before subscription fully expires
 - Stripe subscription must still exist
@@ -136,6 +144,7 @@ The Subscription Management interface provides tools for administrators to manag
 **Purpose**: Review all payments and invoices for a subscription
 
 **Information Shown**:
+
 - Invoice ID and Stripe invoice ID
 - Amount and currency
 - Status (paid, open, void, uncollectible)
@@ -152,11 +161,13 @@ The Subscription Management interface provides tools for administrators to manag
 **Location**: `/admin/subscriptions` (via payment history)
 
 **Parameters**:
+
 - Invoice ID
 - Amount (full or partial)
 - Reason (required)
 
 **Effects**:
+
 - Refund is processed via Stripe
 - Invoice status is updated
 - Credits may be adjusted
@@ -167,42 +178,49 @@ The Subscription Management interface provides tools for administrators to manag
 ## Subscription Statuses
 
 ### Active
+
 - Subscription is active and in good standing
 - User has full access
 - Billing is current
 - Credits are allocated
 
 ### Trialing
+
 - Subscription is in trial period
 - User has full access
 - No charges yet
 - Trial credits allocated
 
 ### Canceled
+
 - Subscription has been canceled
 - May still be active until period end
 - No future billing
 - Credits expire at period end
 
 ### Past Due
+
 - Payment failed
 - User may have limited access
 - Retry attempts in progress
 - Requires payment method update
 
 ### Unpaid
+
 - Multiple payment failures
 - Subscription is suspended
 - User has no access
 - Requires manual intervention
 
 ### Incomplete
+
 - Initial payment failed
 - Subscription never activated
 - User has no access
 - Requires payment completion
 
 ### Incomplete Expired
+
 - Initial payment failed and expired
 - Subscription is canceled
 - User has no access
@@ -213,6 +231,7 @@ The Subscription Management interface provides tools for administrators to manag
 ### Search
 
 Search subscriptions by:
+
 - Workspace name (partial match)
 - Owner email (partial match)
 - Owner name (partial match)
@@ -220,6 +239,7 @@ Search subscriptions by:
 ### Filters
 
 **Status Filter**:
+
 - Active - Currently active subscriptions
 - Trialing - Subscriptions in trial period
 - Canceled - Canceled subscriptions
@@ -230,6 +250,7 @@ Search subscriptions by:
 ### Sorting
 
 Sort subscriptions by:
+
 - Created date (newest/oldest first)
 - Renewal date (soonest/latest first)
 - Status (alphabetical)
@@ -244,6 +265,7 @@ GET /api/admin/subscriptions
 ```
 
 **Query Parameters**:
+
 - `page` (number): Page number (default: 1)
 - `limit` (number): Results per page (default: 20)
 - `search` (string): Search term for workspace/owner
@@ -252,6 +274,7 @@ GET /api/admin/subscriptions
 - `sortOrder` (string): Sort direction (asc, desc)
 
 **Response**:
+
 ```json
 {
   "subscriptions": [
@@ -294,6 +317,7 @@ GET /api/admin/subscriptions/:id
 ```
 
 **Response**:
+
 ```json
 {
   "id": "sub-123",
@@ -319,6 +343,7 @@ POST /api/admin/subscriptions/:id/cancel
 ```
 
 **Body**:
+
 ```json
 {
   "immediate": false,
@@ -327,6 +352,7 @@ POST /api/admin/subscriptions/:id/cancel
 ```
 
 **Response**:
+
 ```json
 {
   "id": "sub-123",
@@ -343,6 +369,7 @@ POST /api/admin/subscriptions/:id/reactivate
 ```
 
 **Response**:
+
 ```json
 {
   "id": "sub-123",
@@ -359,6 +386,7 @@ POST /api/admin/subscriptions/:id/reactivate
 **Location**: Subscription details page
 
 **Information**:
+
 - All invoices for the subscription
 - Payment status and dates
 - Amounts and currency
@@ -367,6 +395,7 @@ POST /api/admin/subscriptions/:id/reactivate
 ### Failed Payments
 
 **Handling**:
+
 1. Stripe automatically retries failed payments
 2. Subscription status changes to `past_due`
 3. User receives email notification
@@ -374,6 +403,7 @@ POST /api/admin/subscriptions/:id/reactivate
 5. Admin can contact user to update payment method
 
 **Resolution**:
+
 - User updates payment method in their account
 - Stripe retries payment automatically
 - Subscription returns to `active` status
@@ -384,6 +414,7 @@ POST /api/admin/subscriptions/:id/reactivate
 **Location**: `/admin/subscriptions` or payment history
 
 **Process**:
+
 1. Navigate to subscription with payment to refund
 2. Find the invoice in payment history
 3. Click "Refund" button
@@ -397,6 +428,7 @@ POST /api/admin/subscriptions/:id/reactivate
 **API Endpoint**: `POST /api/admin/refunds`
 
 **Body**:
+
 ```json
 {
   "invoiceId": "inv-123",
@@ -417,6 +449,7 @@ POST /api/admin/subscriptions/:id/reactivate
 ### Manual Adjustment
 
 If credit allocation fails or needs correction:
+
 1. Navigate to workspace details
 2. Use "Adjust Credits" feature
 3. Add missing credits
@@ -427,18 +460,22 @@ If credit allocation fails or needs correction:
 ## Security Considerations
 
 ### Access Control
+
 - Only admins can access subscription management
 - All endpoints protected by `requireAdmin()` middleware
 - Subscription owners cannot see admin functions
 
 ### Audit Logging
+
 All subscription management actions are logged:
+
 - Subscription cancellation (immediate or at period end)
 - Subscription reactivation
 - Refund processing
 - Payment status changes
 
 ### Payment Security
+
 - Payment data is handled by Stripe (PCI compliant)
 - No credit card data is stored in database
 - Stripe webhook validates payment events
@@ -503,6 +540,7 @@ npm test src/app/api/admin/subscriptions/route.test.ts
 ```
 
 **Test Coverage**:
+
 - List subscriptions with pagination
 - Search and filter functionality
 - Subscription cancellation

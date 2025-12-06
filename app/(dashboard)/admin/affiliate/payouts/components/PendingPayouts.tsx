@@ -12,7 +12,9 @@ interface PendingPayoutsProps {
   payouts: any[];
 }
 
-export default function PendingPayouts({ payouts: initialPayouts }: PendingPayoutsProps) {
+export default function PendingPayouts({
+  payouts: initialPayouts,
+}: PendingPayoutsProps) {
   const [payouts, setPayouts] = useState(initialPayouts);
   const [processing, setProcessing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +87,11 @@ export default function PendingPayouts({ payouts: initialPayouts }: PendingPayou
   };
 
   const handleProcess = async (payoutId: string) => {
-    if (!confirm('Are you sure you want to process this payout? This will mark it as paid.')) {
+    if (
+      !confirm(
+        'Are you sure you want to process this payout? This will mark it as paid.'
+      )
+    ) {
       return;
     }
 
@@ -120,9 +126,7 @@ export default function PendingPayouts({ payouts: initialPayouts }: PendingPayou
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
           No pending payouts
         </h3>
-        <p className="text-gray-600">
-          All payout requests have been processed
-        </p>
+        <p className="text-gray-600">All payout requests have been processed</p>
       </div>
     );
   }
@@ -147,9 +151,12 @@ export default function PendingPayouts({ payouts: initialPayouts }: PendingPayou
                   <div className="text-2xl">👤</div>
                   <div>
                     <h3 className="font-semibold text-gray-900">
-                      {payout.affiliate.user.firstName} {payout.affiliate.user.lastName}
+                      {payout.affiliate.user.firstName}{' '}
+                      {payout.affiliate.user.lastName}
                     </h3>
-                    <p className="text-sm text-gray-600">{payout.affiliate.user.email}</p>
+                    <p className="text-sm text-gray-600">
+                      {payout.affiliate.user.email}
+                    </p>
                   </div>
                 </div>
 
@@ -162,7 +169,9 @@ export default function PendingPayouts({ payouts: initialPayouts }: PendingPayou
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-1">Method</p>
-                    <p className="text-sm font-medium text-gray-900">{payout.method}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {payout.method}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-1">Affiliate Code</p>
@@ -172,7 +181,9 @@ export default function PendingPayouts({ payouts: initialPayouts }: PendingPayou
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-1">Requested</p>
-                    <p className="text-sm text-gray-900">{formatDate(payout.createdAt)}</p>
+                    <p className="text-sm text-gray-900">
+                      {formatDate(payout.createdAt)}
+                    </p>
                   </div>
                 </div>
 

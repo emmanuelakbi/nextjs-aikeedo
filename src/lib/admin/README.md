@@ -164,12 +164,7 @@ const updateUserRole = withAuditLog(
 );
 
 // Usage
-await updateUserRole(
-  session.user.id,
-  userId,
-  { role: 'ADMIN' },
-  request
-);
+await updateUserRole(session.user.id, userId, { role: 'ADMIN' }, request);
 ```
 
 ### Querying Audit Logs
@@ -195,6 +190,7 @@ Use a consistent naming convention for audit log actions:
 - `{resource}.{field}.{action}` - e.g., `user.role.change`, `workspace.credits.adjust`
 
 Examples:
+
 - `user.create`
 - `user.suspend`
 - `user.activate`
@@ -218,10 +214,7 @@ try {
   await requireAdmin();
 } catch (error) {
   if (error instanceof AdminAccessDeniedError) {
-    return Response.json(
-      { error: error.message },
-      { status: 403 }
-    );
+    return Response.json({ error: error.message }, { status: 403 });
   }
   throw error;
 }

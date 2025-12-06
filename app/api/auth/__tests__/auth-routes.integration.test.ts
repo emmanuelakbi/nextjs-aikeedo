@@ -115,7 +115,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await registerPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(201);
@@ -168,7 +169,8 @@ describe('Authentication API Routes - Integration Tests', () => {
       });
 
       const response = await registerPOST(secondRequest);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(409);
@@ -190,7 +192,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await registerPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(400);
@@ -210,7 +213,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await registerPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(400);
@@ -231,7 +235,8 @@ describe('Authentication API Routes - Integration Tests', () => {
       });
 
       const response = await registerPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
       createdUserId = data.data.userId;
       createdWorkspaceId = data.data.workspaceId;
 
@@ -254,7 +259,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await verifyEmailPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(200);
@@ -280,7 +286,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await verifyEmailPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(400);
@@ -310,7 +317,8 @@ describe('Authentication API Routes - Integration Tests', () => {
         token,
       });
       const response = await verifyEmailPOST(secondRequest);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert - Should succeed without error
       expect(response.status).toBe(200);
@@ -416,7 +424,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await requestResetPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert - Should return success to prevent email enumeration
       expect(response.status).toBe(200);
@@ -433,7 +442,8 @@ describe('Authentication API Routes - Integration Tests', () => {
 
       // Act
       const response = await resetPasswordPOST(request);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(400);
@@ -463,7 +473,8 @@ describe('Authentication API Routes - Integration Tests', () => {
       });
 
       const response = await resetPasswordPOST(resetPasswordRequest);
-      if (!response) throw new Error("No response"); const data = await getResponseJson(response!);
+      if (!response) throw new Error('No response');
+      const data = await getResponseJson(response!);
 
       // Assert
       expect(response.status).toBe(400);
