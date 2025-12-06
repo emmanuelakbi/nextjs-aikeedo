@@ -52,12 +52,12 @@ export class RegisterUserUseCase {
     // Save user to database
     const savedUser = await this.userRepository.save(user);
 
-    // Create default "Personal" workspace
+    // Create default "Personal" workspace with free credits for hackathon
     // Requirements: 8.1
     const workspace = Workspace.create({
       name: 'Personal',
       ownerId: savedUser.getId().getValue(),
-      creditCount: 0,
+      creditCount: 10000, // Free credits for hackathon demo
       isTrialed: false,
     });
 
