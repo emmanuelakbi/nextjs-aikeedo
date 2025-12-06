@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 
@@ -9,7 +9,7 @@ import prisma from '@/lib/db/prisma';
  * - Monitor system health
  */
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await requireAdmin();
 
