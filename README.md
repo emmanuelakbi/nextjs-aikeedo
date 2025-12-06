@@ -1,6 +1,13 @@
 # AIKEEDO Next.js Foundation
 
-This is the Next.js 14 foundation module for AIKEEDO, establishing the core infrastructure including authentication, user management, workspace multi-tenancy, and API patterns.
+A modern, enterprise-grade AI services platform built with Next.js 14, featuring multi-tenant workspaces, integrated AI providers, and a comprehensive billing system.
+
+## 🚀 Quick Start for Judges/Evaluators
+
+**New to this project?** Start here:
+- **[Judge Setup Guide](JUDGE_SETUP_GUIDE.md)** - 5-10 minute setup with verification checklist
+- **[Quick Start Guide](QUICK_START.md)** - Detailed setup instructions
+- **[Hackathon Submission](KIROWEEN_SUBMISSION.md)** - Project overview and Kiro usage
 
 ## 📚 Documentation
 

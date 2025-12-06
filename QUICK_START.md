@@ -27,17 +27,23 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and configure:
+Edit `.env` and configure these **REQUIRED** variables:
 
-**Required:**
-- `DATABASE_URL` - PostgreSQL connection (see step 4)
-- `NEXTAUTH_SECRET` - Generate with: `openssl rand -base64 32`
-- `NEXTAUTH_URL` - `http://localhost:3000`
-- `OPENROUTER_API_KEY` - Get free key from https://openrouter.ai/keys
+```bash
+# Database (use this exact value for Docker setup)
+DATABASE_URL="postgresql://aikeedo:password@localhost:5433/aikeedo_dev"
+
+# Auth (generate a secure secret)
+NEXTAUTH_SECRET="your-secret-here"  # Generate with: openssl rand -base64 32
+NEXTAUTH_URL="http://localhost:3000"
+
+# OpenRouter API (FREE - get your key from https://openrouter.ai/keys)
+OPENROUTER_API_KEY="your-openrouter-key-here"
+```
 
 **Optional (for full features):**
-- SMTP settings for email
-- Stripe keys for payments
+- SMTP settings for email verification
+- Stripe keys for payment processing
 - AWS S3 for file storage
 
 ## 4. Start PostgreSQL Database
@@ -46,16 +52,11 @@ Edit `.env` and configure:
 # Start the database
 docker-compose -f docker-compose.test.yml up -d
 
-# Check it's running
+# Verify it's running
 docker ps | grep aikeedo-nextjs-test-db
 ```
 
-The database will be available at `localhost:5433`
-
-Your `DATABASE_URL` should be:
-```
-DATABASE_URL="postgresql://aikeedo:password@localhost:5433/aikeedo_dev"
-```
+The database will be available at `localhost:5433` with credentials `aikeedo:password`
 
 ## 5. Set Up Database Schema
 
@@ -63,26 +64,34 @@ DATABASE_URL="postgresql://aikeedo:password@localhost:5433/aikeedo_dev"
 # Generate Prisma client
 npm run db:generate
 
-# Run migrations
+# Run migrations to create tables
 npm run db:migrate
 ```
 
-## 6. Add Credits to Your Workspace
+## 6. Seed Database (RECOMMENDED)
 
-After registering, add credits to test the AI features:
+**Option A: Use seed script (includes test users with credits)**
 
 ```bash
-# List all workspaces
-docker exec aikeedo-nextjs-test-db psql -U aikeedo -d aikeedo_dev -c "SELECT id, name, \"creditCount\" FROM workspaces;"
-
-# Add 10,000 credits to all workspaces
-docker exec aikeedo-nextjs-test-db psql -U aikeedo -d aikeedo_dev -c "UPDATE workspaces SET \"creditCount\" = 10000;"
+npm run db:seed
 ```
 
-Or use the script:
+This creates:
+- Admin user: `admin@aikeedo.com` / `password123` (1,000 credits)
+- Test user: `user@example.com` / `password123` (100 credits)
+- Sample billing plans
+
+**Option B: Register your own account**
+
+If you register a new account, you'll need to manually add credits:
+
 ```bash
-chmod +x scripts/add-credits.sh
-./scripts/add-credits.sh --all 10000
+# Add 10,000 credits to all workspaces
+npm run credits:add -- --all 10000
+
+# Or add to a specific workspace
+npm run credits:list  # List workspace IDs
+npm run credits:add -- <workspace-id> 10000
 ```
 
 ## 7. Start the Development Server
@@ -93,28 +102,43 @@ npm run dev
 
 Open http://localhost:3000 in your browser!
 
-## 8. Register and Start Using
+## 8. Login and Start Using
 
-1. Click "Register" and create an account
-2. Log in with your credentials
-3. Go to the Chat page
-4. Select a FREE model (Amazon Nova 2 Lite is default)
-5. Start chatting!
+**If you used the seed script:**
+1. Login with `admin@aikeedo.com` / `password123`
+2. Go to the Chat page
+3. Select a FREE model (Amazon Nova 2 Lite is default)
+4. Start chatting!
+
+**If you registered your own account:**
+1. Login with your credentials
+2. Add credits using the command in step 6
+3. Log out and log back in (to refresh session)
+4. Go to the Chat page and start chatting!
 
 ## Free AI Models Available
 
-All these models are FREE via OpenRouter:
-- **Amazon Nova 2 Lite** (300K context) - Default
+All these models are **100% FREE** via OpenRouter (no credit card required):
+- **Amazon Nova 2 Lite** (300K context) - Default, best for general chat
 - **Arcee Trinity Mini** - Fast and efficient
-- **TNG R1T Chimera** - Experimental
-- **Allen AI OLMo 3 32B Think** - Reasoning model
+- **TNG R1T Chimera** - Experimental model
+- **Allen AI OLMo 3 32B Think** - Advanced reasoning
+
+## Quick Test
+
+To verify everything works:
+
+1. Login with test account: `admin@aikeedo.com` / `password123`
+2. Navigate to Chat page
+3. Type a message like "Hello, how are you?"
+4. You should see a streaming response from the AI
 
 ## Troubleshooting
 
 ### Database Connection Issues
 ```bash
 # Check if database is running
-docker ps | grep postgres
+docker ps | grep aikeedo-nextjs-test-db
 
 # Restart database
 docker-compose -f docker-compose.test.yml restart
@@ -123,7 +147,8 @@ docker-compose -f docker-compose.test.yml restart
 docker-compose -f docker-compose.test.yml logs
 ```
 
-### No Workspace Selected Error
+### "No workspace selected" Error
+This happens if the user's workspace isn't set. Fix:
 ```bash
 # Fix workspace assignment
 docker exec aikeedo-nextjs-test-db psql -U aikeedo -d aikeedo_dev -c "
@@ -135,13 +160,23 @@ WHERE w.\"ownerId\" = u.id
 "
 ```
 
-Then log out and log back in.
+Then **log out and log back in** to refresh your session.
 
-### Insufficient Credits Error
+### "Insufficient credits" Error
 ```bash
-# Add credits to all workspaces
+# Add 10,000 credits to all workspaces
+npm run credits:add -- --all 10000
+
+# Or use Docker directly
 docker exec aikeedo-nextjs-test-db psql -U aikeedo -d aikeedo_dev -c "UPDATE workspaces SET \"creditCount\" = 10000;"
 ```
+
+Then **log out and log back in** to refresh your session.
+
+### OpenRouter API Errors
+- Verify your `OPENROUTER_API_KEY` is set in `.env`
+- Get a free key from https://openrouter.ai/keys (no credit card required)
+- Check the terminal for detailed error messages
 
 ## Useful Commands
 
