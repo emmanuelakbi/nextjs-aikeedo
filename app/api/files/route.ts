@@ -24,7 +24,7 @@ import { ZodError } from 'zod';
 export async function GET(request: NextRequest) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     // Get workspace ID from header
     const workspaceId = request.headers.get('x-workspace-id');

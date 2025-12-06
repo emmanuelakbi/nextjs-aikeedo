@@ -25,7 +25,7 @@ export async function GET(
 ) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     // Fetch messages
     const messageRepository = new MessageRepository();
@@ -97,7 +97,7 @@ export async function POST(
 ) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     // Parse request body
     const body = await request.json();

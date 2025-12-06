@@ -27,7 +27,7 @@ export async function GET(
 ) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     // Validate input
     const command = GetConversationCommandSchema.parse({
@@ -146,7 +146,7 @@ export async function DELETE(
 ) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     // Validate input
     const command = DeleteConversationCommandSchema.parse({

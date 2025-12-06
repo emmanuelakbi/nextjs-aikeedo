@@ -25,7 +25,7 @@ export async function GET(
 ) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     const fileId = params.id;
 
@@ -129,7 +129,7 @@ export async function DELETE(
 ) {
   try {
     // Require authentication
-    const _currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     const fileId = params.id;
 
