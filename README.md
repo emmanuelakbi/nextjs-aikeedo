@@ -1,96 +1,73 @@
-# AIKEEDO Next.js Foundation
+# AIKEEDO - AI Services Platform
 
 A modern, enterprise-grade AI services platform built with Next.js 14, featuring multi-tenant workspaces, integrated AI providers, and a comprehensive billing system.
 
-## 🚀 Quick Start for Judges/Evaluators
-
-**New to this project?** Start here:
-- **[Judge Setup Guide](JUDGE_SETUP_GUIDE.md)** - 5-10 minute setup with verification checklist
-- **[Quick Start Guide](QUICK_START.md)** - Detailed setup instructions
-- **[Hackathon Submission](KIROWEEN_SUBMISSION.md)** - Project overview and Kiro usage
-
-## 📚 Documentation
-
-Comprehensive documentation is available in the `docs/` directory:
-
-- **[Setup Guide](docs/SETUP.md)** - Complete installation and configuration instructions
-- **[Configuration Guide](docs/CONFIGURATION.md)** - Customize the platform without code changes
-- **[Configuration Quick Reference](config/QUICK_REFERENCE.md)** - Quick reference for common tasks
-- **[API Documentation](docs/API.md)** - Detailed API endpoint reference
-- **[Environment Variables](docs/ENVIRONMENT.md)** - All configuration options explained
-- **[Architecture](docs/ARCHITECTURE.md)** - System design and patterns
-
-## ⚙️ Configuration System
-
-The platform is fully configurable without code changes:
-
-```bash
-# View current configuration
-npm run config:view
-
-# Create custom configuration
-npm run config:init
-
-# Validate configuration
-npm run config:validate
-```
-
-**What you can configure:**
-- Feature flags (enable/disable features)
-- Credit rates and pricing
-- Subscription plans
-- Affiliate program settings
-- Rate limits
-- AI provider settings
-- Branding and UI
-- Security settings
-- And much more...
-
-**Quick Links:**
-- [Configuration Guide](docs/CONFIGURATION.md) - Complete customization guide
-- [Quick Reference](config/QUICK_REFERENCE.md) - Common tasks
-- [Configuration Checklist](CONFIGURATION_CHECKLIST.md) - Deployment checklist
-- [Reusable Codebase Summary](REUSABLE_CODEBASE_SUMMARY.md) - Implementation overview
-
-## 🚀 Quick Start
+## 🚀 Quick Setup (5 Minutes)
 
 ### Prerequisites
-
 - Node.js 18+
-- PostgreSQL database
-- npm or yarn
+- Docker (for PostgreSQL)
+- Git
 
-### Installation
-
-1. **Install dependencies:**
+### Installation Steps
 
 ```bash
+# 1. Clone and install
+git clone https://github.com/emmanuelakbi/nextjs-aikeedo.git
+cd nextjs-aikeedo
 npm install
-```
 
-2. **Set up environment variables:**
-
-```bash
+# 2. Configure environment
 cp .env.example .env
-# Edit .env with your configuration (see docs/ENVIRONMENT.md for details)
 ```
 
-3. **Set up the database:**
+Edit `.env` with these **3 required variables**:
 
 ```bash
+DATABASE_URL="postgresql://aikeedo:password@localhost:5433/aikeedo_dev"
+NEXTAUTH_SECRET="your-secret-here"  # Generate: openssl rand -base64 32
+OPENROUTER_API_KEY="your-key-here"  # FREE from https://openrouter.ai/keys
+```
+
+```bash
+# 3. Start database
+docker-compose -f docker-compose.test.yml up -d
+
+# 4. Setup database
 npm run db:generate
 npm run db:migrate
-```
+npm run db:seed  # Creates test users with credits
 
-4. **Run the development server:**
-
-```bash
+# 5. Start application
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+### Test It Out
 
-For detailed setup instructions, see [docs/SETUP.md](docs/SETUP.md).
+1. Open http://localhost:3000
+2. Login: `admin@aikeedo.com` / `password123`
+3. Go to Chat page
+4. Select a FREE model (Amazon Nova 2 Lite)
+5. Start chatting with AI!
+
+**New users automatically get 10,000 free credits** - perfect for testing!
+
+## ✨ Key Features
+
+- **Multi-AI Provider Integration** - OpenAI, Anthropic, Google, Mistral via unified interface
+- **Multi-Tenant Workspaces** - Isolated resources and credit allocations
+- **Credit-Based Billing** - Flexible subscription plans with Stripe integration
+- **Enterprise Features** - Affiliate program, admin dashboard, audit logging
+- **Clean Architecture** - Domain-Driven Design with clear layer separation
+- **Free AI Models** - Test with 100% free models via OpenRouter (no credit card)
+
+## 📚 Documentation
+
+- **[Hackathon Submission](KIROWEEN_SUBMISSION.md)** - Project overview and Kiro usage
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and patterns
+- **[API Documentation](docs/API.md)** - Complete API reference
+- **[Configuration](docs/CONFIGURATION.md)** - Customize without code changes
+- **[Environment Variables](docs/ENVIRONMENT.md)** - All configuration options
 
 ## 🛠 Tech Stack
 
