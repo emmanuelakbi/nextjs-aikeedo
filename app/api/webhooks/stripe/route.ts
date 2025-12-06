@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Prisma } from '@prisma/client';
 import { headers } from 'next/headers';
+import type { Prisma } from '@prisma/client';
 import { stripeService } from '@/infrastructure/services/StripeService';
+import type { Prisma } from '@prisma/client';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
+import type { Prisma } from '@prisma/client';
 import Stripe from 'stripe';
+import type { Prisma } from '@prisma/client';
 
 /**
  * POST /api/webhooks/stripe
@@ -170,7 +176,7 @@ async function handleCheckoutSessionCompleted(
   );
 
   // FIX: Use transaction with upsert to handle race condition
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const customerId =
       typeof stripeSubscription.customer === 'string'
         ? stripeSubscription.customer
@@ -351,7 +357,7 @@ async function handleSubscriptionUpdated(
 
   while (retries < maxRetries) {
     try {
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Get current subscription with version
         const current = await tx.subscription.findUnique({
           where: { stripeSubscriptionId: subscription.id },
@@ -479,7 +485,7 @@ async function handlePaymentIntentSucceeded(
 
   // FIX: Use transaction with unique constraint to prevent race condition
   try {
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Try to create transaction record first (will fail if duplicate due to unique constraint)
       const workspace = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -812,7 +818,7 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
   }
 
   // Deduct the credits back
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const workspace = await tx.workspace.findUnique({
       where: { id: transaction.workspaceId },
     });

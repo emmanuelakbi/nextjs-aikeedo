@@ -4,11 +4,14 @@
  */
 
 import type {
+import type { Prisma } from '@prisma/client';
   AffiliateRepository,
   ReferralRepository,
 } from '@/domain/affiliate/repositories/affiliate-repository';
 import { calculateCommission } from '@/domain/affiliate/services/commission-calculator';
+import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/db/prisma';
+import type { Prisma } from '@prisma/client';
 
 export interface ProcessCommissionInput {
   userId: string; // User who made the purchase
@@ -90,7 +93,7 @@ export class ProcessCommissionUseCase {
     });
 
     // Use transaction to ensure atomicity
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Update referral status
       await tx.referral.update({
         where: { id: referral.id },

@@ -4,9 +4,13 @@
  */
 
 import type { AffiliateRepository } from '@/domain/affiliate/repositories/affiliate-repository';
+import type { Prisma } from '@prisma/client';
 import type { PayoutRepository } from '@/domain/affiliate/repositories/payout-repository';
+import type { Prisma } from '@prisma/client';
 import type { Payout } from '@/types/affiliate';
+import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/db/prisma';
+import type { Prisma } from '@prisma/client';
 
 export interface ProcessPayoutInput {
   payoutId: string;
@@ -70,7 +74,7 @@ export class ProcessPayoutUseCase {
       await this.processPayment(payout);
 
       // Use transaction to update both payout and affiliate
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Update payout status to paid
         await tx.payout.update({
           where: { id: payout.id },

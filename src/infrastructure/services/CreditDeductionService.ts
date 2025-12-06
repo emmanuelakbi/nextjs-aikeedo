@@ -1,6 +1,9 @@
 import { prisma } from '../../lib/db';
+import type { Prisma } from '@prisma/client';
 import { Workspace } from '../../domain/workspace/entities/Workspace';
+import type { Prisma } from '@prisma/client';
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository';
+import type { Prisma } from '@prisma/client';
 
 /**
  * CreditDeductionService
@@ -100,7 +103,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Lock the workspace row for update to prevent race conditions
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -168,7 +171,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Lock the workspace row for update
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -224,7 +227,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Lock the workspace row for update
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -301,7 +304,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Lock the workspace row for update
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
