@@ -1,5 +1,5 @@
 import { Workspace } from '../../../domain/workspace/entities/Workspace';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
 import { UpdateWorkspaceCommand } from '../../commands/workspace/UpdateWorkspaceCommand';
 
 /**
@@ -10,7 +10,7 @@ import { UpdateWorkspaceCommand } from '../../commands/workspace/UpdateWorkspace
  */
 
 export class UpdateWorkspaceUseCase {
-  constructor(private readonly workspaceRepository: WorkspaceRepository) {}
+  constructor(private readonly workspaceRepository: IWorkspaceRepository) {}
 
   async execute(command: UpdateWorkspaceCommand): Promise<Workspace> {
     // Find the workspace

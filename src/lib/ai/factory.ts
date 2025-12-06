@@ -558,12 +558,46 @@ export class AIServiceFactory {
     });
 
     // OpenRouter models (100+ models through one API)
+    // Free models
     this.registerModel({
-      id: 'openrouter/bert-nebulon-alpha',
-      name: 'Bert Nebulon Alpha (FREE)',
+      id: 'amazon/nova-2-lite-v1:free',
+      name: 'Amazon Nova 2 Lite (FREE)',
       provider: 'openrouter',
       capabilities: ['text-generation'],
-      description: 'Free experimental model via OpenRouter',
+      description: 'Free Amazon Nova model via OpenRouter',
+      contextWindow: 300000,
+      maxOutputTokens: 5000,
+      pricing: { input: 0.0, output: 0.0 },
+    });
+
+    this.registerModel({
+      id: 'arcee-ai/trinity-mini:free',
+      name: 'Arcee Trinity Mini (FREE)',
+      provider: 'openrouter',
+      capabilities: ['text-generation'],
+      description: 'Free Arcee AI model via OpenRouter',
+      contextWindow: 8192,
+      maxOutputTokens: 2048,
+      pricing: { input: 0.0, output: 0.0 },
+    });
+
+    this.registerModel({
+      id: 'tngtech/tng-r1t-chimera:free',
+      name: 'TNG R1T Chimera (FREE)',
+      provider: 'openrouter',
+      capabilities: ['text-generation'],
+      description: 'Free TNG Tech model via OpenRouter',
+      contextWindow: 8192,
+      maxOutputTokens: 2048,
+      pricing: { input: 0.0, output: 0.0 },
+    });
+
+    this.registerModel({
+      id: 'allenai/olmo-3-32b-think:free',
+      name: 'Allen AI OLMo 3 32B Think (FREE)',
+      provider: 'openrouter',
+      capabilities: ['text-generation'],
+      description: 'Free Allen AI reasoning model via OpenRouter',
       contextWindow: 8192,
       maxOutputTokens: 2048,
       pricing: { input: 0.0, output: 0.0 },

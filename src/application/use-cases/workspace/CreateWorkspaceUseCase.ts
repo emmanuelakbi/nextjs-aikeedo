@@ -1,6 +1,7 @@
 import { Workspace } from '../../../domain/workspace/entities/Workspace';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
-import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
+import { IUserRepository } from '../../../domain/user/repositories/IUserRepository';
+import { Id } from '../../../domain/user/value-objects/Id';
 import { CreateWorkspaceCommand } from '../../commands/workspace/CreateWorkspaceCommand';
 
 /**
@@ -12,13 +13,14 @@ import { CreateWorkspaceCommand } from '../../commands/workspace/CreateWorkspace
 
 export class CreateWorkspaceUseCase {
   constructor(
-    private readonly workspaceRepository: WorkspaceRepository,
-    private readonly userRepository: UserRepository
+    private readonly workspaceRepository: IWorkspaceRepository,
+    private readonly userRepository: IUserRepository
   ) {}
 
   async execute(command: CreateWorkspaceCommand): Promise<Workspace> {
     // Verify the user exists
-    const user = await this.userRepository.findById(command.userId);
+    const userId = Id.fromString(command.userId);
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }

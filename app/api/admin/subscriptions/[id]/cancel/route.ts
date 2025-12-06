@@ -49,14 +49,18 @@ export async function POST(
     }
 
     // Cancel in Stripe
-    const stripe = getStripeClient();
-    const stripeSubscription = await stripe.subscriptions.update(
-      subscription.stripeSubscriptionId,
-      {
-        cancel_at_period_end: !immediate,
-        ...(immediate && { cancel_at: 'now' }),
-      }
-    );
+    const stripeService = getStripeClient();
+    const stripe = stripeService.getClient();
+    if (immediate) {
+      await stripe.subscriptions.cancel(subscription.stripeSubscriptionId);
+    } else {
+      await stripe.subscriptions.update(
+        subscription.stripeSubscriptionId,
+        {
+          cancel_at_period_end: true,
+        }
+      );
+    }
 
     // Update in database
     const updatedSubscription = await prisma.subscription.update({

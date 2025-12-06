@@ -1,7 +1,14 @@
 import { Plan, PlanProps } from '../../domain/billing/entities/Plan';
 import { Id } from '../../domain/user/value-objects/Id';
+import { 
+  IPlanRepository,
+  CreatePlanData,
+  UpdatePlanData,
+  ListPlansOptions
+} from '../../domain/billing/repositories/IPlanRepository';
+import { PlanInterval } from '../../domain/billing/types';
 import { prisma } from '../../lib/db';
-import { Prisma, PlanInterval } from '@prisma/client';
+import { Prisma, PlanInterval as PrismaPlanInterval } from '@prisma/client';
 
 /**
  * PlanRepository - Prisma implementation
@@ -10,37 +17,7 @@ import { Prisma, PlanInterval } from '@prisma/client';
  * Requirements: Billing 1.1, 1.2, 1.3, 1.4, 1.5
  */
 
-export interface CreatePlanData {
-  name: string;
-  description: string;
-  price: number;
-  currency?: string;
-  interval: PlanInterval;
-  creditCount: number | null;
-  features?: Record<string, any>;
-  limits?: Record<string, any>;
-  stripeProductId: string;
-  stripePriceId: string;
-}
-
-export interface UpdatePlanData {
-  name?: string;
-  description?: string;
-  price?: number;
-  creditCount?: number | null;
-  features?: Record<string, any>;
-  limits?: Record<string, any>;
-  isActive?: boolean;
-}
-
-export interface ListPlansOptions {
-  isActive?: boolean;
-  interval?: PlanInterval;
-  limit?: number;
-  offset?: number;
-}
-
-export class PlanRepository {
+export class PlanRepository implements IPlanRepository {
   /**
    * Creates a new plan in the database
    * Requirements: Billing 1.1, 1.2
@@ -53,7 +30,7 @@ export class PlanRepository {
           description: data.description,
           price: data.price,
           currency: data.currency || 'usd',
-          interval: data.interval,
+          interval: data.interval as PrismaPlanInterval,
           creditCount: data.creditCount,
           features: data.features || {},
           limits: data.limits || {},
@@ -143,7 +120,7 @@ export class PlanRepository {
       }
 
       if (options.interval) {
-        where.interval = options.interval;
+        where.interval = options.interval as PrismaPlanInterval;
       }
 
       const plans = await prisma.plan.findMany({
@@ -266,7 +243,7 @@ export class PlanRepository {
             description: props.description,
             price: props.price,
             currency: props.currency,
-            interval: props.interval,
+            interval: props.interval as PrismaPlanInterval,
             creditCount: props.creditCount,
             features: props.features,
             limits: props.limits,
@@ -285,7 +262,7 @@ export class PlanRepository {
             description: props.description,
             price: props.price,
             currency: props.currency,
-            interval: props.interval,
+            interval: props.interval as PrismaPlanInterval,
             creditCount: props.creditCount,
             features: props.features,
             limits: props.limits,

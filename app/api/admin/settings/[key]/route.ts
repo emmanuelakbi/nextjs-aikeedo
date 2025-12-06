@@ -12,7 +12,7 @@ import prisma from '@/lib/db/prisma';
  */
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { key: string } }
 ) {
   try {

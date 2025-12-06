@@ -1,3 +1,8 @@
+import { 
+  ISessionRepository,
+  Session,
+  CreateSessionData
+} from '../../domain/auth/repositories/ISessionRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
 import { SessionCacheService } from '../../lib/cache';
@@ -10,22 +15,7 @@ import { SessionCacheService } from '../../lib/cache';
  * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, Performance considerations
  */
 
-export interface Session {
-  id: string;
-  sessionToken: string;
-  userId: string;
-  expires: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateSessionData {
-  sessionToken: string;
-  userId: string;
-  expires: Date;
-}
-
-export class SessionRepository {
+export class SessionRepository implements ISessionRepository {
   /**
    * Creates a new session
    * Requirements: 6.1

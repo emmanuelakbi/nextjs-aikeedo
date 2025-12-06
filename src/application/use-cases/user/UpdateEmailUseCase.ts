@@ -1,6 +1,7 @@
 import { User } from '../../../domain/user/entities/User';
 import { Email } from '../../../domain/user/value-objects/Email';
-import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
+import { Id } from '../../../domain/user/value-objects/Id';
+import { IUserRepository } from '../../../domain/user/repositories/IUserRepository';
 import { VerificationTokenRepository } from '../../../infrastructure/repositories/VerificationTokenRepository';
 import { generateVerificationToken } from '../../../lib/auth/tokens';
 import { UpdateEmailCommand } from '../../commands/user/UpdateEmailCommand';
@@ -19,13 +20,14 @@ export interface UpdateEmailResult {
 
 export class UpdateEmailUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: IUserRepository,
     private readonly verificationTokenRepository: VerificationTokenRepository
   ) {}
 
   async execute(command: UpdateEmailCommand): Promise<UpdateEmailResult> {
     // Find the user
-    const user = await this.userRepository.findById(command.userId);
+    const userId = Id.fromString(command.userId);
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
@@ -35,9 +37,8 @@ export class UpdateEmailUseCase {
     // Requirements: 7.3
 
     // Check if new email is already in use by another user
-    const existingUser = await this.userRepository.findByEmail(
-      command.newEmail
-    );
+    const newEmailVO = Email.create(command.newEmail);
+    const existingUser = await this.userRepository.findByEmail(newEmailVO);
     if (existingUser && existingUser.getId().getValue() !== command.userId) {
       throw new Error('A user with this email already exists');
     }

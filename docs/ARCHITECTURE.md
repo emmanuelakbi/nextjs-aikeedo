@@ -517,6 +517,114 @@ export async function rateLimitMiddleware(req: NextRequest) {
 - Reusable across routes
 - Easy to compose
 
+### 6. Dependency Injection Pattern
+
+**Purpose**: Manages dependencies and promotes loose coupling through inversion of control.
+
+**Implementation**:
+
+The application uses a centralized Dependency Injection (DI) container that manages all repository instances and use case creation. This ensures consistent dependency management and makes testing easier.
+
+```typescript
+// Container interface
+interface Container {
+  readonly userRepository: IUserRepository;
+  readonly workspaceRepository: IWorkspaceRepository;
+  
+  createGetUserUseCase(): GetUserUseCase;
+  createUpdateProfileUseCase(): UpdateProfileUseCase;
+  // ... other factory methods
+}
+
+// Container implementation with singleton pattern
+class DIContainer implements Container {
+  private static instance: DIContainer;
+  private _userRepository?: IUserRepository;
+  
+  private constructor() {}
+  
+  public static getInstance(): DIContainer {
+    if (!DIContainer.instance) {
+      DIContainer.instance = new DIContainer();
+    }
+    return DIContainer.instance;
+  }
+  
+  // Lazy-loaded repository getter
+  public get userRepository(): IUserRepository {
+    if (!this._userRepository) {
+      this._userRepository = new UserRepository();
+    }
+    return this._userRepository;
+  }
+  
+  // Use case factory method
+  public createGetUserUseCase(): GetUserUseCase {
+    return new GetUserUseCase(this.userRepository);
+  }
+}
+
+// Export singleton instance
+export const container = DIContainer.getInstance();
+```
+
+**Usage in API Routes**:
+
+```typescript
+// Before (Direct Instantiation)
+const userRepository = new UserRepository();
+const useCase = new GetUserUseCase(userRepository);
+const user = await useCase.execute(query);
+
+// After (DI Container)
+import { container } from '@/infrastructure/di/container';
+
+const useCase = container.createGetUserUseCase();
+const user = await useCase.execute(query);
+```
+
+**Benefits**:
+
+- **Single Responsibility**: Container manages all dependency creation
+- **Lazy Loading**: Repositories instantiated only when needed
+- **Singleton Pattern**: Single instance of each repository
+- **Testability**: Easy to swap container for test container
+- **Maintainability**: Single place to manage all dependencies
+- **Type Safety**: Full TypeScript support with interfaces
+- **Consistency**: All routes follow same pattern
+
+**Container Features**:
+
+1. **Repository Management**: Lazy-loaded singleton repositories
+2. **Use Case Factories**: Methods to create properly configured use cases
+3. **Dependency Resolution**: Automatic injection of required dependencies
+4. **Reset Capability**: Can reset container for test isolation
+
+**Architecture Compliance**:
+
+```
+┌─────────────────────────────────────────┐
+│    Presentation Layer (API Routes)     │
+│         ↓ uses                          │
+│    DI Container (Infrastructure)        │
+│         ↓ creates                       │
+│    Use Cases (Application Layer)        │
+│         ↓ depends on                    │
+│    Repository Interfaces (Domain)       │
+│         ↑ implemented by                │
+│    Concrete Repositories (Infrastructure)│
+└─────────────────────────────────────────┘
+```
+
+**Key Principles**:
+
+- API routes depend on container, not concrete implementations
+- Use cases depend on domain interfaces, not infrastructure
+- Container is the only place that knows about concrete implementations
+- Domain layer remains pure with no infrastructure dependencies
+
+For detailed usage examples and API reference, see `src/infrastructure/di/README.md`.
+
 ---
 
 ## Data Flow

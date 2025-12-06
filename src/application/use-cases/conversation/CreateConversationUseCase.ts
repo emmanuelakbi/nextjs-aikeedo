@@ -1,7 +1,8 @@
 import { Conversation } from '../../../domain/conversation/entities/Conversation';
-import { ConversationRepository } from '../../../infrastructure/repositories/ConversationRepository';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
-import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
+import { IConversationRepository } from '../../../domain/conversation/repositories/IConversationRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
+import { IUserRepository } from '../../../domain/user/repositories/IUserRepository';
+import { Id } from '../../../domain/user/value-objects/Id';
 import { CreateConversationCommand } from '../../commands/conversation/CreateConversationCommand';
 
 /**
@@ -13,9 +14,9 @@ import { CreateConversationCommand } from '../../commands/conversation/CreateCon
 
 export class CreateConversationUseCase {
   constructor(
-    private readonly conversationRepository: ConversationRepository,
-    private readonly workspaceRepository: WorkspaceRepository,
-    private readonly userRepository: UserRepository
+    private readonly conversationRepository: IConversationRepository,
+    private readonly workspaceRepository: IWorkspaceRepository,
+    private readonly userRepository: IUserRepository
   ) {}
 
   async execute(command: CreateConversationCommand): Promise<Conversation> {
@@ -28,7 +29,8 @@ export class CreateConversationUseCase {
     }
 
     // Verify the user exists
-    const user = await this.userRepository.findById(command.userId);
+    const userId = Id.fromString(command.userId);
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }

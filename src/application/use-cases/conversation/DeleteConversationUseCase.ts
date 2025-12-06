@@ -1,5 +1,5 @@
-import { ConversationRepository } from '../../../infrastructure/repositories/ConversationRepository';
-import { MessageRepository } from '../../../infrastructure/repositories/MessageRepository';
+import { IConversationRepository } from '../../../domain/conversation/repositories/IConversationRepository';
+import { IMessageRepository } from '../../../domain/conversation/repositories/IMessageRepository';
 import { DeleteConversationCommand } from '../../commands/conversation/DeleteConversationCommand';
 
 /**
@@ -11,8 +11,8 @@ import { DeleteConversationCommand } from '../../commands/conversation/DeleteCon
 
 export class DeleteConversationUseCase {
   constructor(
-    private readonly conversationRepository: ConversationRepository,
-    private readonly messageRepository: MessageRepository
+    private readonly conversationRepository: IConversationRepository,
+    private readonly messageRepository: IMessageRepository
   ) {}
 
   async execute(command: DeleteConversationCommand): Promise<void> {

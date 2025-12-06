@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PlanRepository } from '@/infrastructure/repositories/PlanRepository';
 import { CreatePlanUseCase } from '@/application/use-cases/billing/CreatePlan';
 import { ListPlansUseCase } from '@/application/use-cases/billing/ListPlans';
-import { PlanInterval } from '@prisma/client';
+import { PlanInterval } from '@/domain/types';
 
 /**
  * GET /api/billing/plans

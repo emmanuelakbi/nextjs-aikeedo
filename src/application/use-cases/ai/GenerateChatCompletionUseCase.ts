@@ -169,13 +169,16 @@ export class GenerateChatCompletionUseCase {
       );
     }
 
-    // Allocate credits
-    const allocation = await this.creditService.allocateCredits(
-      command.workspaceId,
-      estimatedCredits
-    );
+    // Track whether credits were successfully allocated
+    let creditsAllocated = false;
 
     try {
+      // Allocate credits
+      const allocation = await this.creditService.allocateCredits(
+        command.workspaceId,
+        estimatedCredits
+      );
+      creditsAllocated = true;
       // Create AI service
       const factory = getAIServiceFactory();
       const textService = factory.createTextService(
@@ -240,18 +243,22 @@ export class GenerateChatCompletionUseCase {
         }
       } catch (streamError) {
         // Release allocated credits on stream failure
+        if (creditsAllocated) {
+          await this.creditService.releaseCredits(
+            command.workspaceId,
+            estimatedCredits
+          );
+        }
+        throw streamError;
+      }
+    } catch (error) {
+      // Release allocated credits on failure (only if they were allocated)
+      if (creditsAllocated) {
         await this.creditService.releaseCredits(
           command.workspaceId,
           estimatedCredits
         );
-        throw streamError;
       }
-    } catch (error) {
-      // Release allocated credits on failure
-      await this.creditService.releaseCredits(
-        command.workspaceId,
-        estimatedCredits
-      );
       throw error;
     }
   }

@@ -10,6 +10,7 @@ import { RequestPasswordResetCommandSchema } from '@/application/commands/auth/R
 import { RequestPasswordResetUseCase } from '@/application/use-cases/auth/RequestPasswordResetUseCase';
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { VerificationTokenRepository } from '@/infrastructure/repositories/VerificationTokenRepository';
+import { Email } from '@/domain/user/value-objects/Email';
 import { sendEmail } from '@/lib/email/service';
 import { renderPasswordResetEmail } from '@/lib/email/templates';
 import { appConfig } from '@/lib/config';
@@ -42,7 +43,8 @@ async function handler(request: NextRequest) {
 
       // Get user to include first name in email
       const userRepository = new UserRepository();
-      const user = await userRepository.findByEmail(result.email);
+      const emailVO = Email.create(result.email);
+      const user = await userRepository.findByEmail(emailVO);
 
       await sendEmail({
         to: result.email,

@@ -7,8 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
-import { UpdatePasswordUseCase } from '@/application/use-cases/user/UpdatePasswordUseCase';
-import { UserRepository } from '@/infrastructure/repositories/UserRepository';
+import { container } from '@/infrastructure/di/container';
 import { UpdatePasswordCommandSchema } from '@/application/commands/user/UpdatePasswordCommand';
 import { ZodError } from 'zod';
 
@@ -34,8 +33,7 @@ export async function PATCH(request: NextRequest) {
     });
 
     // Execute use case
-    const userRepository = new UserRepository();
-    const useCase = new UpdatePasswordUseCase(userRepository);
+    const useCase = container.createUpdatePasswordUseCase();
     await useCase.execute(command);
 
     // Return success response

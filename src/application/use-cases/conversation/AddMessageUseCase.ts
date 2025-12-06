@@ -1,6 +1,6 @@
 import { Message } from '../../../domain/conversation/entities/Message';
-import { ConversationRepository } from '../../../infrastructure/repositories/ConversationRepository';
-import { MessageRepository } from '../../../infrastructure/repositories/MessageRepository';
+import { IConversationRepository } from '../../../domain/conversation/repositories/IConversationRepository';
+import { IMessageRepository } from '../../../domain/conversation/repositories/IMessageRepository';
 import { AddMessageCommand } from '../../commands/conversation/AddMessageCommand';
 
 /**
@@ -12,8 +12,8 @@ import { AddMessageCommand } from '../../commands/conversation/AddMessageCommand
 
 export class AddMessageUseCase {
   constructor(
-    private readonly messageRepository: MessageRepository,
-    private readonly conversationRepository: ConversationRepository
+    private readonly messageRepository: IMessageRepository,
+    private readonly conversationRepository: IConversationRepository
   ) {}
 
   async execute(command: AddMessageCommand): Promise<Message> {

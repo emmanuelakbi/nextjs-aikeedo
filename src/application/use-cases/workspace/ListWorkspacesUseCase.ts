@@ -1,5 +1,5 @@
 import { Workspace } from '../../../domain/workspace/entities/Workspace';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
 import { ListWorkspacesQuery } from '../../queries/workspace/ListWorkspacesQuery';
 
 /**
@@ -10,7 +10,7 @@ import { ListWorkspacesQuery } from '../../queries/workspace/ListWorkspacesQuery
  */
 
 export class ListWorkspacesUseCase {
-  constructor(private readonly workspaceRepository: WorkspaceRepository) {}
+  constructor(private readonly workspaceRepository: IWorkspaceRepository) {}
 
   async execute(query: ListWorkspacesQuery): Promise<Workspace[]> {
     // Get all workspaces where the user is owner or member

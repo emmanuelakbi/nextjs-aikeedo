@@ -490,7 +490,7 @@ async function generateSubscriptionReport(startDate: Date, endDate: Date) {
       statusBreakdown,
       planBreakdown,
     },
-    subscriptions: subscriptions.map((sub) => ({
+    subscriptions: subscriptions.map((sub: any) => ({
       id: sub.id,
       workspaceName: sub.workspace.name,
       ownerEmail: sub.workspace.owner.email,

@@ -110,11 +110,8 @@ export class CreditDeductionService {
         throw new Error(`Workspace not found: ${workspaceId}`);
       }
 
-      // Convert to domain entity
-      const workspace = await this.workspaceRepository.findById(workspaceId);
-      if (!workspace) {
-        throw new Error(`Workspace not found: ${workspaceId}`);
-      }
+      // Convert to domain entity using the locked data from transaction
+      const workspace = this.workspaceRepository.toDomain(workspaceData);
 
       // Check if sufficient credits are available
       if (!workspace.hasAvailableCredits(amount)) {
@@ -181,11 +178,8 @@ export class CreditDeductionService {
         throw new Error(`Workspace not found: ${workspaceId}`);
       }
 
-      // Convert to domain entity
-      const workspace = await this.workspaceRepository.findById(workspaceId);
-      if (!workspace) {
-        throw new Error(`Workspace not found: ${workspaceId}`);
-      }
+      // Convert to domain entity using the locked data from transaction
+      const workspace = this.workspaceRepository.toDomain(workspaceData);
 
       // Consume the allocated credits (removes from both allocated and total)
       workspace.consumeCredits(amount);
@@ -240,11 +234,8 @@ export class CreditDeductionService {
         throw new Error(`Workspace not found: ${workspaceId}`);
       }
 
-      // Convert to domain entity
-      const workspace = await this.workspaceRepository.findById(workspaceId);
-      if (!workspace) {
-        throw new Error(`Workspace not found: ${workspaceId}`);
-      }
+      // Convert to domain entity using the locked data from transaction
+      const workspace = this.workspaceRepository.toDomain(workspaceData);
 
       // Release the allocated credits back to available pool
       workspace.releaseCredits(amount);
@@ -320,11 +311,8 @@ export class CreditDeductionService {
         throw new Error(`Workspace not found: ${workspaceId}`);
       }
 
-      // Convert to domain entity
-      const workspace = await this.workspaceRepository.findById(workspaceId);
-      if (!workspace) {
-        throw new Error(`Workspace not found: ${workspaceId}`);
-      }
+      // Convert to domain entity using the locked data from transaction
+      const workspace = this.workspaceRepository.toDomain(workspaceData);
 
       // Add credits back
       workspace.addCredits(amount);

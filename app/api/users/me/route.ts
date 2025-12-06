@@ -8,9 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
-import { GetUserUseCase } from '@/application/use-cases/user/GetUserUseCase';
-import { UpdateProfileUseCase } from '@/application/use-cases/user/UpdateProfileUseCase';
-import { UserRepository } from '@/infrastructure/repositories/UserRepository';
+import { container } from '@/infrastructure/di/container';
 import { GetUserQuerySchema } from '@/application/queries/user/GetUserQuery';
 import { UpdateProfileCommandSchema } from '@/application/commands/user/UpdateProfileCommand';
 import { ZodError } from 'zod';
@@ -32,8 +30,7 @@ export async function GET() {
     });
 
     // Execute use case
-    const userRepository = new UserRepository();
-    const useCase = new GetUserUseCase(userRepository);
+    const useCase = container.createGetUserUseCase();
     const user = await useCase.execute(query);
 
     // Return user data (excluding sensitive fields)
@@ -118,8 +115,7 @@ export async function PATCH(request: NextRequest) {
     });
 
     // Execute use case
-    const userRepository = new UserRepository();
-    const useCase = new UpdateProfileUseCase(userRepository);
+    const useCase = container.createUpdateProfileUseCase();
     const user = await useCase.execute(command);
 
     // Return updated user data

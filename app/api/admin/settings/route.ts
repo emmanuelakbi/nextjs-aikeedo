@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Group settings by category
-    const groupedSettings = settings.reduce((acc, setting) => {
+    const groupedSettings = settings.reduce((acc: any, setting: any) => {
       if (!acc[setting.category]) {
         acc[setting.category] = [];
       }

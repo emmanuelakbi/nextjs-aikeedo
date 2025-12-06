@@ -7,6 +7,7 @@
 
 import { requireAuth } from '@/lib/auth/session';
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
+import { Id } from '@/domain/user/value-objects/Id';
 import FileBrowserClient from './FileBrowserClient';
 
 export default async function FileBrowserPage() {
@@ -15,7 +16,8 @@ export default async function FileBrowserPage() {
 
   // Fetch user data to get current workspace
   const userRepository = new UserRepository();
-  const user = await userRepository.findById(session.user.id);
+  const userId = Id.fromString(session.user.id);
+  const user = await userRepository.findById(userId);
 
   if (!user) {
     throw new Error('User not found');

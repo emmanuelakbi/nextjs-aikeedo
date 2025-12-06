@@ -46,7 +46,8 @@ export async function POST(
     }
 
     // Reactivate in Stripe
-    const stripe = getStripeClient();
+    const stripeService = getStripeClient();
+    const stripe = stripeService.getClient();
     await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
       cancel_at_period_end: false,
     });

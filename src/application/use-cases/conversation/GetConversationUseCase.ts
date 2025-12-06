@@ -1,7 +1,7 @@
 import { Conversation } from '../../../domain/conversation/entities/Conversation';
 import { Message } from '../../../domain/conversation/entities/Message';
-import { ConversationRepository } from '../../../infrastructure/repositories/ConversationRepository';
-import { MessageRepository } from '../../../infrastructure/repositories/MessageRepository';
+import { IConversationRepository } from '../../../domain/conversation/repositories/IConversationRepository';
+import { IMessageRepository } from '../../../domain/conversation/repositories/IMessageRepository';
 import { GetConversationCommand } from '../../commands/conversation/GetConversationCommand';
 
 /**
@@ -18,8 +18,8 @@ export interface ConversationWithMessages {
 
 export class GetConversationUseCase {
   constructor(
-    private readonly conversationRepository: ConversationRepository,
-    private readonly messageRepository: MessageRepository
+    private readonly conversationRepository: IConversationRepository,
+    private readonly messageRepository: IMessageRepository
   ) {}
 
   async execute(

@@ -1,5 +1,5 @@
 import { Preset } from '../../../domain/preset/entities/Preset';
-import { PresetRepository } from '../../../infrastructure/repositories/PresetRepository';
+import { IPresetRepository } from '../../../domain/preset/repositories/IPresetRepository';
 import { UpdatePresetCommand } from '../../commands/preset/UpdatePresetCommand';
 
 /**
@@ -10,7 +10,7 @@ import { UpdatePresetCommand } from '../../commands/preset/UpdatePresetCommand';
  */
 
 export class UpdatePresetUseCase {
-  constructor(private readonly presetRepository: PresetRepository) {}
+  constructor(private readonly presetRepository: IPresetRepository) {}
 
   async execute(command: UpdatePresetCommand): Promise<Preset> {
     // Find existing preset

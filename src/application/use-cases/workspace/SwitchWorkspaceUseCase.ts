@@ -1,6 +1,7 @@
 import { User } from '../../../domain/user/entities/User';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
-import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
+import { IUserRepository } from '../../../domain/user/repositories/IUserRepository';
+import { Id } from '../../../domain/user/value-objects/Id';
 import { SwitchWorkspaceCommand } from '../../commands/workspace/SwitchWorkspaceCommand';
 
 /**
@@ -12,13 +13,14 @@ import { SwitchWorkspaceCommand } from '../../commands/workspace/SwitchWorkspace
 
 export class SwitchWorkspaceUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly workspaceRepository: WorkspaceRepository
+    private readonly userRepository: IUserRepository,
+    private readonly workspaceRepository: IWorkspaceRepository
   ) {}
 
   async execute(command: SwitchWorkspaceCommand): Promise<User> {
     // Find the user
-    const user = await this.userRepository.findById(command.userId);
+    const userId = Id.fromString(command.userId);
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }

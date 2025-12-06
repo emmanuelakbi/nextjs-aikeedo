@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
-import { InvoiceStatus } from '@prisma/client';
+import { InvoiceStatus } from '@/domain/types';
 
 /**
  * GET /api/billing/invoices

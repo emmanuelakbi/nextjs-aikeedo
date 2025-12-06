@@ -45,7 +45,7 @@ const ChatPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<ConversationSettings>({
-    model: 'openrouter/bert-nebulon-alpha',
+    model: 'amazon/nova-2-lite-v1:free',
     provider: 'openrouter',
     temperature: 0.7,
     maxTokens: 2000,
@@ -73,7 +73,10 @@ const ChatPage: React.FC = () => {
       { value: 'mistral-small-latest', label: 'Mistral Small' },
     ],
     openrouter: [
-      { value: 'openrouter/bert-nebulon-alpha', label: 'Bert Nebulon Alpha (FREE)' },
+      { value: 'amazon/nova-2-lite-v1:free', label: 'Amazon Nova 2 Lite (FREE)' },
+      { value: 'arcee-ai/trinity-mini:free', label: 'Arcee Trinity Mini (FREE)' },
+      { value: 'tngtech/tng-r1t-chimera:free', label: 'TNG R1T Chimera (FREE)' },
+      { value: 'allenai/olmo-3-32b-think:free', label: 'Allen AI OLMo 3 32B (FREE)' },
       { value: 'openai/gpt-4o', label: 'OpenAI GPT-4o' },
       { value: 'openai/gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
       { value: 'anthropic/claude-3.5-sonnet', label: 'Claude 3.5 Sonnet' },
@@ -495,7 +498,7 @@ const ChatPage: React.FC = () => {
                   onChange={(e) =>
                     setSettings({ ...settings, model: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {modelOptions[settings.provider]?.map((model) => (
                     <option key={model.value} value={model.value}>
@@ -514,7 +517,7 @@ const ChatPage: React.FC = () => {
                   onChange={(e) =>
                     setSettings({ ...settings, provider: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="openai">OpenAI</option>
                   <option value="anthropic">Anthropic</option>

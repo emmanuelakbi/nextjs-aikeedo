@@ -14,6 +14,7 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
+// For seeding, use simple PrismaClient
 const prisma = new PrismaClient();
 
 async function main() {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
-import { SubscriptionStatus } from '@prisma/client';
+import { SubscriptionStatus } from '@/domain/types';
 
 /**
  * Admin Subscription Management API

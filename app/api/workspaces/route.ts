@@ -8,10 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
-import { ListWorkspacesUseCase } from '@/application/use-cases/workspace/ListWorkspacesUseCase';
-import { CreateWorkspaceUseCase } from '@/application/use-cases/workspace/CreateWorkspaceUseCase';
-import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepository';
-import { UserRepository } from '@/infrastructure/repositories/UserRepository';
+import { container } from '@/infrastructure/di/container';
 import { ListWorkspacesQuerySchema } from '@/application/queries/workspace/ListWorkspacesQuery';
 import { CreateWorkspaceCommandSchema } from '@/application/commands/workspace/CreateWorkspaceCommand';
 import { ZodError } from 'zod';
@@ -32,8 +29,7 @@ export async function GET() {
     });
 
     // Execute use case
-    const workspaceRepository = new WorkspaceRepository();
-    const useCase = new ListWorkspacesUseCase(workspaceRepository);
+    const useCase = container.createListWorkspacesUseCase();
     const workspaces = await useCase.execute(query);
 
     // Return workspace data
@@ -100,12 +96,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Execute use case
-    const workspaceRepository = new WorkspaceRepository();
-    const userRepository = new UserRepository();
-    const useCase = new CreateWorkspaceUseCase(
-      workspaceRepository,
-      userRepository
-    );
+    const useCase = container.createCreateWorkspaceUseCase();
     const workspace = await useCase.execute(command);
 
     // Return created workspace data

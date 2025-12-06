@@ -1,6 +1,7 @@
 import { Workspace } from '../../../domain/workspace/entities/Workspace';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
-import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
+import { IUserRepository } from '../../../domain/user/repositories/IUserRepository';
+import { Id } from '../../../domain/user/value-objects/Id';
 import { TransferWorkspaceOwnershipCommand } from '../../commands/workspace/TransferWorkspaceOwnershipCommand';
 
 /**
@@ -12,8 +13,8 @@ import { TransferWorkspaceOwnershipCommand } from '../../commands/workspace/Tran
 
 export class TransferWorkspaceOwnershipUseCase {
   constructor(
-    private readonly workspaceRepository: WorkspaceRepository,
-    private readonly userRepository: UserRepository
+    private readonly workspaceRepository: IWorkspaceRepository,
+    private readonly userRepository: IUserRepository
   ) {}
 
   async execute(
@@ -34,7 +35,8 @@ export class TransferWorkspaceOwnershipUseCase {
     }
 
     // Validate new owner exists
-    const newOwner = await this.userRepository.findById(command.newOwnerId);
+    const newOwnerId = Id.fromString(command.newOwnerId);
+    const newOwner = await this.userRepository.findById(newOwnerId);
     if (!newOwner) {
       throw new Error('New owner user not found');
     }

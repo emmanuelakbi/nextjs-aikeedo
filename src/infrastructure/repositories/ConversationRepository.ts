@@ -3,6 +3,11 @@ import {
   ConversationProps,
 } from '../../domain/conversation/entities/Conversation';
 import { Id } from '../../domain/user/value-objects/Id';
+import {
+  IConversationRepository,
+  ListConversationsOptions,
+  ConversationPaginationResult,
+} from '../../domain/conversation/repositories/IConversationRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
 
@@ -10,6 +15,7 @@ import { Prisma } from '@prisma/client';
  * ConversationRepository - Prisma implementation
  *
  * Handles persistence operations for Conversation entities.
+ * Implements IConversationRepository interface for Clean Architecture compliance.
  * Requirements: 3.1, 3.3, 3.4, 3.5
  */
 
@@ -32,7 +38,7 @@ export interface ListConversationsOptions {
   offset?: number;
 }
 
-export class ConversationRepository {
+export class ConversationRepository implements IConversationRepository {
   /**
    * Creates a new conversation in the database
    * Requirements: 3.1
@@ -150,11 +156,9 @@ export class ConversationRepository {
    * List conversations with pagination metadata
    * Optimized for lazy loading
    */
-  async listWithPagination(options: ListConversationsOptions = {}): Promise<{
-    conversations: Conversation[];
-    total: number;
-    hasMore: boolean;
-  }> {
+  async listWithPagination(
+    options: ListConversationsOptions = {}
+  ): Promise<ConversationPaginationResult> {
     const limit = options.limit || 20;
     const offset = options.offset || 0;
 

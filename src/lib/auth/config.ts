@@ -3,6 +3,8 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { UserRepository } from '../../infrastructure/repositories/UserRepository';
 import { Password } from '../../domain/user/value-objects/Password';
+import { Email } from '../../domain/user/value-objects/Email';
+import { Id } from '../../domain/user/value-objects/Id';
 import { env } from '../env';
 
 /**
@@ -42,12 +44,16 @@ export const authConfig: NextAuthConfig = {
 
           // Find user by email
           const userRepository = new UserRepository();
-          const user = await userRepository.findByEmail(email);
+          const emailVO = Email.create(email);
+          const user = await userRepository.findByEmail(emailVO);
 
           if (!user) {
             // User not found
+            console.log('[AUTH] User not found for email:', email);
             return null;
           }
+          
+          console.log('[AUTH] User found:', user.getId().getValue());
 
           // Verify password (don't validate complexity during login, just check hash)
           const bcrypt = await import('bcrypt');
@@ -55,8 +61,11 @@ export const authConfig: NextAuthConfig = {
 
           if (!isValid) {
             // Invalid password
+            console.log('[AUTH] Invalid password for user:', email);
             return null;
           }
+          
+          console.log('[AUTH] Password valid for user:', email);
 
           // Check if user is active
           if (!user.isActive()) {
@@ -144,7 +153,8 @@ export const authConfig: NextAuthConfig = {
     async signIn({ user }) {
       if (user.id) {
         const userRepository = new UserRepository();
-        const userEntity = await userRepository.findById(user.id);
+        const userId = Id.fromString(user.id);
+        const userEntity = await userRepository.findById(userId);
         if (userEntity) {
           userEntity.updateLastSeen();
           await userRepository.save(userEntity);

@@ -1,6 +1,7 @@
 import { requireAuth } from '@/lib/auth/session';
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepository';
+import { Id } from '@/domain/user/value-objects/Id';
 import MainLayout from '@/components/layouts/MainLayout';
 
 /**
@@ -18,7 +19,8 @@ export default async function DashboardLayout({
 
   // Fetch user data
   const userRepository = new UserRepository();
-  const user = await userRepository.findById(session.user.id);
+  const userId = Id.fromString(session.user.id);
+  const user = await userRepository.findById(userId);
 
   if (!user) {
     throw new Error('User not found');

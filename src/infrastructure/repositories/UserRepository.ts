@@ -1,6 +1,11 @@
 import { User, UserProps } from '../../domain/user/entities/User';
 import { Email } from '../../domain/user/value-objects/Email';
 import { Id } from '../../domain/user/value-objects/Id';
+import {
+  IUserRepository,
+  UserStatus,
+  FindAllOptions,
+} from '../../domain/user/repositories/IUserRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
 
@@ -8,6 +13,7 @@ import { Prisma } from '@prisma/client';
  * UserRepository - Prisma implementation
  *
  * Handles persistence operations for User entities.
+ * Implements IUserRepository interface for Clean Architecture compliance.
  * Requirements: 2.2, 3.1, 6.1, 8.2
  */
 
@@ -37,7 +43,7 @@ export interface UpdateUserData {
   lastSeenAt?: Date | null;
 }
 
-export class UserRepository {
+export class UserRepository implements IUserRepository {
   /**
    * Creates a new user in the database
    * Requirements: 3.1
@@ -74,10 +80,10 @@ export class UserRepository {
    * Finds a user by ID
    * Requirements: 7.2
    */
-  async findById(id: string): Promise<User | null> {
+  async findById(id: Id): Promise<User | null> {
     try {
       const user = await prisma.user.findUnique({
-        where: { id },
+        where: { id: id.getValue() },
       });
 
       return user ? this.toDomain(user) : null;
@@ -92,10 +98,10 @@ export class UserRepository {
    * Finds a user by email address
    * Requirements: 3.1
    */
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: Email): Promise<User | null> {
     try {
       const user = await prisma.user.findUnique({
-        where: { email },
+        where: { email: email.getValue() },
       });
 
       return user ? this.toDomain(user) : null;
@@ -156,10 +162,10 @@ export class UserRepository {
   /**
    * Deletes a user
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: Id): Promise<void> {
     try {
       await prisma.user.delete({
-        where: { id },
+        where: { id: id.getValue() },
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -169,6 +175,95 @@ export class UserRepository {
       }
       throw new Error(
         `Failed to delete user: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
+   * Find all users matching the given criteria
+   * Requirements: 7.2
+   */
+  async findAll(options?: FindAllOptions): Promise<User[]> {
+    try {
+      const where: Prisma.UserWhereInput = {};
+
+      if (options?.status) {
+        where.status = options.status;
+      }
+
+      const users = await prisma.user.findMany({
+        where,
+        take: options?.limit,
+        skip: options?.offset,
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return users.map((u) => this.toDomain(u));
+    } catch (error) {
+      throw new Error(
+        `Failed to find all users: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
+   * Count users matching the given criteria
+   * Requirements: 7.2
+   */
+  async count(filters?: { status?: UserStatus }): Promise<number> {
+    try {
+      const where: Prisma.UserWhereInput = {};
+
+      if (filters?.status) {
+        where.status = filters.status;
+      }
+
+      return await prisma.user.count({ where });
+    } catch (error) {
+      throw new Error(
+        `Failed to count users: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
+   * Find all users belonging to a workspace
+   * Requirements: 8.2
+   */
+  async findByWorkspace(workspaceId: string): Promise<User[]> {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          OR: [
+            { ownedWorkspaces: { some: { id: workspaceId } } },
+            { workspaceMemberships: { some: { workspaceId } } },
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return users.map((u) => this.toDomain(u));
+    } catch (error) {
+      throw new Error(
+        `Failed to find users by workspace: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
+   * Check if a user exists with the given email
+   * Requirements: 3.1
+   */
+  async existsByEmail(email: Email): Promise<boolean> {
+    try {
+      const count = await prisma.user.count({
+        where: { email: email.getValue() },
+      });
+
+      return count > 0;
+    } catch (error) {
+      throw new Error(
+        `Failed to check if user exists by email: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }

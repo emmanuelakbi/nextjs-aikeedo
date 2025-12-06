@@ -1,5 +1,5 @@
 import { Conversation } from '../../../domain/conversation/entities/Conversation';
-import { ConversationRepository } from '../../../infrastructure/repositories/ConversationRepository';
+import { IConversationRepository } from '../../../domain/conversation/repositories/IConversationRepository';
 import { ListConversationsCommand } from '../../commands/conversation/ListConversationsCommand';
 
 /**
@@ -11,7 +11,7 @@ import { ListConversationsCommand } from '../../commands/conversation/ListConver
 
 export class ListConversationsUseCase {
   constructor(
-    private readonly conversationRepository: ConversationRepository
+    private readonly conversationRepository: IConversationRepository
   ) {}
 
   async execute(command: ListConversationsCommand): Promise<Conversation[]> {

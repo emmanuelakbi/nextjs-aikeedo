@@ -7,9 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
-import { UpdateEmailUseCase } from '@/application/use-cases/user/UpdateEmailUseCase';
-import { UserRepository } from '@/infrastructure/repositories/UserRepository';
-import { VerificationTokenRepository } from '@/infrastructure/repositories/VerificationTokenRepository';
+import { container } from '@/infrastructure/di/container';
 import { UpdateEmailCommandSchema } from '@/application/commands/user/UpdateEmailCommand';
 import { sendEmail } from '@/lib/email/service';
 import { renderVerificationEmail } from '@/lib/email/templates';
@@ -37,12 +35,7 @@ export async function PATCH(request: NextRequest) {
     });
 
     // Execute use case
-    const userRepository = new UserRepository();
-    const verificationTokenRepository = new VerificationTokenRepository();
-    const useCase = new UpdateEmailUseCase(
-      userRepository,
-      verificationTokenRepository
-    );
+    const useCase = container.createUpdateEmailUseCase();
     const result = await useCase.execute(command);
 
     // Send verification email to new address

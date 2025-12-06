@@ -1,4 +1,4 @@
-import { PresetRepository } from '../../../infrastructure/repositories/PresetRepository';
+import { IPresetRepository } from '../../../domain/preset/repositories/IPresetRepository';
 import { DeletePresetCommand } from '../../commands/preset/DeletePresetCommand';
 
 /**
@@ -9,7 +9,7 @@ import { DeletePresetCommand } from '../../commands/preset/DeletePresetCommand';
  */
 
 export class DeletePresetUseCase {
-  constructor(private readonly presetRepository: PresetRepository) {}
+  constructor(private readonly presetRepository: IPresetRepository) {}
 
   async execute(command: DeletePresetCommand): Promise<void> {
     // Find existing preset

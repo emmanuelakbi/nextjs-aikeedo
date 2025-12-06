@@ -1,5 +1,9 @@
 import { Preset, PresetProps } from '../../domain/preset/entities/Preset';
 import { Id } from '../../domain/user/value-objects/Id';
+import {
+  IPresetRepository,
+  ListPresetsOptions,
+} from '../../domain/preset/repositories/IPresetRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
 
@@ -7,6 +11,7 @@ import { Prisma } from '@prisma/client';
  * PresetRepository - Prisma implementation
  *
  * Handles persistence operations for Preset entities.
+ * Implements IPresetRepository interface for Clean Architecture compliance.
  * Requirements: 9.1, 9.2, 9.3, 9.4, 9.5
  */
 
@@ -40,7 +45,7 @@ export interface ListPresetsOptions {
   offset?: number;
 }
 
-export class PresetRepository {
+export class PresetRepository implements IPresetRepository {
   /**
    * Creates a new preset in the database
    * Requirements: 9.1

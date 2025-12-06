@@ -1,5 +1,5 @@
 import { Preset } from '../../../domain/preset/entities/Preset';
-import { PresetRepository } from '../../../infrastructure/repositories/PresetRepository';
+import { IPresetRepository } from '../../../domain/preset/repositories/IPresetRepository';
 import { GetPresetCommand } from '../../commands/preset/GetPresetCommand';
 
 /**
@@ -10,7 +10,7 @@ import { GetPresetCommand } from '../../commands/preset/GetPresetCommand';
  */
 
 export class GetPresetUseCase {
-  constructor(private readonly presetRepository: PresetRepository) {}
+  constructor(private readonly presetRepository: IPresetRepository) {}
 
   async execute(command: GetPresetCommand): Promise<Preset> {
     // Find preset by ID

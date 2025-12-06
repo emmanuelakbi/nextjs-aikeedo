@@ -91,6 +91,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               rows={1}
               className={`
                 w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg
+                bg-white text-gray-900 placeholder-gray-400
                 resize-none overflow-hidden
                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                 disabled:bg-gray-100 disabled:cursor-not-allowed

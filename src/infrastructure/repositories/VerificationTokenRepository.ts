@@ -1,3 +1,9 @@
+import {
+  IVerificationTokenRepository,
+  VerificationToken,
+  VerificationTokenType,
+  CreateVerificationTokenData
+} from '../../domain/auth/repositories/IVerificationTokenRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
 
@@ -8,24 +14,7 @@ import { Prisma } from '@prisma/client';
  * Requirements: 4.1, 4.3, 5.1, 5.2
  */
 
-export type VerificationTokenType = 'EMAIL_VERIFICATION' | 'PASSWORD_RESET';
-
-export interface VerificationToken {
-  identifier: string;
-  token: string;
-  expires: Date;
-  type: VerificationTokenType;
-  createdAt: Date;
-}
-
-export interface CreateVerificationTokenData {
-  identifier: string;
-  token: string;
-  expires: Date;
-  type: VerificationTokenType;
-}
-
-export class VerificationTokenRepository {
+export class VerificationTokenRepository implements IVerificationTokenRepository {
   /**
    * Creates a new verification token
    * Requirements: 4.1, 5.1

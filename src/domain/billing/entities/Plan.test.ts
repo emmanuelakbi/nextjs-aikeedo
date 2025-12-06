@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Plan } from './Plan';
-import { PlanInterval } from '@prisma/client';
+import { PlanInterval } from '../../types';
 
 /**
  * Plan Entity Tests

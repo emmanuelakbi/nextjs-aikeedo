@@ -1,5 +1,5 @@
 import { Preset } from '../../../domain/preset/entities/Preset';
-import { PresetRepository } from '../../../infrastructure/repositories/PresetRepository';
+import { IPresetRepository } from '../../../domain/preset/repositories/IPresetRepository';
 import { ListPresetsCommand } from '../../commands/preset/ListPresetsCommand';
 
 /**
@@ -10,7 +10,7 @@ import { ListPresetsCommand } from '../../commands/preset/ListPresetsCommand';
  */
 
 export class ListPresetsUseCase {
-  constructor(private readonly presetRepository: PresetRepository) {}
+  constructor(private readonly presetRepository: IPresetRepository) {}
 
   async execute(command: ListPresetsCommand): Promise<Preset[]> {
     // List presets with filters

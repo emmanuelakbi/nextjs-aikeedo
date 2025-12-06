@@ -1,5 +1,5 @@
 import { Id } from '../../user/value-objects/Id';
-import { PlanInterval } from '@prisma/client';
+import { PlanInterval } from '../../types';
 
 /**
  * Plan Entity

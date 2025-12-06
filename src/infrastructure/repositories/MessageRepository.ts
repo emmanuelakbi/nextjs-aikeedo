@@ -3,6 +3,10 @@ import {
   MessageProps,
   MessageRole,
 } from '../../domain/conversation/entities/Message';
+import {
+  IMessageRepository,
+  CreateMessageData,
+} from '../../domain/conversation/repositories/IMessageRepository';
 import { Id } from '../../domain/user/value-objects/Id';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
@@ -14,15 +18,7 @@ import { Prisma } from '@prisma/client';
  * Requirements: 3.2, 3.3
  */
 
-export interface CreateMessageData {
-  conversationId: string;
-  role: MessageRole;
-  content: string;
-  tokens?: number;
-  credits?: number;
-}
-
-export class MessageRepository {
+export class MessageRepository implements IMessageRepository {
   /**
    * Creates a new message in the database
    * Requirements: 3.2

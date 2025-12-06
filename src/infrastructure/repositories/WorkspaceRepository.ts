@@ -3,6 +3,11 @@ import {
   WorkspaceProps,
 } from '../../domain/workspace/entities/Workspace';
 import { Id } from '../../domain/user/value-objects/Id';
+import {
+  IWorkspaceRepository,
+  WorkspaceMemberRole,
+  WorkspaceMember,
+} from '../../domain/workspace/repositories/IWorkspaceRepository';
 import { prisma } from '../../lib/db';
 import { Prisma } from '@prisma/client';
 
@@ -10,6 +15,7 @@ import { Prisma } from '@prisma/client';
  * WorkspaceRepository - Prisma implementation
  *
  * Handles persistence operations for Workspace entities.
+ * Implements IWorkspaceRepository interface for Clean Architecture compliance.
  * Requirements: 8.1, 8.2, 8.3
  */
 
@@ -29,7 +35,7 @@ export interface UpdateWorkspaceData {
   creditsAdjustedAt?: Date | null;
 }
 
-export class WorkspaceRepository {
+export class WorkspaceRepository implements IWorkspaceRepository {
   /**
    * Creates a new workspace in the database
    * Requirements: 8.1
@@ -174,7 +180,7 @@ export class WorkspaceRepository {
   async addMember(
     workspaceId: string,
     userId: string,
-    role: 'OWNER' | 'ADMIN' | 'MEMBER' = 'MEMBER'
+    role: WorkspaceMemberRole = WorkspaceMemberRole.MEMBER
   ): Promise<void> {
     try {
       await prisma.workspaceMember.create({
@@ -243,9 +249,7 @@ export class WorkspaceRepository {
    * Gets all members of a workspace
    * Requirements: 8.3
    */
-  async getMembers(
-    workspaceId: string
-  ): Promise<Array<{ userId: string; role: string }>> {
+  async getMembers(workspaceId: string): Promise<WorkspaceMember[]> {
     try {
       const members = await prisma.workspaceMember.findMany({
         where: { workspaceId },
@@ -255,10 +259,34 @@ export class WorkspaceRepository {
         },
       });
 
-      return members;
+      return members.map((m) => ({
+        userId: m.userId,
+        role: m.role as WorkspaceMemberRole,
+      }));
     } catch (error) {
       throw new Error(
         `Failed to get workspace members: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
+   * Check if a workspace exists with the given name for a specific owner
+   * Requirements: 8.1
+   */
+  async existsByName(name: string, ownerId: string): Promise<boolean> {
+    try {
+      const count = await prisma.workspace.count({
+        where: {
+          name,
+          ownerId,
+        },
+      });
+
+      return count > 0;
+    } catch (error) {
+      throw new Error(
+        `Failed to check if workspace exists by name: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -324,7 +352,7 @@ export class WorkspaceRepository {
   /**
    * Converts Prisma workspace model to domain Workspace entity
    */
-  private toDomain(prismaWorkspace: any): Workspace {
+  public toDomain(prismaWorkspace: any): Workspace {
     const props: WorkspaceProps = {
       id: Id.fromString(prismaWorkspace.id),
       name: prismaWorkspace.name,

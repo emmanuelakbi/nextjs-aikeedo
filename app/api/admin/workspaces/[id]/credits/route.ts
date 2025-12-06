@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { z } from 'zod';
-import { CreditTransactionType } from '@prisma/client';
+import { CreditTransactionType } from '@/domain/types';
 
 /**
  * Admin Workspace Credits Management API

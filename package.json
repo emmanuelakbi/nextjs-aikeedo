@@ -38,7 +38,9 @@
     "config:diff": "tsx scripts/config-manager.ts diff",
     "config:help": "tsx scripts/config-manager.ts help",
     "config:demo": "tsx scripts/demo-config.ts",
-    "find:hardcoded": "tsx scripts/find-hardcoded-values.ts"
+    "find:hardcoded": "tsx scripts/find-hardcoded-values.ts",
+    "credits:add": "tsx scripts/add-credits.ts",
+    "credits:list": "tsx scripts/add-credits.ts --list"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

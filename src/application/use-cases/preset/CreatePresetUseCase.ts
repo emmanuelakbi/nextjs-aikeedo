@@ -1,6 +1,6 @@
 import { Preset } from '../../../domain/preset/entities/Preset';
-import { PresetRepository } from '../../../infrastructure/repositories/PresetRepository';
-import { WorkspaceRepository } from '../../../infrastructure/repositories/WorkspaceRepository';
+import { IPresetRepository } from '../../../domain/preset/repositories/IPresetRepository';
+import { IWorkspaceRepository } from '../../../domain/workspace/repositories/IWorkspaceRepository';
 import { CreatePresetCommand } from '../../commands/preset/CreatePresetCommand';
 
 /**
@@ -12,8 +12,8 @@ import { CreatePresetCommand } from '../../commands/preset/CreatePresetCommand';
 
 export class CreatePresetUseCase {
   constructor(
-    private readonly presetRepository: PresetRepository,
-    private readonly workspaceRepository: WorkspaceRepository
+    private readonly presetRepository: IPresetRepository,
+    private readonly workspaceRepository: IWorkspaceRepository
   ) {}
 
   async execute(command: CreatePresetCommand): Promise<Preset> {

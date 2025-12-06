@@ -1,5 +1,6 @@
 import { User } from '../../../domain/user/entities/User';
-import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
+import { Id } from '../../../domain/user/value-objects/Id';
+import { IUserRepository } from '../../../domain/user/repositories/IUserRepository';
 import { GetUserQuery } from '../../queries/user/GetUserQuery';
 
 /**
@@ -10,11 +11,12 @@ import { GetUserQuery } from '../../queries/user/GetUserQuery';
  */
 
 export class GetUserUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(query: GetUserQuery): Promise<User> {
     // Find the user
-    const user = await this.userRepository.findById(query.userId);
+    const userId = Id.fromString(query.userId);
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }

@@ -37,6 +37,79 @@
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/no-base-to-string": "off",
     "@typescript-eslint/require-await": "off",
-    "no-console": "off"
-  }
+    "no-console": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["**/infrastructure/**"],
+            "message": "Domain layer must not import from infrastructure layer. Use interfaces instead."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/domain/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/infrastructure/**", "@/infrastructure/**"],
+                "message": "Domain layer must not import from infrastructure layer. Domain should be pure and framework-agnostic."
+              },
+              {
+                "group": ["**/application/**", "@/application/**"],
+                "message": "Domain layer must not import from application layer. Domain should not depend on use cases."
+              },
+              {
+                "group": ["next", "next/*", "react", "react-dom"],
+                "message": "Domain layer must not import framework code. Keep domain pure and testable."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/application/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/infrastructure/repositories/*", "@/infrastructure/repositories/*"],
+                "message": "Application layer (use cases) must not import concrete repositories. Import from domain interfaces instead (e.g., '@/domain/user/repositories/IUserRepository')."
+              },
+              {
+                "group": ["next", "next/*"],
+                "message": "Application layer must not import Next.js code. Use cases should be framework-agnostic."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["app/api/**/*.ts", "app/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/infrastructure/repositories/*", "@/infrastructure/repositories/*"],
+                "message": "API routes must not import concrete repositories directly. Use the DI container instead: import { container } from '@/infrastructure/di/container'."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }
