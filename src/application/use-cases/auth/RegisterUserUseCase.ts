@@ -29,15 +29,15 @@ export class RegisterUserUseCase {
   ) {}
 
   async execute(command: RegisterUserCommand): Promise<RegisterUserResult> {
+    // Create value objects first
+    const email = Email.create(command.email);
+    const password = Password.create(command.password);
+    
     // Check if user already exists
-    const existingUser = await this.userRepository.findByEmail(command.email);
+    const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new Error('A user with this email already exists');
     }
-
-    // Create value objects
-    const email = Email.create(command.email);
-    const password = Password.create(command.password);
 
     // Create user entity
     const user = await User.create({

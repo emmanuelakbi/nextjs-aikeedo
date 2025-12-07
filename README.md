@@ -1,4 +1,4 @@
-# AIKEEDO - AI Services Platform
+# AIKEEDO - Multi-Tenant AI Services Platform
 
 A modern, enterprise-grade AI services platform built with Next.js 14, featuring multi-tenant workspaces, integrated AI providers, and a comprehensive billing system.
 
