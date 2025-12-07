@@ -2,7 +2,9 @@ const { config } = require('dotenv');
 config();
 
 module.exports = {
-  datasource: {
-    url: process.env.DATABASE_URL,
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL,
+    },
   },
 };
