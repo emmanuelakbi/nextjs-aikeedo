@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
+import bcrypt from 'bcryptjs';
 import { UserRepository } from '../../infrastructure/repositories/UserRepository';
 import { Password } from '../../domain/user/value-objects/Password';
 import { Email } from '../../domain/user/value-objects/Email';
@@ -56,8 +57,7 @@ export const authConfig: NextAuthConfig = {
           console.log('[AUTH] User found:', user.getId().getValue());
 
           // Verify password (don't validate complexity during login, just check hash)
-          const bcrypt = await import('bcryptjs');
-          const isValid = await bcryptjs.compare(
+          const isValid = await bcrypt.compare(
             password,
             user.getPasswordHash()
           );
