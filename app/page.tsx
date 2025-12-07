@@ -8,7 +8,14 @@ import Link from 'next/link';
  */
 
 export default async function Home() {
-  const session = await getSession();
+  let session = null;
+  
+  try {
+    session = await getSession();
+  } catch (error) {
+    console.error('Error getting session:', error);
+    // Continue without session - show landing page
+  }
 
   // Redirect authenticated users to dashboard
   if (session?.user) {
