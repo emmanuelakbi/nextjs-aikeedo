@@ -5,6 +5,11 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
+  // Skip ESLint during build (linting is checked in CI/locally)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   // Enable instrumentation hook for environment validation on startup
   experimental: {
     instrumentationHook: true,
