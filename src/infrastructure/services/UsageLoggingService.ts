@@ -128,8 +128,8 @@ export class UsageLoggingService {
 
     // Calculate totals
     const totalGenerations = generations.length;
-    const totalCredits = generations.reduce((sum: number, gen) => sum + gen.credits, 0);
-    const totalTokens = generations.reduce((sum: number, gen) => sum + gen.tokens, 0);
+    const totalCredits = generations.reduce((sum: number, gen: any) => sum + gen.credits, 0);
+    const totalTokens = generations.reduce((sum: number, gen: any) => sum + gen.tokens, 0);
 
     // Aggregate by type
     const byTypeMap = new Map<

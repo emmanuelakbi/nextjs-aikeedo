@@ -99,7 +99,7 @@ export async function GET(
 
     // Calculate total credits used
     const totalCreditsUsed = generationStats.reduce(
-      (sum: number, stat) => sum + (stat._sum.credits || 0),
+      (sum: number, stat: any) => sum + (stat._sum.credits || 0),
       0
     );
 

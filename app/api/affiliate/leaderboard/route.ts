@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       ).length;
       const totalEarnings = affiliate.referrals
         .filter((r) => r.status === 'CONVERTED')
-        .reduce((sum: number, r) => sum + (r.commission || 0), 0);
+        .reduce((sum: number, r: any) => sum + (r.commission || 0), 0);
       const conversionRate =
         totalReferrals > 0 ? (convertedReferrals / totalReferrals) * 100 : 0;
 

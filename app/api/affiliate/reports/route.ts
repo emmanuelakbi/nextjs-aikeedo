@@ -128,7 +128,7 @@ async function generateSummaryReport(affiliateId: string, startDate: Date) {
   );
   const totalPayouts = payouts
     .filter((p) => p.status === 'PAID')
-    .reduce((sum: number, p) => sum + p.amount, 0);
+    .reduce((sum: number, p: any) => sum + p.amount, 0);
 
   return {
     totalReferrals,

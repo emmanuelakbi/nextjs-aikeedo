@@ -223,7 +223,7 @@ export async function GET(request: NextRequest) {
           createdAt: invoice.createdAt.toISOString(),
         })),
         monthlySpending,
-        totalSpent: invoices.reduce((sum: number, inv) => sum + inv.amount, 0),
+        totalSpent: invoices.reduce((sum: number, inv: any) => sum + inv.amount, 0),
       },
 
       // Requirements: 12.4 - Usage breakdown by service type
