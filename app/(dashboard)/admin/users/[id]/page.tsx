@@ -8,6 +8,9 @@ import { UserDetailClient } from './UserDetailClient';
  *
  * Displays detailed information about a specific user.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'User Details | Admin Dashboard',

@@ -8,6 +8,9 @@ import { SubscriptionManagementClient } from './SubscriptionManagementClient';
  *
  * Displays a list of all subscriptions with management actions.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'Subscription Management | Admin Dashboard',

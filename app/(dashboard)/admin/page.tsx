@@ -8,6 +8,9 @@ import { AnalyticsDashboard } from './AnalyticsDashboard';
  *
  * Displays overview statistics and analytics.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'Admin Dashboard',

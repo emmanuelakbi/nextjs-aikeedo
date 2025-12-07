@@ -8,6 +8,9 @@ import { SystemSettingsClient } from './SystemSettingsClient';
  *
  * Displays and manages system-wide settings.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'System Settings | Admin Dashboard',

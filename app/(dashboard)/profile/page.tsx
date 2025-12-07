@@ -7,6 +7,9 @@ import ProfileForm from './ProfileForm';
  * Profile page with edit form
  * Requirements: 7.1, 7.2
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export default async function ProfilePage() {
   const session = await requireAuth();

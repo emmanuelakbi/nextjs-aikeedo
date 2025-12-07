@@ -8,6 +8,9 @@ import { WorkspaceDetailClient } from './WorkspaceDetailClient';
  *
  * Displays detailed information about a specific workspace.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'Workspace Details | Admin Dashboard',

@@ -7,6 +7,9 @@ import { Id } from '@/domain/user/value-objects/Id';
  * Dashboard home page
  * Requirements: 7.1, 8.3, 8.4
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export default async function DashboardPage() {
   const session = await requireAuth();

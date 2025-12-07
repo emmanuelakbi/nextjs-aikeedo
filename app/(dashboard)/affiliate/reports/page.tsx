@@ -7,6 +7,9 @@ import { Suspense } from 'react';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import AffiliateReports from './AffiliateReports';
+export const dynamic = 'force-dynamic';
+
+
 
 export default async function ReportsPage() {
   const session = await auth();

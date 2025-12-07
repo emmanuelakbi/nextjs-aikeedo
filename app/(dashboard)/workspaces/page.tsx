@@ -9,6 +9,9 @@ import CreateWorkspaceButton from './CreateWorkspaceButton';
  * Workspace management page
  * Requirements: 8.1, 8.2, 8.3, 8.4
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export default async function WorkspacesPage() {
   const session = await requireAuth();

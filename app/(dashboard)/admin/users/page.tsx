@@ -8,6 +8,9 @@ import { UserManagementClient } from './UserManagementClient';
  *
  * Displays a list of all users with search, filters, and management actions.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'User Management | Admin Dashboard',

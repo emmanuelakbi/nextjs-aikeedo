@@ -8,6 +8,9 @@ import { WorkspaceManagementClient } from './WorkspaceManagementClient';
  *
  * Displays a list of all workspaces with management actions.
  */
+export const dynamic = 'force-dynamic';
+
+
 
 export const metadata = {
   title: 'Workspace Management | Admin Dashboard',

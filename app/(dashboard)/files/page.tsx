@@ -9,6 +9,9 @@ import { requireAuth } from '@/lib/auth/session';
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { Id } from '@/domain/user/value-objects/Id';
 import FileBrowserClient from './FileBrowserClient';
+export const dynamic = 'force-dynamic';
+
+
 
 export default async function FileBrowserPage() {
   // Require authentication
