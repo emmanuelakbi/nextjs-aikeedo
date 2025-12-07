@@ -7,6 +7,8 @@ import Link from 'next/link';
  * Requirements: 7.1, 8.3
  */
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   let session = null;
   
