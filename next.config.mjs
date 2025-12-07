@@ -10,9 +10,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
-  // Enable instrumentation hook for environment validation on startup
+  // Disable instrumentation hook temporarily to fix build
   experimental: {
-    instrumentationHook: true,
+    instrumentationHook: false,
     // Enable optimized package imports
     optimizePackageImports: ['@/components', '@/lib'],
     // Exclude packages from server components bundling

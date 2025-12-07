@@ -4,14 +4,14 @@
  * Use it for initialization tasks like environment validation
  */
 
-// Polyfill self for server-side rendering
-if (typeof self === 'undefined') {
-  (global as any).self = global;
-}
-
 export async function register() {
   // Only run on server-side
   if (process.env.NEXT_RUNTIME === 'nodejs') {
+    // Polyfill self for server-side rendering before any imports
+    if (typeof self === 'undefined') {
+      (global as any).self = global;
+    }
+    
     const { initializeApp } = await import('./src/lib/init');
     initializeApp();
   }
