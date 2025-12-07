@@ -40,7 +40,7 @@ export class UserFactory {
 
     const email = options.email || `user${this.counter}@test.com`;
     const password = options.password || 'password123';
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcryptjs.hash(password, 12);
 
     const user = await this.prisma.user.create({
       data: {

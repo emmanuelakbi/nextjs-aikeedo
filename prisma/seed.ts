@@ -21,7 +21,7 @@ async function main() {
   console.log('🌱 Starting database seeding...');
 
   // Hash password once for all users
-  const hashedPassword = await bcrypt.hash('password123', 12);
+  const hashedPassword = await bcryptjs.hash('password123', 12);
 
   // Create admin user
   const admin = await prisma.user.create({

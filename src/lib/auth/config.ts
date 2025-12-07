@@ -57,7 +57,7 @@ export const authConfig: NextAuthConfig = {
 
           // Verify password (don't validate complexity during login, just check hash)
           const bcrypt = await import('bcryptjs');
-          const isValid = await bcrypt.compare(
+          const isValid = await bcryptjs.compare(
             password,
             user.getPasswordHash()
           );

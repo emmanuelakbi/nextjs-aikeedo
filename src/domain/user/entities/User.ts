@@ -102,7 +102,7 @@ export class User {
    * Requirements: 3.4, 12.1
    */
   static async hashPassword(password: Password): Promise<string> {
-    return bcrypt.hash(password.getValue(), User.SALT_ROUNDS);
+    return bcryptjs.hash(password.getValue(), User.SALT_ROUNDS);
   }
 
   /**
@@ -110,7 +110,7 @@ export class User {
    * Requirements: 3.2, 3.3
    */
   async verifyPassword(password: Password): Promise<boolean> {
-    return bcrypt.compare(password.getValue(), this.props.passwordHash);
+    return bcryptjs.compare(password.getValue(), this.props.passwordHash);
   }
 
   /**

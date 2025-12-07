@@ -54,7 +54,7 @@ describe('Workspace - Ownership Property Tests', () => {
         async (workspaceName, ownerEmail, firstName, lastName) => {
           try {
             // Create owner user
-            const passwordHash = await bcrypt.hash('TestPassword123!', 10);
+            const passwordHash = await bcryptjs.hash('TestPassword123!', 10);
             const owner = await userRepository.create({
               email: ownerEmail,
               passwordHash,
@@ -150,7 +150,7 @@ describe('Workspace - Ownership Property Tests', () => {
 
           try {
             // Create original owner user
-            const passwordHash = await bcrypt.hash('TestPassword123!', 10);
+            const passwordHash = await bcryptjs.hash('TestPassword123!', 10);
             const originalOwner = await userRepository.create({
               email: originalOwnerEmail,
               passwordHash,

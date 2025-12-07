@@ -38,7 +38,7 @@ export async function createTestFixtures(
   const userId = crypto.randomUUID();
   const workspaceId = crypto.randomUUID();
 
-  const hashedPassword = await bcrypt.hash('Test123!@#', 10);
+  const hashedPassword = await bcryptjs.hash('Test123!@#', 10);
 
   // Create user
   const user = await prisma.user.create({
@@ -94,7 +94,7 @@ export async function createTestUser(
   email?: string
 ): Promise<{ id: string; email: string; cleanup: () => Promise<void> }> {
   const userId = crypto.randomUUID();
-  const hashedPassword = await bcrypt.hash('Test123!@#', 10);
+  const hashedPassword = await bcryptjs.hash('Test123!@#', 10);
 
   const user = await prisma.user.create({
     data: {
