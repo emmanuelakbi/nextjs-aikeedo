@@ -29,7 +29,7 @@ export default function UsageBreakdownChart({
     'bg-orange-500',
   ];
 
-  const totalUsage = usageData.reduce((sum, item) => sum + item.usage, 0);
+  const totalUsage = usageData.reduce((sum: number, item) => sum + item.usage, 0);
 
   return (
     <div className="space-y-4">

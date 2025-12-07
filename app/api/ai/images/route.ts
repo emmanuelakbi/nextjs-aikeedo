@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         data: {
           images: results,
           count: results.length,
-          totalCredits: results.reduce((sum, r) => sum + r.credits, 0),
+          totalCredits: results.reduce((sum: number, r) => sum + r.credits, 0),
         },
       });
     }
