@@ -13,6 +13,9 @@ import { VerificationTokenRepository } from '@/infrastructure/repositories/Verif
 import { SessionRepository } from '@/infrastructure/repositories/SessionRepository';
 import { rateLimit, RATE_LIMITS } from '@/lib/middleware/rate-limit';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 async function handler(request: NextRequest) {
   try {

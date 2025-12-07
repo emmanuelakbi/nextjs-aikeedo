@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+
+
 /**
  * NextAuth.js API Route Handler
  *

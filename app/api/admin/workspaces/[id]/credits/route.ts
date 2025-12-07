@@ -3,6 +3,9 @@ import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { z } from 'zod';
 import { CreditTransactionType } from '@/domain/types';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin Workspace Credits Management API

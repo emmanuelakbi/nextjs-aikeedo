@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/session';
 import { UsageLoggingService } from '@/infrastructure/services/UsageLoggingService';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/usage/activity

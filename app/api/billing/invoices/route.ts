@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
 import { InvoiceStatus } from '@/domain/types';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/billing/invoices

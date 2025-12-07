@@ -15,6 +15,9 @@ import { MessageRepository } from '@/infrastructure/repositories/MessageReposito
 import { GetConversationCommandSchema } from '@/application/commands/conversation/GetConversationCommand';
 import { DeleteConversationCommandSchema } from '@/application/commands/conversation/DeleteConversationCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/conversations/:id

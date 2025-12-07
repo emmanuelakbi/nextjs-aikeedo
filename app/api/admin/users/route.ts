@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { UserStatus } from '@/domain/user';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin User Management API

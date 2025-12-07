@@ -15,6 +15,9 @@ import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepo
 import { CreatePresetCommandSchema } from '@/application/commands/preset/CreatePresetCommand';
 import { ListPresetsCommandSchema } from '@/application/commands/preset/ListPresetsCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/presets

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PlanRepository } from '@/infrastructure/repositories/PlanRepository';
 import { ActivatePlanUseCase } from '@/application/use-cases/billing/ActivatePlan';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/billing/plans/[id]/activate

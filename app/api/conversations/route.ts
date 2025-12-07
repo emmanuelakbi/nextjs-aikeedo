@@ -16,6 +16,9 @@ import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { CreateConversationCommandSchema } from '@/application/commands/conversation/CreateConversationCommand';
 import { ListConversationsCommandSchema } from '@/application/commands/conversation/ListConversationsCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/conversations

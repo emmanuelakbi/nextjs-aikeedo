@@ -12,6 +12,9 @@ import { GenerateImageCommandSchema } from '@/application/commands/ai/GenerateIm
 import { InsufficientCreditsError } from '@/infrastructure/services/CreditDeductionService';
 import { withAIRateLimit } from '@/lib/middleware/rate-limit';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/ai/images

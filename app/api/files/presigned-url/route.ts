@@ -11,6 +11,9 @@ import { GetPresignedUploadUrlUseCase } from '@/application/use-cases/file/GetPr
 import { getFileStorage } from '@/lib/storage';
 import { GetPresignedUploadUrlCommandSchema } from '@/application/commands/file/GetPresignedUploadUrlCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/files/presigned-url

@@ -9,6 +9,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
 import { getAIServiceFactory } from '@/lib/ai/factory';
 import type { ServiceCapability } from '@/lib/ai/factory';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/ai/models

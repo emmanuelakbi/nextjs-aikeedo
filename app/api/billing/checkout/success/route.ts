@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { stripeService } from '@/infrastructure/services/StripeService';
 import { subscriptionService } from '@/infrastructure/services/SubscriptionService';
 import { z } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/billing/checkout/success

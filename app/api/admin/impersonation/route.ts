@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin-guard';
 import { getAdminImpersonationSessions } from '@/lib/admin/impersonation';
 import prisma from '@/lib/db/prisma';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/admin/impersonation

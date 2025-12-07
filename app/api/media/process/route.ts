@@ -7,6 +7,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMediaProcessingService } from '@/infrastructure/services/media-processing-service';
 import { getFileStorageService } from '@/infrastructure/services/file-storage-service';
+export const dynamic = 'force-dynamic';
+
+
 
 export async function POST(request: NextRequest) {
   try {

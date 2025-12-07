@@ -17,6 +17,9 @@ import { GetPresetCommandSchema } from '@/application/commands/preset/GetPresetC
 import { UpdatePresetCommandSchema } from '@/application/commands/preset/UpdatePresetCommand';
 import { DeletePresetCommandSchema } from '@/application/commands/preset/DeletePresetCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/presets/[id]

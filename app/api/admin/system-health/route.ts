@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin System Health API

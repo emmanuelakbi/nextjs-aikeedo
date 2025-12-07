@@ -12,6 +12,9 @@ import { TransferWorkspaceOwnershipUseCase } from '@/application/use-cases/works
 import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepository';
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { TransferWorkspaceOwnershipCommand } from '@/application/commands/workspace/TransferWorkspaceOwnershipCommand';
+export const dynamic = 'force-dynamic';
+
+
 
 const TransferOwnershipSchema = z.object({
   newOwnerId: z.string().uuid('New owner ID must be a valid UUID'),

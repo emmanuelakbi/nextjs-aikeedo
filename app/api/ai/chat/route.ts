@@ -13,6 +13,9 @@ import { InsufficientCreditsError } from '@/infrastructure/services/CreditDeduct
 import { withAIRateLimit } from '@/lib/middleware/rate-limit';
 import { toReadableStream } from '@/lib/ai/streaming-handler';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/ai/chat

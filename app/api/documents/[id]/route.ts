@@ -14,6 +14,9 @@ import { UpdateDocumentUseCase } from '@/application/use-cases/document/UpdateDo
 import { DeleteDocumentUseCase } from '@/application/use-cases/document/DeleteDocumentUseCase';
 import { DocumentRepository } from '@/infrastructure/repositories/DocumentRepository';
 import { z, ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 const UpdateDocumentSchema = z.object({
   title: z.string().min(1).optional(),

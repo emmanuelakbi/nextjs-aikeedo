@@ -8,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { RejectPayoutUseCase } from '@/application/use-cases/affiliate/reject-payout';
 import { PrismaPayoutRepository } from '@/infrastructure/affiliate/prisma-payout-repository';
+export const dynamic = 'force-dynamic';
+
+
 
 export async function POST(request: NextRequest) {
   try {

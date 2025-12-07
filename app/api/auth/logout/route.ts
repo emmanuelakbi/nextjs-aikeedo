@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth, signOut } from '@/lib/auth/auth';
 import { SessionRepository } from '@/infrastructure/repositories/SessionRepository';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/auth/logout

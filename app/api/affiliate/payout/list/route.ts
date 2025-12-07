@@ -8,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
 import { PrismaPayoutRepository } from '@/infrastructure/affiliate/prisma-payout-repository';
+export const dynamic = 'force-dynamic';
+
+
 
 export async function GET(_request: NextRequest) {
   try {

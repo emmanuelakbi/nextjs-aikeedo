@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PlanRepository } from '@/infrastructure/repositories/PlanRepository';
 import { GetPlanUseCase } from '@/application/use-cases/billing/GetPlan';
 import { UpdatePlanUseCase } from '@/application/use-cases/billing/UpdatePlan';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/billing/plans/[id]

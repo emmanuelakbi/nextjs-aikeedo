@@ -12,6 +12,9 @@ import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { VerificationTokenRepository } from '@/infrastructure/repositories/VerificationTokenRepository';
 import { rateLimit, RATE_LIMITS } from '@/lib/middleware/rate-limit';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 async function handler(request: NextRequest) {
   try {

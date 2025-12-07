@@ -12,6 +12,9 @@ import { GenerateCompletionCommandSchema } from '@/application/commands/ai/Gener
 import { InsufficientCreditsError } from '@/infrastructure/services/CreditDeductionService';
 import { withAIRateLimit } from '@/lib/middleware/rate-limit';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/ai/completions

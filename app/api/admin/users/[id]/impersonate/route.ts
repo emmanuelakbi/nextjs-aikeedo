@@ -5,6 +5,9 @@ import {
   endImpersonation,
 } from '@/lib/admin/impersonation';
 import prisma from '@/lib/db/prisma';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/admin/users/:id/impersonate

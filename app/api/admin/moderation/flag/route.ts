@@ -3,6 +3,9 @@ import { requireAdmin } from '@/lib/admin';
 import { logAdminAction } from '@/lib/admin/audit-logger';
 import prisma from '@/lib/db/prisma';
 import { z } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin Content Flagging API

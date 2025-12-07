@@ -10,6 +10,9 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { container } from '@/infrastructure/di/container';
 import { UpdatePasswordCommandSchema } from '@/application/commands/user/UpdatePasswordCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * PATCH /api/users/me/password

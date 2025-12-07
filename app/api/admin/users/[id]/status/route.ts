@@ -3,6 +3,9 @@ import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { UserStatus } from '@/domain/user';
 import { z } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin User Status Management API

@@ -4,6 +4,9 @@ import prisma from '@/lib/db/prisma';
 import { getStripeClient } from '@/lib/stripe';
 import { z } from 'zod';
 import type Stripe from 'stripe';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin Refunds API

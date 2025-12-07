@@ -4,6 +4,9 @@ import { stripeService } from '@/infrastructure/services/StripeService';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
 import { prisma } from '@/lib/db';
 import Stripe from 'stripe';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/webhooks/stripe

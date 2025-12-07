@@ -11,6 +11,9 @@ import { UpdateWorkspaceUseCase } from '@/application/use-cases/workspace/Update
 import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepository';
 import { UpdateWorkspaceCommandSchema } from '@/application/commands/workspace/UpdateWorkspaceCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * PATCH /api/workspaces/:id

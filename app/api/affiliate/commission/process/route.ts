@@ -10,6 +10,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { ProcessCommissionUseCase } from '@/application/use-cases/affiliate/process-commission';
 import {
+export const dynamic = 'force-dynamic';
+
+
   PrismaAffiliateRepository,
   PrismaReferralRepository,
 } from '@/infrastructure/affiliate/prisma-affiliate-repository';

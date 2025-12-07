@@ -3,6 +3,9 @@ import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { getStripeClient } from '@/lib/stripe';
 import { z } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin Subscription Cancellation API

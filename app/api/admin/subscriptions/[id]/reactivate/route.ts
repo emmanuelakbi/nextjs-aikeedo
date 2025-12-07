@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { getStripeClient } from '@/lib/stripe';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin Subscription Reactivation API

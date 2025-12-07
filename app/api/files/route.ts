@@ -15,6 +15,9 @@ import { getFileStorage } from '@/lib/storage';
 import { UploadFileCommandSchema } from '@/application/commands/file/UploadFileCommand';
 import { ListFilesCommandSchema } from '@/application/commands/file/ListFilesCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/files

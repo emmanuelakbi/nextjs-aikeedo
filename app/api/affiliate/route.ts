@@ -9,6 +9,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
 import prisma from '@/lib/db/prisma';
+export const dynamic = 'force-dynamic';
+
+
 
 export async function GET() {
   try {

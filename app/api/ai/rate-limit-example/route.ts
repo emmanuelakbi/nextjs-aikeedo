@@ -9,6 +9,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { withAIRateLimit } from '@/lib/middleware/rate-limit';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Example AI endpoint with rate limiting

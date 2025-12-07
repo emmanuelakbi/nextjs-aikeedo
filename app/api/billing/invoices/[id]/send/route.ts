@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
 import { prisma } from '@/lib/db';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/billing/invoices/[id]/send

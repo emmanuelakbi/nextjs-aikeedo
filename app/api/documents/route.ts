@@ -13,6 +13,9 @@ import { ListDocumentsUseCase } from '@/application/use-cases/document/ListDocum
 import { SearchDocumentsUseCase } from '@/application/use-cases/document/SearchDocumentsUseCase';
 import { DocumentRepository } from '@/infrastructure/repositories/DocumentRepository';
 import { z, ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 const CreateDocumentSchema = z.object({
   title: z.string().min(1, 'Title is required'),

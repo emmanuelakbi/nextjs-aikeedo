@@ -12,6 +12,9 @@ import { container } from '@/infrastructure/di/container';
 import { ListWorkspacesQuerySchema } from '@/application/queries/workspace/ListWorkspacesQuery';
 import { CreateWorkspaceCommandSchema } from '@/application/commands/workspace/CreateWorkspaceCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/workspaces

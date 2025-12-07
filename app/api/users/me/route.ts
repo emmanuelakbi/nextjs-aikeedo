@@ -12,6 +12,9 @@ import { container } from '@/infrastructure/di/container';
 import { GetUserQuerySchema } from '@/application/queries/user/GetUserQuery';
 import { UpdateProfileCommandSchema } from '@/application/commands/user/UpdateProfileCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/users/me

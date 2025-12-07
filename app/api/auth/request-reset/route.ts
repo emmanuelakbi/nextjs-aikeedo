@@ -16,6 +16,9 @@ import { renderPasswordResetEmail } from '@/lib/email/templates';
 import { appConfig } from '@/lib/config';
 import { rateLimit, RATE_LIMITS } from '@/lib/middleware/rate-limit';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 async function handler(request: NextRequest) {
   try {

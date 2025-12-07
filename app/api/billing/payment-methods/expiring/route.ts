@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { createPaymentMethodService } from '@/infrastructure/services/PaymentMethodService';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Expiring Payment Methods API Route

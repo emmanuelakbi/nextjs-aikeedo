@@ -13,6 +13,9 @@ import { sendEmail } from '@/lib/email/service';
 import { renderVerificationEmail } from '@/lib/email/templates';
 import { appConfig } from '@/lib/config';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * PATCH /api/users/me/email

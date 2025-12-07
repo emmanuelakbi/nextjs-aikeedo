@@ -8,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { CreateAffiliateUseCase } from '@/application/use-cases/affiliate/create-affiliate';
 import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
+export const dynamic = 'force-dynamic';
+
+
 
 export async function POST(request: NextRequest) {
   try {

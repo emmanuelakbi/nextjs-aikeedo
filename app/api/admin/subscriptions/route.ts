@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { SubscriptionStatus } from '@/domain/types';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Admin Subscription Management API

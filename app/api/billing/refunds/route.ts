@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { stripeService } from '@/infrastructure/services/StripeService';
 import { z } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Refund API Routes

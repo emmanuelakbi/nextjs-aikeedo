@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { createPaymentMethodService } from '@/infrastructure/services/PaymentMethodService';
 import { z } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * Payment Methods API Routes

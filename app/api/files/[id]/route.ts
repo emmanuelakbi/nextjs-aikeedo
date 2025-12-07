@@ -13,6 +13,9 @@ import { FileRepository } from '@/infrastructure/repositories/FileRepository';
 import { getFileStorage } from '@/lib/storage';
 import { DeleteFileCommandSchema } from '@/application/commands/file/DeleteFileCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/files/[id]

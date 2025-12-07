@@ -12,6 +12,9 @@ import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepo
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { SwitchWorkspaceCommandSchema } from '@/application/commands/workspace/SwitchWorkspaceCommand';
 import { ZodError } from 'zod';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/workspaces/:id/switch

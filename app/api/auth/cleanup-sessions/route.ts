@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/session';
 import { runSessionCleanup } from '@/lib/auth/cleanup';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/auth/cleanup-sessions

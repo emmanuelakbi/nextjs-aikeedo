@@ -3,6 +3,9 @@ import { PlanRepository } from '@/infrastructure/repositories/PlanRepository';
 import { CreatePlanUseCase } from '@/application/use-cases/billing/CreatePlan';
 import { ListPlansUseCase } from '@/application/use-cases/billing/ListPlans';
 import { PlanInterval } from '@/domain/types';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/billing/plans

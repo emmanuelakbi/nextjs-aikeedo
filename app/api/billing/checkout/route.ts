@@ -4,6 +4,9 @@ import { subscriptionService } from '@/infrastructure/services/SubscriptionServi
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import {
+export const dynamic = 'force-dynamic';
+
+
   withRateLimit,
   checkoutRateLimiter,
 } from '@/lib/middleware/rate-limit';

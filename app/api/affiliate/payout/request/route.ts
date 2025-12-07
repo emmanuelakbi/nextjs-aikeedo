@@ -9,6 +9,9 @@ import { auth } from '@/lib/auth';
 import { RequestPayoutUseCase } from '@/application/use-cases/affiliate/request-payout';
 import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
 import { PrismaPayoutRepository } from '@/infrastructure/affiliate/prisma-payout-repository';
+export const dynamic = 'force-dynamic';
+
+
 
 export async function POST(request: NextRequest) {
   try {
