@@ -26,21 +26,23 @@ const envSchema = z.object({
     .min(1, 'NEXTAUTH_URL is required')
     .url('NEXTAUTH_URL must be a valid URL'),
 
-  // Email (SMTP) Configuration
-  SMTP_HOST: z.string().min(1, 'SMTP_HOST is required'),
+  // Email (SMTP) Configuration - Optional for deployment
+  SMTP_HOST: z.string().min(1, 'SMTP_HOST is required').optional(),
   SMTP_PORT: z
     .string()
     .regex(/^\d+$/, 'SMTP_PORT must be a number')
     .transform((val) => parseInt(val, 10))
     .refine((val) => val > 0 && val <= 65535, {
       message: 'SMTP_PORT must be between 1 and 65535',
-    }),
-  SMTP_USER: z.string().min(1, 'SMTP_USER is required'),
-  SMTP_PASSWORD: z.string().min(1, 'SMTP_PASSWORD is required'),
+    })
+    .optional(),
+  SMTP_USER: z.string().min(1, 'SMTP_USER is required').optional(),
+  SMTP_PASSWORD: z.string().min(1, 'SMTP_PASSWORD is required').optional(),
   SMTP_FROM: z
     .string()
     .min(1, 'SMTP_FROM is required')
-    .email('SMTP_FROM must be a valid email address'),
+    .email('SMTP_FROM must be a valid email address')
+    .optional(),
 
   // Optional: Redis for caching
   REDIS_URL: z.string().url('REDIS_URL must be a valid URL').optional(),
