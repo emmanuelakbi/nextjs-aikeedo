@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Input, Button, Form, FormError, useToast } from '@/components/ui';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Login Page
  *

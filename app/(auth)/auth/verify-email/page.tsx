@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Spinner, ErrorMessage, SuccessMessage } from '@/components/ui';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Email Verification Page
  *

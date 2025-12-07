@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { SuccessMessage } from '@/components/ui';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Verification Request Page
  *

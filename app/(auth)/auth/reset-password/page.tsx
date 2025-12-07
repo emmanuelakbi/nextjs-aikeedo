@@ -12,6 +12,8 @@ import {
   ErrorMessage,
 } from '@/components/ui';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Password Reset Page
  *

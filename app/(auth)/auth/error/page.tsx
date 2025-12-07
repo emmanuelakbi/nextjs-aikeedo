@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ErrorMessage } from '@/components/ui';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Auth Error Page
  *
