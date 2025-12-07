@@ -1,13 +1,11 @@
 import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '../db';
 import { authConfig } from './config';
 import { env } from '../env';
 
 /**
- * NextAuth.js instance with Prisma adapter
+ * NextAuth.js instance
  *
- * Provides authentication with database sessions and Prisma ORM integration.
+ * Provides authentication with JWT sessions.
  * Requirements: 3.1, 3.2, 3.3, 6.1, 6.2
  */
 
@@ -17,7 +15,6 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  adapter: PrismaAdapter(prisma) as any,
   ...authConfig,
   secret: env.NEXTAUTH_SECRET,
 });

@@ -114,6 +114,15 @@ async function handler(request: NextRequest) {
 
     // Handle other errors
     console.error('Registration error:', error);
+    
+    // Log more details for debugging
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
+    }
 
     return NextResponse.json(
       {
@@ -121,6 +130,7 @@ async function handler(request: NextRequest) {
           code: 'INTERNAL_ERROR',
           message:
             'An error occurred during registration. Please try again later.',
+          details: error instanceof Error ? error.message : 'Unknown error',
         },
       },
       { status: 500 }
