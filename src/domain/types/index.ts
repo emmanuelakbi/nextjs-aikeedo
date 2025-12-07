@@ -82,10 +82,11 @@ export enum InvoiceStatus {
 
 export enum CreditTransactionType {
   PURCHASE = 'PURCHASE',
+  SUBSCRIPTION_ALLOCATION = 'SUBSCRIPTION_ALLOCATION',
   USAGE = 'USAGE',
   REFUND = 'REFUND',
-  BONUS = 'BONUS',
-  SUBSCRIPTION_ALLOCATION = 'SUBSCRIPTION_ALLOCATION',
+  ADJUSTMENT = 'ADJUSTMENT',
+  OVERAGE = 'OVERAGE',
 }
 
 // ============================================================================
