@@ -20,7 +20,6 @@ import {
 } from '@/lib/middleware/performance-middleware';
 
 export const dynamic = 'force-dynamic';
-export const dynamic = 'force-dynamic';
 
 
 
