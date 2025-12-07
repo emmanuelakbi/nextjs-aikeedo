@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import prisma from '../../src/lib/db/prisma';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 
 /**
  * End-to-End Tests for AI Services Flows

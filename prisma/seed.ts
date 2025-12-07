@@ -12,7 +12,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 
 // For seeding, use simple PrismaClient
 const prisma = new PrismaClient();

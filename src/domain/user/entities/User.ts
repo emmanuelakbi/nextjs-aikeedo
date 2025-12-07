@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import { Id } from '../value-objects/Id';
 import { Email } from '../value-objects/Email';
 import { Password } from '../value-objects/Password';

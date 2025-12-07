@@ -4,7 +4,7 @@
  */
 
 import { prisma } from '../db';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 export interface TestUser {
   id: string;

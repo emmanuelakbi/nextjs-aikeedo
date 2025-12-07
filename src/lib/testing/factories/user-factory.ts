@@ -9,7 +9,7 @@
 
 import { PrismaClient } from '@prisma/client';
 import { UserRole, UserStatus } from '@/domain/user';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 
 export interface CreateUserOptions {
   email?: string;

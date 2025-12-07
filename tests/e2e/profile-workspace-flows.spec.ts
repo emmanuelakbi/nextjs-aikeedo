@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 
 /**
  * End-to-End Tests for Profile and Workspace Flows

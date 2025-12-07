@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as fc from 'fast-check';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import { Workspace } from '../Workspace';
 import { WorkspaceRepository } from '../../../../infrastructure/repositories/WorkspaceRepository';
 import { UserRepository } from '../../../../infrastructure/repositories/UserRepository';

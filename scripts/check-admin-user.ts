@@ -34,7 +34,7 @@ async function main() {
       console.log('❌ Admin user not found');
       console.log('\nCreating admin user...');
 
-      const bcrypt = await import('bcrypt');
+      const bcrypt = await import('bcryptjs');
       const passwordHash = await bcrypt.hash('password123', 12);
 
       const newUser = await prisma.user.create({
