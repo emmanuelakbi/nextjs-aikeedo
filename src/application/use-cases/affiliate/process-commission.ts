@@ -3,15 +3,13 @@
  * Requirements: Affiliate 2 - Calculate commissions on subscriptions and credit purchases
  */
 
-import type {
 import type { Prisma } from '@prisma/client';
+import type {
   AffiliateRepository,
   ReferralRepository,
 } from '@/domain/affiliate/repositories/affiliate-repository';
 import { calculateCommission } from '@/domain/affiliate/services/commission-calculator';
-import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/db/prisma';
-import type { Prisma } from '@prisma/client';
 
 export interface ProcessCommissionInput {
   userId: string; // User who made the purchase

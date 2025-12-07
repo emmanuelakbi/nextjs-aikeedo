@@ -3,15 +3,13 @@
  * Requirements: Affiliate 2 - Handle refunds and chargebacks
  */
 
-import type {
 import type { Prisma } from '@prisma/client';
+import type {
   AffiliateRepository,
   ReferralRepository,
 } from '@/domain/affiliate/repositories/affiliate-repository';
 import { calculateRefundAdjustment } from '@/domain/affiliate/services/commission-calculator';
-import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/db/prisma';
-import type { Prisma } from '@prisma/client';
 
 export interface ProcessRefundInput {
   userId: string; // User who received the refund

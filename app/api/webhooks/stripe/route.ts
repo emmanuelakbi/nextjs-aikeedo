@@ -1,15 +1,10 @@
+import type { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
-import type { Prisma } from '@prisma/client';
 import { headers } from 'next/headers';
-import type { Prisma } from '@prisma/client';
 import { stripeService } from '@/infrastructure/services/StripeService';
-import type { Prisma } from '@prisma/client';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
-import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
-import type { Prisma } from '@prisma/client';
 import Stripe from 'stripe';
-import type { Prisma } from '@prisma/client';
 
 /**
  * POST /api/webhooks/stripe

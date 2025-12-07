@@ -1,9 +1,7 @@
+import type { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/db';
-import type { Prisma } from '@prisma/client';
 import { Workspace } from '../../domain/workspace/entities/Workspace';
-import type { Prisma } from '@prisma/client';
 import { WorkspaceRepository } from '../repositories/WorkspaceRepository';
-import type { Prisma } from '@prisma/client';
 
 /**
  * CreditDeductionService

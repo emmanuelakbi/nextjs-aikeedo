@@ -3,14 +3,11 @@
  * Requirements: Affiliate 3 - Process via PayPal/Stripe
  */
 
+import type { Prisma } from '@prisma/client';
 import type { AffiliateRepository } from '@/domain/affiliate/repositories/affiliate-repository';
-import type { Prisma } from '@prisma/client';
 import type { PayoutRepository } from '@/domain/affiliate/repositories/payout-repository';
-import type { Prisma } from '@prisma/client';
 import type { Payout } from '@/types/affiliate';
-import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/db/prisma';
-import type { Prisma } from '@prisma/client';
 
 export interface ProcessPayoutInput {
   payoutId: string;
