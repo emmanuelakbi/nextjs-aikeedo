@@ -1,7 +1,7 @@
-const { config } = require('dotenv');
+import { config } from 'dotenv';
 config();
 
-module.exports = {
+export default {
   datasources: {
     db: {
       url: process.env.DATABASE_URL,
