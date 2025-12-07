@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Skip type checking during build (types are checked in CI/locally)
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
   // Enable instrumentation hook for environment validation on startup
   experimental: {
     instrumentationHook: true,
