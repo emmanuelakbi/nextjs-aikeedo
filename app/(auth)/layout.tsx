@@ -1,5 +1,7 @@
 import { ToastProvider } from '@/components/ui';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Auth Layout
  *
