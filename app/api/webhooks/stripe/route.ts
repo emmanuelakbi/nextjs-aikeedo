@@ -170,7 +170,7 @@ async function handleCheckoutSessionCompleted(
   );
 
   // FIX: Use transaction with upsert to handle race condition
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: any) => {
     const customerId =
       typeof stripeSubscription.customer === 'string'
         ? stripeSubscription.customer
@@ -351,7 +351,7 @@ async function handleSubscriptionUpdated(
 
   while (retries < maxRetries) {
     try {
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         // Get current subscription with version
         const current = await tx.subscription.findUnique({
           where: { stripeSubscriptionId: subscription.id },
@@ -479,7 +479,7 @@ async function handlePaymentIntentSucceeded(
 
   // FIX: Use transaction with unique constraint to prevent race condition
   try {
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // Try to create transaction record first (will fail if duplicate due to unique constraint)
       const workspace = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -812,7 +812,7 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
   }
 
   // Deduct the credits back
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: any) => {
     const workspace = await tx.workspace.findUnique({
       where: { id: transaction.workspaceId },
     });

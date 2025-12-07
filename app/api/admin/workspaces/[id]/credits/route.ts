@@ -59,7 +59,8 @@ export async function POST(
     }
 
     // Update workspace credits and create transaction in a transaction
-    const result = await prisma.$transaction(async (tx) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await prisma.$transaction(async (tx: any) => {
       // Update workspace credits
       const updatedWorkspace = await tx.workspace.update({
         where: { id: workspaceId },

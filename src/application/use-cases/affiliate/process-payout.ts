@@ -70,7 +70,7 @@ export class ProcessPayoutUseCase {
       await this.processPayment(payout);
 
       // Use transaction to update both payout and affiliate
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         // Update payout status to paid
         await tx.payout.update({
           where: { id: payout.id },

@@ -100,7 +100,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: any) => {
       // Lock the workspace row for update to prevent race conditions
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -168,7 +168,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: any) => {
       // Lock the workspace row for update
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -224,7 +224,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: any) => {
       // Lock the workspace row for update
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -301,7 +301,7 @@ export class CreditDeductionService {
     }
 
     // Use a transaction to ensure atomicity
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: any) => {
       // Lock the workspace row for update
       const workspaceData = await tx.workspace.findUnique({
         where: { id: workspaceId },

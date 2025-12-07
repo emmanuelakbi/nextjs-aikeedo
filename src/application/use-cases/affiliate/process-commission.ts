@@ -90,7 +90,7 @@ export class ProcessCommissionUseCase {
     });
 
     // Use transaction to ensure atomicity
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // Update referral status
       await tx.referral.update({
         where: { id: referral.id },
