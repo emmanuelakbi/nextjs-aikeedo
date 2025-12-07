@@ -40,17 +40,22 @@ async function handler(request: NextRequest) {
 
     const result = await useCase.execute(command);
 
-    // Send verification email
-    const verificationUrl = `${appConfig.url()}/auth/verify-email?token=${result.verificationToken}`;
+    // Send verification email (skip if SMTP not configured)
+    try {
+      const verificationUrl = `${appConfig.url()}/auth/verify-email?token=${result.verificationToken}`;
 
-    await sendEmail({
-      to: command.email,
-      subject: 'Verify your email address',
-      html: renderVerificationEmail({
-        firstName: command.firstName,
-        verificationUrl,
-      }),
-    });
+      await sendEmail({
+        to: command.email,
+        subject: 'Verify your email address',
+        html: renderVerificationEmail({
+          firstName: command.firstName,
+          verificationUrl,
+        }),
+      });
+    } catch (emailError) {
+      console.warn('Failed to send verification email (SMTP not configured?):', emailError);
+      // Continue without email - user can still login
+    }
 
     // Return success response
     return NextResponse.json(

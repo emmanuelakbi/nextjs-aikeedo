@@ -1,28 +1,13 @@
-import { redirect } from 'next/navigation';
-import { getSession } from '../src/lib/auth/session';
 import Link from 'next/link';
 
 /**
- * Root page - redirects authenticated users to dashboard
+ * Root page - Landing page for unauthenticated users
  * Requirements: 7.1, 8.3
  */
 
-export const dynamic = 'force-dynamic';
-
-export default async function Home() {
-  let session = null;
-  
-  try {
-    session = await getSession();
-  } catch (error) {
-    console.error('Error getting session:', error);
-    // Continue without session - show landing page
-  }
-
-  // Redirect authenticated users to dashboard
-  if (session?.user) {
-    redirect('/dashboard');
-  }
+export default function Home() {
+  // Show landing page
+  // Authenticated users can access dashboard via the menu
 
   // Show landing page for unauthenticated users
   return (
