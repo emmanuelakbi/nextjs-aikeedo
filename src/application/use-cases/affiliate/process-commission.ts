@@ -3,7 +3,7 @@
  * Requirements: Affiliate 2 - Calculate commissions on subscriptions and credit purchases
  */
 
-import type { Prisma } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 import type {
   AffiliateRepository,
   ReferralRepository,
@@ -91,7 +91,7 @@ export class ProcessCommissionUseCase {
     });
 
     // Use transaction to ensure atomicity
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await prisma.$transaction(async (tx: PrismaClient) => {
       // Update referral status
       await tx.referral.update({
         where: { id: referral.id },

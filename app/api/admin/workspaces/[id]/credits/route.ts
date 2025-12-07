@@ -3,7 +3,7 @@ import { requireAdmin, logAdminAction } from '@/lib/admin';
 import prisma from '@/lib/db/prisma';
 import { z } from 'zod';
 import { CreditTransactionType } from '@/domain/types';
-import type { Prisma } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
 /**
  * Admin Workspace Credits Management API
@@ -60,7 +60,7 @@ export async function POST(
     }
 
     // Update workspace credits and create transaction in a transaction
-    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const result = await prisma.$transaction(async (tx: PrismaClient) => {
       // Update workspace credits
       const updatedWorkspace = await tx.workspace.update({
         where: { id: workspaceId },
