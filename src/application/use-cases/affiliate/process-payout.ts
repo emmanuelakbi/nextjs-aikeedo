@@ -3,7 +3,6 @@
  * Requirements: Affiliate 3 - Process via PayPal/Stripe
  */
 
-import type { PrismaClient } from '@prisma/client';
 import type { AffiliateRepository } from '@/domain/affiliate/repositories/affiliate-repository';
 import type { PayoutRepository } from '@/domain/affiliate/repositories/payout-repository';
 import type { Payout } from '@/types/affiliate';
@@ -71,7 +70,7 @@ export class ProcessPayoutUseCase {
       await this.processPayment(payout);
 
       // Use transaction to update both payout and affiliate
-      await prisma.$transaction(async (tx: PrismaClient) => {
+      await prisma.$transaction(async (tx) => {
         // Update payout status to paid
         await tx.payout.update({
           where: { id: payout.id },

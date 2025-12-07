@@ -3,7 +3,6 @@
  * Requirements: Affiliate 2 - Handle refunds and chargebacks
  */
 
-import type { PrismaClient } from '@prisma/client';
 import type {
   AffiliateRepository,
   ReferralRepository,
@@ -68,7 +67,7 @@ export class ProcessRefundUseCase {
     const adjustment = calculateRefundAdjustment(referral.commission);
 
     // Use transaction to ensure atomicity
-    await prisma.$transaction(async (tx: PrismaClient) => {
+    await prisma.$transaction(async (tx) => {
       // Update referral status to canceled
       await tx.referral.update({
         where: { id: referral.id },
