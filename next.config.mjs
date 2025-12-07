@@ -15,6 +15,14 @@ const nextConfig = {
     instrumentationHook: true,
     // Enable optimized package imports
     optimizePackageImports: ['@/components', '@/lib'],
+    // Exclude packages from server components bundling
+    serverComponentsExternalPackages: [
+      '@prisma/client',
+      'prisma',
+      'bcrypt',
+      '@aws-sdk/client-s3',
+      '@aws-sdk/s3-request-presigner',
+    ],
   },
 
   // Image optimization configuration
