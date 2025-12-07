@@ -7,7 +7,6 @@ import Stripe from 'stripe';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/webhooks/stripe
  * Handles Stripe webhook events for payment processing

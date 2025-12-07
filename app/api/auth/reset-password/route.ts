@@ -16,7 +16,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 async function handler(request: NextRequest) {
   try {
     // Parse request body

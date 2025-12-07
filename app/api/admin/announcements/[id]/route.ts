@@ -6,7 +6,6 @@ import { z } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Admin Announcement Detail API
  *

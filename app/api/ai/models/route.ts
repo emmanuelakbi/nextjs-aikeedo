@@ -12,7 +12,6 @@ import type { ServiceCapability } from '@/lib/ai/factory';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/ai/models
  * List available AI models with optional filtering

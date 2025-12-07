@@ -15,7 +15,6 @@ import { TransferWorkspaceOwnershipCommand } from '@/application/commands/worksp
 export const dynamic = 'force-dynamic';
 
 
-
 const TransferOwnershipSchema = z.object({
   newOwnerId: z.string().uuid('New owner ID must be a valid UUID'),
 });

@@ -18,7 +18,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/presets
  * List presets with optional filters

@@ -15,7 +15,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/workspaces
  * Retrieves all workspaces for the current user (owned and member)

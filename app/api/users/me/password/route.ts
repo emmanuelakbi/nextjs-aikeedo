@@ -13,7 +13,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * PATCH /api/users/me/password
  * Updates the current user's password

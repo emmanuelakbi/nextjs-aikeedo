@@ -4,7 +4,6 @@ import { SessionRepository } from '@/infrastructure/repositories/SessionReposito
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/auth/logout
  *

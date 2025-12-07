@@ -15,12 +15,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma, UserSelect, withQueryOptimization } from '@/lib/db';
 import { getCacheWrapper, CacheKeys, CacheTags } from '@/lib/cache';
 import {
-export const dynamic = 'force-dynamic';
-
-
   withPerformanceMonitoring,
   withOptimizations,
 } from '@/lib/middleware/performance-middleware';
+
+export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * GET /api/users/optimized-example

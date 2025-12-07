@@ -4,7 +4,6 @@ import prisma from '@/lib/db/prisma';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Admin Moderation Queue API
  *

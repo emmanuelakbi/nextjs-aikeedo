@@ -14,7 +14,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * PATCH /api/workspaces/:id
  * Updates a workspace

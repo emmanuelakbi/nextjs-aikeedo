@@ -4,7 +4,6 @@ import { DeprecatePlanUseCase } from '@/application/use-cases/billing/DeprecateP
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/billing/plans/[id]/deprecate
  * Deprecates a subscription plan

@@ -7,12 +7,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import {
-export const dynamic = 'force-dynamic';
-
-
   PrismaAffiliateRepository,
   PrismaReferralRepository,
 } from '@/infrastructure/affiliate/prisma-affiliate-repository';
+
+export const dynamic = 'force-dynamic';
+
+
 
 export async function GET(_request: NextRequest) {
   try {

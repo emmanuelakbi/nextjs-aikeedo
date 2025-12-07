@@ -4,7 +4,6 @@ import { UsageLoggingService } from '@/infrastructure/services/UsageLoggingServi
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/usage
  *

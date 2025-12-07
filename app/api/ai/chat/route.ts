@@ -16,7 +16,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/ai/chat
  * Generate chat completion with optional streaming

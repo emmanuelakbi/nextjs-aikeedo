@@ -6,7 +6,6 @@ import { PlanInterval } from '@/domain/types';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/billing/plans
  * Lists all subscription plans

@@ -5,12 +5,13 @@ import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import { formatAmountForStripe } from '@/lib/stripe';
 import {
-export const dynamic = 'force-dynamic';
-
-
   withRateLimit,
   checkoutRateLimiter,
 } from '@/lib/middleware/rate-limit';
+
+export const dynamic = 'force-dynamic';
+
+
 
 /**
  * POST /api/billing/credits/checkout

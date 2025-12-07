@@ -7,12 +7,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { TrackReferralUseCase } from '@/application/use-cases/affiliate/track-referral';
 import {
-export const dynamic = 'force-dynamic';
-
-
   PrismaAffiliateRepository,
   PrismaReferralRepository,
 } from '@/infrastructure/affiliate/prisma-affiliate-repository';
+
+export const dynamic = 'force-dynamic';
+
+
 
 export async function POST(request: NextRequest) {
   try {

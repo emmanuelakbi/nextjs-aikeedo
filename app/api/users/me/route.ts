@@ -15,7 +15,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/users/me
  * Retrieves the current user's profile

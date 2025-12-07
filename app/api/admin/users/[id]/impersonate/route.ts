@@ -5,8 +5,8 @@ import {
   endImpersonation,
 } from '@/lib/admin/impersonation';
 import prisma from '@/lib/db/prisma';
-export const dynamic = 'force-dynamic';
 
+export const dynamic = 'force-dynamic';
 
 
 /**

@@ -15,7 +15,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/ai/completions
  * Generate text completion from a prompt

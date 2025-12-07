@@ -4,7 +4,6 @@ import { runSessionCleanup } from '@/lib/auth/cleanup';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/auth/cleanup-sessions
  *

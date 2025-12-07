@@ -16,7 +16,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * PATCH /api/users/me/email
  * Updates the current user's email address

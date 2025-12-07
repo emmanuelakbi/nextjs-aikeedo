@@ -16,7 +16,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/files/[id]
  * Get a single file by ID

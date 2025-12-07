@@ -15,7 +15,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/ai/images
  * Generate image from text prompt

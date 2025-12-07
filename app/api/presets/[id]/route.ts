@@ -20,7 +20,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/presets/[id]
  * Retrieve a single preset by ID

@@ -6,7 +6,6 @@ import { z } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/billing/checkout/success
  * Retrieves checkout session details after successful payment

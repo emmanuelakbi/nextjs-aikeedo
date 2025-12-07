@@ -5,7 +5,6 @@ import { InvoiceStatus } from '@/domain/types';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/billing/invoices
  * List invoices for the current workspace

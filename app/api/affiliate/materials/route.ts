@@ -10,7 +10,6 @@ import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-aff
 export const dynamic = 'force-dynamic';
 
 
-
 export async function GET(_request: NextRequest) {
   try {
     // Check authentication

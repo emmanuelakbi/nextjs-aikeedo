@@ -5,7 +5,6 @@ import { z } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Admin Plans Management API
  *

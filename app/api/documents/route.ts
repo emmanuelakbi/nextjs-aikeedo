@@ -16,7 +16,6 @@ import { z, ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 const CreateDocumentSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   content: z.string(),

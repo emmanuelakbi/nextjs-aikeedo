@@ -5,7 +5,6 @@ import prisma from '@/lib/db/prisma';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/admin/impersonation
  *

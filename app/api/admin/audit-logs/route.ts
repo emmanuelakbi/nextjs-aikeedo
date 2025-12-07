@@ -4,7 +4,6 @@ import { getAuditLogs } from '@/lib/admin/audit-logger';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Admin Audit Logs API
  *

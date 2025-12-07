@@ -5,7 +5,6 @@ import { prisma } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/billing/invoices/[id]/pdf
  * Get invoice PDF URL

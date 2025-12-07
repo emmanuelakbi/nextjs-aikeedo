@@ -6,7 +6,6 @@ import { z } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Individual Payment Method API Routes
  *

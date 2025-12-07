@@ -5,7 +5,6 @@ import { UpdatePlanUseCase } from '@/application/use-cases/billing/UpdatePlan';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/billing/plans/[id]
  * Gets a single subscription plan

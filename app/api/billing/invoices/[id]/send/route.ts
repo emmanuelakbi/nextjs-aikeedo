@@ -5,7 +5,6 @@ import { prisma } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/billing/invoices/[id]/send
  * Send invoice email to customer

@@ -4,7 +4,6 @@ import { ActivatePlanUseCase } from '@/application/use-cases/billing/ActivatePla
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/billing/plans/[id]/activate
  * Activates a deprecated subscription plan

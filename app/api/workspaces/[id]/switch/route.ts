@@ -15,7 +15,6 @@ import { ZodError } from 'zod';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * POST /api/workspaces/:id/switch
  * Switches the user's current workspace

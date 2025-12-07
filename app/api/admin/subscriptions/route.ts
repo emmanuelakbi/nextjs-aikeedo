@@ -5,7 +5,6 @@ import { SubscriptionStatus } from '@/domain/types';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Admin Subscription Management API
  *

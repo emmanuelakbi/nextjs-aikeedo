@@ -5,7 +5,6 @@ import { UserStatus } from '@/domain/user';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Admin User Management API
  *

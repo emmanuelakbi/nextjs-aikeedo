@@ -4,7 +4,6 @@ import { prisma } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * GET /api/billing/credits/transactions
  * Retrieves credit transaction history for a workspace

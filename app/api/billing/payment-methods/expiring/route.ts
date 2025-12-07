@@ -5,7 +5,6 @@ import { createPaymentMethodService } from '@/infrastructure/services/PaymentMet
 export const dynamic = 'force-dynamic';
 
 
-
 /**
  * Expiring Payment Methods API Route
  *

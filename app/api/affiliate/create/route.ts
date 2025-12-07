@@ -11,7 +11,6 @@ import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-aff
 export const dynamic = 'force-dynamic';
 
 
-
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
