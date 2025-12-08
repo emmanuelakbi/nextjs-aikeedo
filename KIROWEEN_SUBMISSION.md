@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-AIKEEDO is a **Frankenstein's monster of modern web technologies** - a multi-tenant AI services platform that stitches together seemingly incompatible elements into one unexpectedly powerful application. Like Dr. Frankenstein's creation, this platform brings together disparate parts (multiple AI providers, enterprise architecture patterns, serverless infrastructure, complex billing systems) and breathes life into them as a cohesive, production-ready system.
+AIKEEDO is a **Frankenstein's monster of modern web technologies** - a multi-tenant AI services platform that stitches together seemingly incompatible elements into one unexpectedly powerful application. This platform brings together disparate parts (multiple AI providers, enterprise architecture patterns, serverless infrastructure, complex billing systems) and breathes life into them as a cohesive, production-ready system.
 
 ### The Monster's Parts 🧟
 
