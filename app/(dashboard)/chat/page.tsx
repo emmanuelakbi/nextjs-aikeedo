@@ -342,9 +342,11 @@ const ChatPage: React.FC = () => {
         credentials: 'include',
         body: JSON.stringify({
           workspaceId: sessionData.user.currentWorkspaceId,
-          conversationId: activeConversationId,
           messages: [
-            ...messages.map((m) => ({ role: m.role, content: m.content })),
+            // Filter out empty messages from history
+            ...messages
+              .filter((m) => m.content && m.content.trim().length > 0)
+              .map((m) => ({ role: m.role, content: m.content })),
             { role: 'user', content },
           ],
           model: settings.model,
