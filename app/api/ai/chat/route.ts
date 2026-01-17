@@ -14,8 +14,10 @@ import { withAIRateLimit } from '@/lib/middleware/rate-limit';
 import { toReadableStream } from '@/lib/ai/streaming-handler';
 import { ZodError } from 'zod';
 
+// Force new deployment - v2
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 /**
  * OPTIONS /api/ai/chat
