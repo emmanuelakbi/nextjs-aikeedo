@@ -45,8 +45,8 @@ const ChatPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<ConversationSettings>({
-    model: 'amazon/nova-2-lite-v1:free',
-    provider: 'openrouter',
+    model: 'gemini-1.5-flash',
+    provider: 'google',
     temperature: 0.7,
     maxTokens: 2000,
   });

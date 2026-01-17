@@ -13,7 +13,21 @@ import { InsufficientCreditsError } from '@/infrastructure/services/CreditDeduct
 import { withAIRateLimit } from '@/lib/middleware/rate-limit';
 import { toReadableStream } from '@/lib/ai/streaming-handler';
 import { ZodError } from 'zod';
+
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+/**
+ * GET /api/ai/chat
+ * Returns API info (prevents 405 errors)
+ */
+export async function GET() {
+  return NextResponse.json({
+    endpoint: '/api/ai/chat',
+    method: 'POST',
+    description: 'Generate chat completions with optional streaming',
+  });
+}
 
 
 /**
