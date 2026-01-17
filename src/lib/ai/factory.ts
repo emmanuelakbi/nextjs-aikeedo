@@ -527,6 +527,28 @@ export class AIServiceFactory {
     });
 
     this.registerModel({
+      id: 'gemini-2.0-flash',
+      name: 'Gemini 2.0 Flash',
+      provider: 'google',
+      capabilities: ['text-generation'],
+      description: 'Fast and versatile multimodal model',
+      contextWindow: 1048576,
+      maxOutputTokens: 8192,
+      pricing: { input: 0.075, output: 0.3 },
+    });
+
+    this.registerModel({
+      id: 'gemini-2.5-flash',
+      name: 'Gemini 2.5 Flash',
+      provider: 'google',
+      capabilities: ['text-generation'],
+      description: 'Mid-size multimodal model with thinking capabilities',
+      contextWindow: 1048576,
+      maxOutputTokens: 65536,
+      pricing: { input: 0.075, output: 0.3 },
+    });
+
+    this.registerModel({
       id: 'imagen-3',
       name: 'Imagen 3',
       provider: 'google',

@@ -45,7 +45,7 @@ const ChatPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<ConversationSettings>({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     provider: 'google',
     temperature: 0.7,
     maxTokens: 2000,
@@ -68,8 +68,8 @@ const ChatPage: React.FC = () => {
       { value: 'claude-3-haiku-20240307', label: 'Claude 3 Haiku' },
     ],
     google: [
-      { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
-      { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+      { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+      { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
     ],
     mistral: [
       { value: 'mistral-large-latest', label: 'Mistral Large' },
