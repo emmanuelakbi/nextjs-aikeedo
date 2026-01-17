@@ -46,7 +46,33 @@ export async function POST(request: NextRequest) {
   }
   try {
     // Require authentication
-    const currentUser = await getCurrentUser();
+    let currentUser;
+    try {
+      currentUser = await getCurrentUser();
+    } catch (authError) {
+      console.error('Auth error:', authError);
+      return NextResponse.json(
+        {
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Authentication required',
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    if (!currentUser) {
+      return NextResponse.json(
+        {
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'User not found',
+          },
+        },
+        { status: 401 }
+      );
+    }
 
     // Parse request body
     const body = await request.json();
@@ -170,12 +196,17 @@ export async function POST(request: NextRequest) {
 
     // Handle other errors
     console.error('Generate chat completion error:', error);
+    console.error('Error details:', {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
 
     return NextResponse.json(
       {
         error: {
           code: 'INTERNAL_ERROR',
-          message: 'An error occurred while generating chat completion',
+          message: error instanceof Error ? error.message : 'An error occurred while generating chat completion',
         },
       },
       { status: 500 }
