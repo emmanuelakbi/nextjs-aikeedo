@@ -63,7 +63,7 @@ npm run dev
 1. Open http://localhost:3000
 2. Login: `admin@aikeedo.com` / `password123`
 3. Go to Chat page
-4. Select a FREE model (Amazon Nova 2 Lite)
+4. Select a model
 5. Start chatting with AI!
 
 **New users automatically get 10,000 free credits** - perfect for testing!

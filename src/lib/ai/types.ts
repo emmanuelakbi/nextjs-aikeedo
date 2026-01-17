@@ -8,7 +8,8 @@ export type AIProvider =
   | 'google'
   | 'mistral'
   | 'openrouter'
-  | 'pollinations';
+  | 'pollinations'
+  | 'browser';
 
 export type ImageSize =
   | '256x256'

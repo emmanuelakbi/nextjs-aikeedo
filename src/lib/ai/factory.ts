@@ -25,6 +25,7 @@ import {
   MistralTextGenerationService,
   OpenRouterTextGenerationService,
   PollinationsImageGenerationService,
+  BrowserSpeechSynthesisService,
 } from './providers';
 import { getEnv } from '@/lib/env';
 import { getModelCacheService } from './model-cache';
@@ -181,18 +182,19 @@ export class AIServiceFactory {
     provider: AIProvider,
     model: string
   ): SpeechSynthesisService {
-    this.validateProvider(provider);
-    this.validateModel(model, 'speech-synthesis');
-
-    switch (provider) {
-      case 'openai':
-        return new OpenAISpeechSynthesisService(model, this.maxRetries);
-
-      default:
-        throw new Error(
-          `Provider ${provider} does not support speech synthesis`
-        );
+    // Use Browser TTS as default/fallback for free speech synthesis
+    if (provider === 'browser' || model === 'browser-tts' || model === 'browser') {
+      return new BrowserSpeechSynthesisService(model);
     }
+
+    // For OpenAI, check if it's available
+    if (provider === 'openai' && this.isProviderAvailableSync('openai')) {
+      this.validateModel(model, 'speech-synthesis');
+      return new OpenAISpeechSynthesisService(model, this.maxRetries);
+    }
+
+    // Default to Browser TTS (free, no API key needed)
+    return new BrowserSpeechSynthesisService('browser-tts');
   }
 
   /**
@@ -339,8 +341,8 @@ export class AIServiceFactory {
    * @returns True if provider is configured and enabled
    */
   async isProviderAvailable(provider: AIProvider): Promise<boolean> {
-    // Pollinations is always available (no API key needed)
-    if (provider === 'pollinations') {
+    // Pollinations and Browser are always available (no API key needed)
+    if (provider === 'pollinations' || provider === 'browser') {
       return true;
     }
 
@@ -379,8 +381,8 @@ export class AIServiceFactory {
       return false;
     }
 
-    // Pollinations is always available (no API key needed)
-    if (provider === 'pollinations') {
+    // Pollinations and Browser are always available (no API key needed)
+    if (provider === 'pollinations' || provider === 'browser') {
       return true;
     }
 
@@ -481,6 +483,15 @@ export class AIServiceFactory {
       provider: 'openai',
       capabilities: ['transcription'],
       description: 'Speech-to-text model',
+    });
+
+    // Browser TTS (Free speech synthesis)
+    this.registerModel({
+      id: 'browser-tts',
+      name: 'Browser TTS (Free)',
+      provider: 'browser',
+      capabilities: ['speech-synthesis'],
+      description: 'Free text-to-speech using browser Web Speech API',
     });
 
     // Anthropic models
@@ -790,6 +801,7 @@ export class AIServiceFactory {
       { provider: 'mistral', enabled: true, priority: 4 },
       { provider: 'openrouter', enabled: true, priority: 5 },
       { provider: 'pollinations', enabled: true, priority: 6 },
+      { provider: 'browser', enabled: true, priority: 7 },
     ];
 
     const configs = customConfigs || defaults;

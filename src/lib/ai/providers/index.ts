@@ -14,3 +14,4 @@ export { GoogleImageGenerationService } from './google-image-generation';
 export { MistralTextGenerationService } from './mistral-text-generation';
 export { OpenRouterTextGenerationService } from './openrouter';
 export { PollinationsImageGenerationService } from './pollinations-image-generation';
+export { BrowserSpeechSynthesisService, BROWSER_VOICES } from './browser-speech-synthesis';
