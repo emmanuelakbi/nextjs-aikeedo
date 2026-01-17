@@ -18,6 +18,21 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 /**
+ * OPTIONS /api/ai/chat
+ * Handle CORS preflight requests
+ */
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-workspace-id, x-user-id',
+    },
+  });
+}
+
+/**
  * GET /api/ai/chat
  * Returns API info (prevents 405 errors)
  */
