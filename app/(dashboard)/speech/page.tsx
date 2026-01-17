@@ -53,6 +53,17 @@ const OPENAI_VOICES = [
 ];
 
 const SpeechSynthesisPage: React.FC = () => {
+  // Helper to convert base64 to blob
+  const base64ToBlob = (base64: string, mimeType: string): Blob => {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  };
+
   const [models, setModels] = useState<AIModel[]>([]);
   const [selectedModelId, setSelectedModelId] = useState<string | null>('speecht5');
   const [text, setText] = useState('');
@@ -208,38 +219,38 @@ const SpeechSynthesisPage: React.FC = () => {
         };
         setGeneratedSpeech([newSpeech, ...generatedSpeech]);
       } else if (isHuggingFaceTTS) {
-        // HuggingFace TTS - free AI voice
+        // HuggingFace TTS - free AI voice via our API
         setError(null);
         
-        // Call HuggingFace API directly from client
-        const modelMap: Record<string, string> = {
-          'speecht5': 'microsoft/speecht5_tts',
-          'mms-tts-eng': 'facebook/mms-tts-eng',
-          'bark-small': 'suno/bark-small',
-        };
-        const hfModelId = modelMap[selectedModelId || 'speecht5'] || 'microsoft/speecht5_tts';
-        
-        const response = await fetch(`https://router.huggingface.co/hf-inference/models/${hfModelId}`, {
+        const response = await fetch('/api/ai/speech', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ inputs: text.trim() }),
+          body: JSON.stringify({
+            text: text.trim(),
+            model: selectedModelId,
+            provider: 'huggingface',
+          }),
         });
 
         if (response.status === 503) {
-          // Model is loading
-          setError('AI model is loading, please try again in 20-30 seconds...');
+          const data = await response.json();
+          setError(data.error?.message || 'AI model is loading, please try again in 20-30 seconds...');
           return;
         }
 
         if (!response.ok) {
-          throw new Error(`HuggingFace API error: ${response.status}`);
+          const data = await response.json();
+          throw new Error(data.error?.message || 'Failed to generate speech');
         }
 
-        const audioBlob = await response.blob();
+        const data = await response.json();
+        
+        // Convert base64 to blob URL
+        const audioBlob = base64ToBlob(data.data.audio, 'audio/wav');
         const audioUrl = URL.createObjectURL(audioBlob);
 
         const newSpeech: GeneratedSpeech = {
-          id,
+          id: data.data.id,
           text,
           model: selectedModel?.name || 'HuggingFace TTS',
           voice: 'AI Voice',
