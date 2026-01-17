@@ -339,6 +339,7 @@ const ChatPage: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           workspaceId: sessionData.user.currentWorkspaceId,
           conversationId: activeConversationId,

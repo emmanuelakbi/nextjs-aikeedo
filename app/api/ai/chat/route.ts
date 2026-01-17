@@ -26,6 +26,10 @@ export async function GET() {
     endpoint: '/api/ai/chat',
     method: 'POST',
     description: 'Generate chat completions with optional streaming',
+  }, {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+    },
   });
 }
 
