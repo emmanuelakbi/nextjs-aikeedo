@@ -7,8 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/config';
+import { auth } from '@/lib/auth';
 
 // HuggingFace model mapping
 const HF_MODELS: Record<string, string> = {
@@ -20,7 +19,7 @@ const HF_MODELS: Record<string, string> = {
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json(
         { error: { message: 'Unauthorized' } },
