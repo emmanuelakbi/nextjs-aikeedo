@@ -94,11 +94,40 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate input
-    const command = GenerateChatCompletionCommandSchema.parse({
-      userId: currentUser.id,
-      workspaceId,
-      ...body,
-    });
+    let command;
+    try {
+      command = GenerateChatCompletionCommandSchema.parse({
+        userId: currentUser.id,
+        workspaceId,
+        ...body,
+      });
+    } catch (validationError) {
+      if (validationError instanceof ZodError) {
+        console.error('Validation error details:', JSON.stringify(validationError.issues, null, 2));
+        console.error('Request body:', JSON.stringify(body, null, 2));
+        
+        const fieldErrors: Record<string, string[]> = {};
+        validationError.issues.forEach((issue) => {
+          const field = issue.path.join('.');
+          if (!fieldErrors[field]) {
+            fieldErrors[field] = [];
+          }
+          fieldErrors[field].push(issue.message);
+        });
+
+        return NextResponse.json(
+          {
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Invalid input data',
+              fields: fieldErrors,
+            },
+          },
+          { status: 400 }
+        );
+      }
+      throw validationError;
+    }
 
     // Execute use case
     const useCase = new GenerateChatCompletionUseCase();
