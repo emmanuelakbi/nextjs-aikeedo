@@ -92,10 +92,16 @@ const SpeechSynthesisPage: React.FC = () => {
         id: 'browser-tts',
         name: 'Browser TTS (Free)',
         provider: 'browser',
+        capabilities: ['speech-synthesis'],
         available: true,
         description: 'Free text-to-speech using your browser',
       };
-      const allModels = [browserModel, ...data.data.filter((m: AIModel) => m.id !== 'browser-tts')];
+      // Ensure all models have capabilities array
+      const apiModels = (data.data || []).map((m: AIModel) => ({
+        ...m,
+        capabilities: m.capabilities || [],
+      })).filter((m: AIModel) => m.id !== 'browser-tts');
+      const allModels = [browserModel, ...apiModels];
       setModels(allModels);
       if (!selectedModelId) setSelectedModelId('browser-tts');
     } catch (err) {
@@ -104,6 +110,7 @@ const SpeechSynthesisPage: React.FC = () => {
         id: 'browser-tts',
         name: 'Browser TTS (Free)',
         provider: 'browser',
+        capabilities: ['speech-synthesis'],
         available: true,
         description: 'Free text-to-speech using your browser',
       }]);
