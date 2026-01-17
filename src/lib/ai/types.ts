@@ -9,7 +9,8 @@ export type AIProvider =
   | 'mistral'
   | 'openrouter'
   | 'pollinations'
-  | 'browser';
+  | 'browser'
+  | 'huggingface';
 
 export type ImageSize =
   | '256x256'

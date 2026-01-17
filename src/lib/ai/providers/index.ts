@@ -15,3 +15,4 @@ export { MistralTextGenerationService } from './mistral-text-generation';
 export { OpenRouterTextGenerationService } from './openrouter';
 export { PollinationsImageGenerationService } from './pollinations-image-generation';
 export { BrowserSpeechSynthesisService, BROWSER_VOICES } from './browser-speech-synthesis';
+export { HuggingFaceSpeechSynthesisService, HF_TTS_MODELS } from './huggingface-speech-synthesis';
