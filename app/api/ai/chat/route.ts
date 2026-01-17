@@ -93,13 +93,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate input
+    // Validate input - strip unknown fields like conversationId
     let command;
     try {
+      const { conversationId, ...chatParams } = body; // Remove conversationId as it's not part of the AI request
       command = GenerateChatCompletionCommandSchema.parse({
         userId: currentUser.id,
         workspaceId,
-        ...body,
+        ...chatParams,
       });
     } catch (validationError) {
       if (validationError instanceof ZodError) {
