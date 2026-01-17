@@ -1,18 +1,11 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { SuccessMessage } from '@/components/ui';
 
-export const dynamic = 'force-dynamic';
-
-/**
- * Verification Request Page
- *
- * Displays a message after registration asking user to check their email.
- * Requirements: 4.1
- */
-export default function VerifyRequestPage() {
+function VerifyRequestContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
 
@@ -46,5 +39,24 @@ export default function VerifyRequestPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[200px]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );
+}
+
+/**
+ * Verification Request Page
+ */
+export default function VerifyRequestPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VerifyRequestContent />
+    </Suspense>
   );
 }

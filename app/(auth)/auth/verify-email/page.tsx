@@ -1,19 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Spinner, ErrorMessage, SuccessMessage } from '@/components/ui';
 
-export const dynamic = 'force-dynamic';
-
-/**
- * Email Verification Page
- *
- * Handles email verification using a token from the URL.
- * Requirements: 4.1, 4.2
- */
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
@@ -57,7 +49,6 @@ export default function VerifyEmailPage() {
         return;
       }
 
-      // Success
       setStatus('success');
       setMessage(
         'Your email has been verified successfully! You can now sign in to your account.'
@@ -116,5 +107,24 @@ export default function VerifyEmailPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[200px]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );
+}
+
+/**
+ * Email Verification Page
+ */
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

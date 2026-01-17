@@ -1,20 +1,16 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Input, Button, Form, FormError, useToast } from '@/components/ui';
 
-export const dynamic = 'force-dynamic';
-
 /**
- * Login Page
- *
- * Provides user login functionality with email and password.
- * Requirements: 3.1, 3.2
+ * Login Form Component (uses useSearchParams)
  */
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
@@ -38,13 +34,15 @@ export default function LoginPage() {
   }, [status, session, router, callbackUrl]);
 
   // Show error message if present
-  if (error && !loading) {
-    if (error === 'CredentialsSignin') {
-      showToast('Invalid email or password', 'error');
-    } else {
-      showToast('An error occurred. Please try again.', 'error');
+  useEffect(() => {
+    if (error && !loading) {
+      if (error === 'CredentialsSignin') {
+        showToast('Invalid email or password', 'error');
+      } else {
+        showToast('An error occurred. Please try again.', 'error');
+      }
     }
-  }
+  }, [error, loading, showToast]);
 
   // Show loading while checking session
   if (status === 'loading') {
@@ -70,7 +68,6 @@ export default function LoginPage() {
   const validateForm = (): boolean => {
     const newErrors: FormError[] = [];
 
-    // Email validation
     if (!formData.email) {
       newErrors.push({ field: 'email', message: 'Email is required' });
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -80,7 +77,6 @@ export default function LoginPage() {
       });
     }
 
-    // Password validation
     if (!formData.password) {
       newErrors.push({ field: 'password', message: 'Password is required' });
     }
@@ -209,5 +205,30 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Loading fallback for Suspense
+ */
+function LoginLoading() {
+  return (
+    <div className="flex items-center justify-center min-h-[200px]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );
+}
+
+/**
+ * Login Page
+ *
+ * Provides user login functionality with email and password.
+ * Requirements: 3.1, 3.2
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginLoading />}>
+      <LoginForm />
+    </Suspense>
   );
 }

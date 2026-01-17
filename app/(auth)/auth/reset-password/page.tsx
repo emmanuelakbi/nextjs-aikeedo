@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -12,15 +12,7 @@ import {
   ErrorMessage,
 } from '@/components/ui';
 
-export const dynamic = 'force-dynamic';
-
-/**
- * Password Reset Page
- *
- * Allows users to reset their password using a reset token.
- * Requirements: 5.2, 5.3
- */
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showToast } = useToast();
@@ -43,7 +35,6 @@ export default function ResetPasswordPage() {
   const validateForm = (): boolean => {
     const newErrors: FormError[] = [];
 
-    // Password validation
     if (!formData.password) {
       newErrors.push({ field: 'password', message: 'Password is required' });
     } else if (formData.password.length < 8) {
@@ -59,7 +50,6 @@ export default function ResetPasswordPage() {
       });
     }
 
-    // Confirm password validation
     if (!formData.confirmPassword) {
       newErrors.push({
         field: 'confirmPassword',
@@ -106,7 +96,6 @@ export default function ResetPasswordPage() {
 
       if (!response.ok) {
         if (data.error?.fields) {
-          // Handle field-specific errors
           const fieldErrors: FormError[] = [];
           Object.entries(data.error.fields).forEach(([field, messages]) => {
             (messages as string[]).forEach((message) => {
@@ -123,13 +112,10 @@ export default function ResetPasswordPage() {
         return;
       }
 
-      // Success
       showToast(
         'Password reset successfully! You can now sign in with your new password.',
         'success'
       );
-
-      // Redirect to login
       router.push('/login');
     } catch (error) {
       console.error('Password reset error:', error);
@@ -222,5 +208,24 @@ export default function ResetPasswordPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[200px]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );
+}
+
+/**
+ * Password Reset Page
+ */
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

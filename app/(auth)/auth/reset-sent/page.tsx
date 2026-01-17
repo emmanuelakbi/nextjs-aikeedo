@@ -1,18 +1,11 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { SuccessMessage } from '@/components/ui';
 
-export const dynamic = 'force-dynamic';
-
-/**
- * Password Reset Sent Page
- *
- * Displays a message after password reset request.
- * Requirements: 5.1
- */
-export default function ResetSentPage() {
+function ResetSentContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
 
@@ -52,5 +45,24 @@ export default function ResetSentPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[200px]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );
+}
+
+/**
+ * Password Reset Sent Page
+ */
+export default function ResetSentPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ResetSentContent />
+    </Suspense>
   );
 }
