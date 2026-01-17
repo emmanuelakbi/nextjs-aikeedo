@@ -118,12 +118,21 @@ export default function PresetsPage() {
       setIsSubmitting(true);
       setError(null);
 
+      // Get workspace ID from session
+      const sessionResponse = await fetch('/api/auth/session');
+      const sessionData = await sessionResponse.json();
+      const workspaceId = sessionData?.user?.currentWorkspaceId;
+
       const response = await fetch('/api/presets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(workspaceId && { 'x-workspace-id': workspaceId }),
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          workspaceId,
+        }),
       });
 
       if (!response.ok) {
@@ -157,10 +166,16 @@ export default function PresetsPage() {
       setIsSubmitting(true);
       setError(null);
 
+      // Get workspace ID from session
+      const sessionResponse = await fetch('/api/auth/session');
+      const sessionData = await sessionResponse.json();
+      const workspaceId = sessionData?.user?.currentWorkspaceId;
+
       const response = await fetch(`/api/presets/${editingPreset.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          ...(workspaceId && { 'x-workspace-id': workspaceId }),
         },
         body: JSON.stringify(data),
       });
@@ -200,8 +215,16 @@ export default function PresetsPage() {
       setDeletingPresetId(id);
       setError(null);
 
+      // Get workspace ID from session
+      const sessionResponse = await fetch('/api/auth/session');
+      const sessionData = await sessionResponse.json();
+      const workspaceId = sessionData?.user?.currentWorkspaceId;
+
       const response = await fetch(`/api/presets/${id}`, {
         method: 'DELETE',
+        headers: {
+          ...(workspaceId && { 'x-workspace-id': workspaceId }),
+        },
       });
 
       if (!response.ok) {
