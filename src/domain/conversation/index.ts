@@ -14,10 +14,10 @@ export { Message } from './entities/Message';
 export type { MessageProps, MessageRole } from './entities/Message';
 
 // Repository Interfaces
-export { IConversationRepository } from './repositories/IConversationRepository';
+export type { IConversationRepository } from './repositories/IConversationRepository';
 export type {
   ListConversationsOptions,
   ConversationPaginationResult,
 } from './repositories/IConversationRepository';
-export { IMessageRepository } from './repositories/IMessageRepository';
+export type { IMessageRepository } from './repositories/IMessageRepository';
 export type { CreateMessageData } from './repositories/IMessageRepository';

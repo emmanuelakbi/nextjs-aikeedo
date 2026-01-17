@@ -66,8 +66,13 @@ export class InvoiceService {
     stripeInvoice: Stripe.Invoice
   ): Promise<InvoiceDetails> {
     try {
-      // Find workspace by subscription ID
-      const subscriptionId = stripeInvoice.subscription as string | undefined;
+      // Find workspace by subscription ID from parent subscription details
+      // In Stripe v20, subscription info is in parent.subscription_details
+      const subscriptionId = stripeInvoice.parent?.subscription_details?.subscription
+        ? (typeof stripeInvoice.parent.subscription_details.subscription === 'string'
+            ? stripeInvoice.parent.subscription_details.subscription
+            : stripeInvoice.parent.subscription_details.subscription.id)
+        : undefined;
 
       let workspaceId: string | null = null;
       let localSubscriptionId: string | null = null;
@@ -180,18 +185,22 @@ export class InvoiceService {
 
       // Extract line items
       // Requirements: 5.4 - Include itemized charges
+      // In Stripe v20, price info is in pricing.unit_amount_decimal or pricing.price_details
       const lineItems: InvoiceLineItem[] = stripeInvoice.lines.data.map(
         (line) => ({
           description: line.description || 'No description',
           amount: line.amount,
           quantity: line.quantity || 1,
-          unitAmount: (line.price?.unit_amount || line.amount) as number,
+          unitAmount: line.pricing?.unit_amount_decimal
+            ? Math.round(parseFloat(line.pricing.unit_amount_decimal))
+            : line.amount,
         })
       );
 
       // Calculate totals
       const subtotal = stripeInvoice.subtotal || 0;
-      const tax = (stripeInvoice.tax as number | null) || 0;
+      // In Stripe v20, tax is in total_taxes array, sum all tax amounts
+      const tax = stripeInvoice.total_taxes?.reduce((sum, t) => sum + (t.taxable_amount || 0), 0) || 0;
       const total = stripeInvoice.total || 0;
 
       // Get customer details
@@ -201,9 +210,9 @@ export class InvoiceService {
         : null;
 
       const customerEmail =
-        customer && 'email' in customer ? customer.email : null;
+        customer && 'email' in customer ? (customer.email ?? null) : null;
       const customerName =
-        customer && 'name' in customer ? customer.name : null;
+        customer && 'name' in customer ? (customer.name ?? null) : null;
 
       return {
         ...invoice,
@@ -479,8 +488,9 @@ export class InvoiceService {
       return 'Invoice';
     }
 
-    if (lineItems.length === 1) {
-      return lineItems[0].description || 'Invoice';
+    const firstItem = lineItems[0];
+    if (lineItems.length === 1 && firstItem) {
+      return firstItem.description || 'Invoice';
     }
 
     return `Invoice with ${lineItems.length} items`;

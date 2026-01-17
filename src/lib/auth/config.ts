@@ -3,10 +3,10 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { UserRepository } from '../../infrastructure/repositories/UserRepository';
-import { Password } from '../../domain/user/value-objects/Password';
 import { Email } from '../../domain/user/value-objects/Email';
 import { Id } from '../../domain/user/value-objects/Id';
 import { env } from '../env';
+import type { UserRole } from '../../types/next-auth';
 
 /**
  * NextAuth.js Configuration
@@ -139,7 +139,7 @@ export const authConfig: NextAuthConfig = {
     async session({ session, token }) {
       if (session.user && token) {
         session.user.id = token.id as string;
-        session.user.role = (token.role as 'USER' | 'ADMIN') || 'USER';
+        session.user.role = (token.role as UserRole) || 'USER';
         session.user.currentWorkspaceId =
           (token.currentWorkspaceId as string | null) ?? null;
         session.user.email = token.email as string;

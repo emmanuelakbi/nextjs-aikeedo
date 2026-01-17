@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * For production, consider using Redis for distributed rate limiting
  */
 
-interface RateLimitConfig {
+export interface RateLimitConfig {
   windowMs: number; // Time window in milliseconds
   maxRequests: number; // Max requests per window
   keyPrefix?: string; // Key prefix for identification
@@ -58,10 +58,12 @@ export class RateLimiter {
   // Clean up old entries periodically
   static cleanup() {
     const now = Date.now();
-    for (const [key, entry] of rateLimitStore.entries()) {
+    const entries = Array.from(rateLimitStore.entries());
+    for (const [key, entry] of entries) {
+      const lastTimestamp = entry.timestamps[entry.timestamps.length - 1];
       if (
         entry.timestamps.length === 0 ||
-        entry.timestamps[entry.timestamps.length - 1] < now - 3600000
+        (lastTimestamp !== undefined && lastTimestamp < now - 3600000)
       ) {
         rateLimitStore.delete(key);
       }

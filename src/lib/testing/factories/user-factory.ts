@@ -86,7 +86,7 @@ export class UserFactory {
   async createAdmin(options: CreateUserOptions = {}) {
     return this.create({
       ...options,
-      role: 'ADMIN',
+      role: UserRole.ADMIN,
       emailVerified: true,
     });
   }
@@ -97,7 +97,7 @@ export class UserFactory {
   async createSuspended(options: CreateUserOptions = {}) {
     return this.create({
       ...options,
-      status: 'SUSPENDED',
+      status: UserStatus.SUSPENDED,
     });
   }
 
@@ -105,11 +105,10 @@ export class UserFactory {
    * Create multiple users
    */
   async createMany(count: number, options: CreateUserOptions = {}) {
-    const users = [];
-    for (let i = 0; i < count; i++) {
-      users.push(await this.create(options));
-    }
-    return users;
+    const results = await Promise.all(
+      Array.from({ length: count }, () => this.create(options))
+    );
+    return results;
   }
 
   /**

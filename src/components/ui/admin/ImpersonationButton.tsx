@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useImpersonation } from '@/lib/hooks/use-impersonation';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
 
 /**
  * Impersonation Button Component

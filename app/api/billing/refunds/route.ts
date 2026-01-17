@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
           refundAmount: refund.amount / 100,
           currency: refund.currency.toUpperCase(),
           refundId: refund.id,
-          status: refund.status,
+          status: refund.status || 'pending',
         });
       }
     } catch (emailError) {

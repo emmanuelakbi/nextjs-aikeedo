@@ -3,9 +3,10 @@ import * as fc from 'fast-check';
 import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { GetUserUseCase } from '@/application/use-cases/user/GetUserUseCase';
 import { UpdateProfileUseCase } from '@/application/use-cases/user/UpdateProfileUseCase';
-import { User } from '../../../../../domain/user/entities/User';
-import { Email } from '../../../../../domain/user/value-objects/Email';
-import { Password } from '../../../../../domain/user/value-objects/Password';
+import { User } from '@/domain/user/entities/User';
+import { Email } from '@/domain/user/value-objects/Email';
+import { Password } from '@/domain/user/value-objects/Password';
+import { Id } from '@/domain/user/value-objects/Id';
 
 /**
  * Property-Based Tests for User Profile Management
@@ -82,7 +83,7 @@ describe('User Profile Management - Property Tests', () => {
 
           // Cleanup
           try {
-            await userRepository.delete(userId);
+            await userRepository.delete(Id.fromString(userId));
           } catch (e) {
             /* User might already be deleted */
           }
@@ -168,7 +169,7 @@ describe('User Profile Management - Property Tests', () => {
 
           // Cleanup
           try {
-            await userRepository.delete(userId);
+            await userRepository.delete(Id.fromString(userId));
           } catch (e) {
             /* User might already be deleted */
           }
@@ -238,8 +239,8 @@ describe('User Profile Management - Property Tests', () => {
           expect(result2.getEmail().getValue()).toBe(email2.getValue());
 
           // Cleanup
-          await userRepository.delete(userId1);
-          await userRepository.delete(userId2);
+          await userRepository.delete(Id.fromString(userId1));
+          await userRepository.delete(Id.fromString(userId2));
         }
       ),
       { numRuns: 100, timeout: 60000 }

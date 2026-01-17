@@ -133,6 +133,9 @@ export class GoogleTextGenerationService implements TextGenerationService {
 
       // Send the last message
       const lastMessage = conversationMessages[conversationMessages.length - 1];
+      if (!lastMessage) {
+        throw new Error('No messages provided for chat completion');
+      }
       const result = await chat.sendMessage(lastMessage.content);
       const response = result.response;
 
@@ -265,6 +268,9 @@ export class GoogleTextGenerationService implements TextGenerationService {
 
     try {
       const lastMessage = conversationMessages[conversationMessages.length - 1];
+      if (!lastMessage) {
+        throw new Error('No messages provided for chat completion');
+      }
       const result = await chat.sendMessageStream(lastMessage.content);
 
       for await (const chunk of result.stream) {

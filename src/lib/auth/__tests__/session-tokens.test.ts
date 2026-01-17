@@ -89,16 +89,18 @@ describe('Session Token Generation', () => {
             expect(token1).not.toBe(token2);
 
             // Calculate Hamming distance (should be high for random tokens)
-            let differences = 0;
-            const minLength = Math.min(token1.length, token2.length);
-            for (let j = 0; j < minLength; j++) {
-              if (token1[j] !== token2[j]) {
-                differences++;
+            if (token1 && token2) {
+              let differences = 0;
+              const minLength = Math.min(token1.length, token2.length);
+              for (let j = 0; j < minLength; j++) {
+                if (token1[j] !== token2[j]) {
+                  differences++;
+                }
               }
-            }
 
-            // At least 50% of characters should be different
-            expect(differences / minLength).toBeGreaterThan(0.5);
+              // At least 50% of characters should be different
+              expect(differences / minLength).toBeGreaterThan(0.5);
+            }
           }
         }),
         { numRuns: 10 }

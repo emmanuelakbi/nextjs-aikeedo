@@ -17,16 +17,33 @@ export class EmailService {
 
   constructor(config?: EmailConfig) {
     // Use provided config or load from environment
-    this.config = config || {
-      host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
-      secure: env.SMTP_PORT === 465, // true for 465, false for other ports
-      auth: {
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASSWORD,
-      },
-      from: env.SMTP_FROM,
-    };
+    if (config) {
+      this.config = config;
+    } else {
+      // Validate that required SMTP environment variables are set
+      const host = env.SMTP_HOST;
+      const port = env.SMTP_PORT;
+      const user = env.SMTP_USER;
+      const password = env.SMTP_PASSWORD;
+      const from = env.SMTP_FROM;
+
+      if (!host || !port || !user || !password || !from) {
+        throw new Error(
+          'Email service requires SMTP configuration. Please set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, and SMTP_FROM environment variables.'
+        );
+      }
+
+      this.config = {
+        host,
+        port,
+        secure: port === 465, // true for 465, false for other ports
+        auth: {
+          user,
+          pass: password,
+        },
+        from,
+      };
+    }
   }
 
   /**

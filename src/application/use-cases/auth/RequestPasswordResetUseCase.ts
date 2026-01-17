@@ -1,5 +1,6 @@
 import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
 import { VerificationTokenRepository } from '../../../infrastructure/repositories/VerificationTokenRepository';
+import { Email } from '../../../domain/user/value-objects/Email';
 import { generatePasswordResetToken } from '../../../lib/auth/tokens';
 import { RequestPasswordResetCommand } from '../../commands/auth/RequestPasswordResetCommand';
 
@@ -25,7 +26,8 @@ export class RequestPasswordResetUseCase {
     command: RequestPasswordResetCommand
   ): Promise<RequestPasswordResetResult> {
     // Find user by email
-    const user = await this.userRepository.findByEmail(command.email);
+    const email = Email.create(command.email);
+    const user = await this.userRepository.findByEmail(email);
 
     // For security, don't reveal if user exists or not
     // Always return success but only send email if user exists

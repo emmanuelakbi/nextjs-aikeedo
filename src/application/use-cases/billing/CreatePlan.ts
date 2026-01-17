@@ -1,6 +1,6 @@
 import { Plan } from '../../../domain/billing/entities/Plan';
 import { PlanRepository } from '../../../infrastructure/repositories/PlanRepository';
-import { PlanInterval } from '@prisma/client';
+import { PlanInterval } from '../../../domain/types';
 
 /**
  * Create Plan Use Case

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { UserRepository } from './UserRepository';
 import { Email } from '../../domain/user/value-objects/Email';
 import { Password } from '../../domain/user/value-objects/Password';
+import { Id } from '../../domain/user/value-objects/Id';
 import { User } from '../../domain/user/entities/User';
 import { prisma } from '../../lib/db';
 
@@ -102,9 +103,7 @@ describe('UserRepository', () => {
       const createdUser = await repository.create(userData);
       testUserIds.push(createdUser.getId().getValue());
 
-      const foundUser = await repository.findById(
-        createdUser.getId().getValue()
-      );
+      const foundUser = await repository.findById(createdUser.getId());
 
       expect(foundUser).toBeDefined();
       expect(foundUser?.getId().getValue()).toBe(
@@ -114,7 +113,7 @@ describe('UserRepository', () => {
     });
 
     it('should return null when user is not found', async () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const nonExistentId = Id.fromString('00000000-0000-4000-8000-000000000000');
       const user = await repository.findById(nonExistentId);
 
       expect(user).toBeNull();
@@ -133,7 +132,7 @@ describe('UserRepository', () => {
       const createdUser = await repository.create(userData);
       testUserIds.push(createdUser.getId().getValue());
 
-      const foundUser = await repository.findByEmail(userData.email);
+      const foundUser = await repository.findByEmail(Email.create(userData.email));
 
       expect(foundUser).toBeDefined();
       expect(foundUser?.getEmail().getValue()).toBe(userData.email);
@@ -143,7 +142,7 @@ describe('UserRepository', () => {
     });
 
     it('should return null when email is not found', async () => {
-      const user = await repository.findByEmail('nonexistent@example.com');
+      const user = await repository.findByEmail(Email.create('nonexistent@example.com'));
 
       expect(user).toBeNull();
     });
@@ -179,7 +178,7 @@ describe('UserRepository', () => {
     });
 
     it('should throw error when updating non-existent user', async () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const nonExistentId = '00000000-0000-4000-8000-000000000000';
       const updateData = { firstName: 'Test' };
 
       await expect(
@@ -222,7 +221,7 @@ describe('UserRepository', () => {
       };
 
       const createdUser = await repository.create(userData);
-      const userId = createdUser.getId().getValue();
+      const userId = createdUser.getId();
 
       await repository.delete(userId);
 
@@ -231,7 +230,7 @@ describe('UserRepository', () => {
     });
 
     it('should throw error when deleting non-existent user', async () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const nonExistentId = Id.fromString('00000000-0000-4000-8000-000000000000');
 
       await expect(repository.delete(nonExistentId)).rejects.toThrow(
         'User not found'
@@ -256,7 +255,7 @@ describe('UserRepository', () => {
       expect(savedUser).toBeDefined();
       expect(savedUser.getEmail().getValue()).toBe(email.getValue());
 
-      const foundUser = await repository.findById(savedUser.getId().getValue());
+      const foundUser = await repository.findById(savedUser.getId());
       expect(foundUser).toBeDefined();
     });
 

@@ -73,7 +73,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Get subscription details
-    let subscription = null;
+    let subscription: {
+      id: string;
+      status: string;
+      currentPeriodEnd: Date;
+      trialEnd: Date | null;
+    } | null = null;
     if (checkoutSession.subscription) {
       const stripeSubscriptionId =
         typeof checkoutSession.subscription === 'string'

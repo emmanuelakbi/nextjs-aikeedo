@@ -13,7 +13,7 @@ import {
 import {
   getReferralCookie,
   clearReferralCookie,
-} from '@/domain/affiliate/services/referral-tracker';
+} from '@/lib/affiliate/referral-tracker';
 
 /**
  * Process referral for a newly registered user

@@ -82,7 +82,7 @@ export function handleAIError(
  * Transform OpenAI API errors
  */
 function transformOpenAIError(
-  error: OpenAI.APIError,
+  error: InstanceType<typeof OpenAI.APIError>,
   provider: AIProvider,
   context?: Record<string, unknown>
 ): AIServiceError {
@@ -136,14 +136,20 @@ function transformOpenAIError(
  * Transform Anthropic API errors
  */
 function transformAnthropicError(
-  error: Anthropic.APIError,
+  error: InstanceType<typeof Anthropic.APIError>,
   provider: AIProvider,
   context?: Record<string, unknown>
 ): AIServiceError {
+  // Safely extract error type from Anthropic error object
+  const errorType =
+    error.error && typeof error.error === 'object' && 'type' in error.error
+      ? (error.error as { type?: string }).type
+      : undefined;
+
   const errorContext = {
     ...context,
     status: error.status,
-    type: error.error?.type,
+    type: errorType,
   };
 
   switch (error.status) {

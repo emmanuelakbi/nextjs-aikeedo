@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { PlanRepository } from './PlanRepository';
 import { Plan } from '../../domain/billing/entities/Plan';
-import { PlanInterval } from '@prisma/client';
+import { PlanInterval } from '../../domain/types';
 import { prisma } from '../../lib/db';
 
 /**

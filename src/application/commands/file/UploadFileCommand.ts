@@ -41,7 +41,7 @@ export const UploadFileCommandSchema = z.object({
     size: z.number().positive('File size must be positive'),
     buffer: z.any(), // Buffer type - using any for Zod compatibility
   }),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type UploadFileCommand = z.infer<typeof UploadFileCommandSchema>;

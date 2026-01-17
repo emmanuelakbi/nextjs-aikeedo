@@ -84,8 +84,10 @@ describe('RegisterUserUseCase - Default Workspace Property Tests', () => {
               result.user.getId().getValue()
             );
             expect(userWorkspaces).toHaveLength(1);
-            expect(userWorkspaces[0].getName()).toBe('Personal');
-            expect(userWorkspaces[0].getOwnerId()).toBe(
+            const firstWorkspace = userWorkspaces[0];
+            expect(firstWorkspace).toBeDefined();
+            expect(firstWorkspace!.getName()).toBe('Personal');
+            expect(firstWorkspace!.getOwnerId()).toBe(
               result.user.getId().getValue()
             );
 

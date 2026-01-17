@@ -9,6 +9,7 @@
 import { PrismaClient } from '@prisma/client';
 import { UserFactory } from './factories/user-factory';
 import { WorkspaceFactory } from './factories/workspace-factory';
+import { UserRole } from '@/domain/user';
 
 /**
  * Create factory instances for testing
@@ -52,7 +53,7 @@ export async function createTestScenario(prisma: PrismaClient) {
       email: 'admin@test.com',
       firstName: 'Admin',
       lastName: 'User',
-      role: 'ADMIN',
+      role: UserRole.ADMIN,
     },
     {
       name: 'Admin Workspace',

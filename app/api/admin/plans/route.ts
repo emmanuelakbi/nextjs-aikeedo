@@ -75,9 +75,20 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedData = planSchema.parse(body);
 
-    // Create plan
+    // Create plan - stripeProductId is required by Prisma schema
     const plan = await prisma.plan.create({
-      data: validatedData,
+      data: {
+        name: validatedData.name,
+        description: validatedData.description || '',
+        price: validatedData.price,
+        currency: validatedData.currency,
+        interval: validatedData.interval,
+        creditCount: validatedData.creditCount,
+        features: validatedData.features || {},
+        isActive: validatedData.isActive,
+        stripePriceId: validatedData.stripePriceId || '',
+        stripeProductId: validatedData.stripePriceId || '', // Use stripePriceId as fallback or empty string
+      },
     });
 
     // Log the action

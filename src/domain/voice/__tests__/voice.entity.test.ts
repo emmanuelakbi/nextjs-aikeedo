@@ -8,11 +8,11 @@ import { VoiceEntity } from '../entities/Voice';
 
 describe('VoiceEntity', () => {
   const mockVoiceProps = {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+    id: '123e4567-e89b-42d3-a456-426614174000',
+    workspaceId: '123e4567-e89b-42d3-a456-426614174001',
     name: 'Test Voice',
     description: 'A test voice',
-    sampleFileId: '123e4567-e89b-12d3-a456-426614174002',
+    sampleFileId: '123e4567-e89b-42d3-a456-426614174002',
     modelId: null,
     status: 'TRAINING' as const,
     createdAt: new Date('2024-01-01'),

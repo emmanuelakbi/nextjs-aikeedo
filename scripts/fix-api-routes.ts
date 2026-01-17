@@ -39,7 +39,7 @@ function fixRouteFile(filePath: string): boolean {
     
     // Find the last import or first export
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+      const line = lines[i]?.trim() ?? '';
       
       if (line.startsWith('import ')) {
         insertIndex = i + 1;

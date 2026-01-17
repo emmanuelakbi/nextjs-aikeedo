@@ -60,9 +60,12 @@ describe('Test DI Container', () => {
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
-      expect(mockRepo).toHaveProperty('findByWorkspace');
-      expect(mockRepo).toHaveProperty('findByUser');
+      expect(mockRepo).toHaveProperty('findByWorkspaceId');
+      expect(mockRepo).toHaveProperty('countByWorkspaceId');
       expect(mockRepo).toHaveProperty('search');
+      expect(mockRepo).toHaveProperty('exists');
+      expect(mockRepo).toHaveProperty('findByGenerationId');
+      expect(mockRepo).toHaveProperty('findByFileId');
     });
 
     it('should create mock file repository with all required methods', () => {
@@ -71,9 +74,9 @@ describe('Test DI Container', () => {
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
-      expect(mockRepo).toHaveProperty('findByWorkspace');
-      expect(mockRepo).toHaveProperty('findByUser');
-      expect(mockRepo).toHaveProperty('findUnused');
+      expect(mockRepo).toHaveProperty('findByWorkspaceId');
+      expect(mockRepo).toHaveProperty('countByWorkspaceId');
+      expect(mockRepo).toHaveProperty('exists');
     });
 
     it('should create mock conversation repository with all required methods', () => {
@@ -82,20 +85,22 @@ describe('Test DI Container', () => {
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
-      expect(mockRepo).toHaveProperty('findByWorkspace');
-      expect(mockRepo).toHaveProperty('findByUser');
-      expect(mockRepo).toHaveProperty('addMessage');
-      expect(mockRepo).toHaveProperty('getMessages');
+      expect(mockRepo).toHaveProperty('findByWorkspaceId');
+      expect(mockRepo).toHaveProperty('findByUserId');
+      expect(mockRepo).toHaveProperty('list');
+      expect(mockRepo).toHaveProperty('count');
+      expect(mockRepo).toHaveProperty('listWithPagination');
     });
 
     it('should create mock message repository with all required methods', () => {
       const mockRepo = createMockMessageRepository();
 
+      expect(mockRepo).toHaveProperty('create');
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
-      expect(mockRepo).toHaveProperty('findByConversation');
-      expect(mockRepo).toHaveProperty('deleteByConversation');
+      expect(mockRepo).toHaveProperty('findByConversationId');
+      expect(mockRepo).toHaveProperty('deleteByConversationId');
     });
 
     it('should create mock preset repository with all required methods', () => {
@@ -104,8 +109,11 @@ describe('Test DI Container', () => {
       expect(mockRepo).toHaveProperty('save');
       expect(mockRepo).toHaveProperty('findById');
       expect(mockRepo).toHaveProperty('delete');
-      expect(mockRepo).toHaveProperty('findByWorkspace');
-      expect(mockRepo).toHaveProperty('findByUser');
+      expect(mockRepo).toHaveProperty('findByWorkspaceId');
+      expect(mockRepo).toHaveProperty('findByCategory');
+      expect(mockRepo).toHaveProperty('findSystemPresets');
+      expect(mockRepo).toHaveProperty('list');
+      expect(mockRepo).toHaveProperty('incrementUsageCount');
     });
 
     it('should create mock file storage with all required methods', () => {
@@ -114,7 +122,12 @@ describe('Test DI Container', () => {
       expect(mockStorage).toHaveProperty('upload');
       expect(mockStorage).toHaveProperty('download');
       expect(mockStorage).toHaveProperty('delete');
-      expect(mockStorage).toHaveProperty('getPresignedUrl');
+      expect(mockStorage).toHaveProperty('exists');
+      expect(mockStorage).toHaveProperty('getMetadata');
+      expect(mockStorage).toHaveProperty('getPublicUrl');
+      expect(mockStorage).toHaveProperty('getPresignedUploadUrl');
+      expect(mockStorage).toHaveProperty('getPresignedDownloadUrl');
+      expect(mockStorage).toHaveProperty('list');
     });
   });
 
@@ -198,6 +211,10 @@ describe('Test DI Container', () => {
         findByUserId: vi.fn(),
         updateCredits: vi.fn(),
         existsByName: vi.fn(),
+        addMember: vi.fn(),
+        removeMember: vi.fn(),
+        isMember: vi.fn(),
+        getMembers: vi.fn(),
       };
 
       container.setWorkspaceRepository(customMock);

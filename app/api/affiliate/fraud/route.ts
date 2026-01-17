@@ -112,8 +112,32 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function detectSuspiciousPatterns(affiliateId?: string | null) {
-  const suspiciousAffiliates = [];
+interface SuspiciousAffiliate {
+  affiliate: {
+    id: string;
+    code: string;
+    status: string;
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
+  };
+  flags: string[];
+  riskScore: number;
+  riskLevel: string;
+  metrics: {
+    totalReferrals: number;
+    convertedReferrals: number;
+    conversionRate: string;
+    totalEarnings: number;
+    pendingEarnings: number;
+  };
+}
+
+async function detectSuspiciousPatterns(affiliateId?: string | null): Promise<SuspiciousAffiliate[]> {
+  const suspiciousAffiliates: SuspiciousAffiliate[] = [];
 
   // Build query
   const where = affiliateId ? { id: affiliateId } : {};
@@ -159,16 +183,20 @@ async function detectSuspiciousPatterns(affiliateId?: string | null) {
       (r) => r.status === 'CONVERTED' && r.convertedAt
     );
     if (conversions.length > 5) {
-      const timeSpan =
-        conversions[conversions.length - 1].convertedAt!.getTime() -
-        conversions[0].convertedAt!.getTime();
-      const hoursSpan = timeSpan / (1000 * 60 * 60);
+      const firstConversion = conversions[0];
+      const lastConversion = conversions[conversions.length - 1];
+      if (firstConversion?.convertedAt && lastConversion?.convertedAt) {
+        const timeSpan =
+          lastConversion.convertedAt.getTime() -
+          firstConversion.convertedAt.getTime();
+        const hoursSpan = timeSpan / (1000 * 60 * 60);
 
-      if (hoursSpan < 24) {
-        flags.push(
-          `Rapid conversions: ${conversions.length} in ${hoursSpan.toFixed(1)} hours`
-        );
-        riskScore += 30;
+        if (hoursSpan < 24) {
+          flags.push(
+            `Rapid conversions: ${conversions.length} in ${hoursSpan.toFixed(1)} hours`
+          );
+          riskScore += 30;
+        }
       }
     }
 

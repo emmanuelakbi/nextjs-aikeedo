@@ -82,7 +82,7 @@ describe('AIServiceFactory', () => {
 
       factory.registerModel(customModel);
 
-      const retrieved = factory.getModelInfo('custom-test-model');
+      const retrieved = await factory.getModelInfo('custom-test-model');
       expect(retrieved).toEqual(customModel);
     });
 
@@ -208,26 +208,40 @@ describe('AIServiceFactory', () => {
 
       const customFactory = new AIServiceFactory(config);
 
-      expect(customFactory.isProviderAvailable('anthropic')).toBe(true);
-      expect(customFactory.isProviderAvailable('openai')).toBe(false);
+      // Verify enabled provider works
+      const service = customFactory.createTextService('anthropic', 'claude-3-5-sonnet-20241022');
+      expect(service).toBeDefined();
+      expect(service.getProvider()).toBe('anthropic');
+
+      // Verify disabled provider throws
+      expect(() => {
+        customFactory.createTextService('openai', 'gpt-4o-mini');
+      }).toThrow('not available');
     });
 
     it('should update provider configuration', () => {
-      factory.updateProviderConfig('openai', {
+      // Create a fresh factory
+      const freshFactory = new AIServiceFactory();
+      
+      // Update the config
+      freshFactory.updateProviderConfig('openai', {
         provider: 'openai',
         enabled: false,
         priority: 10,
       });
 
-      expect(factory.isProviderAvailable('openai')).toBe(false);
+      // Verify the provider is now unavailable by trying to create a service
+      expect(() => {
+        freshFactory.createTextService('openai', 'gpt-4o-mini');
+      }).toThrow('not available');
     });
   });
 
   describe('Fallback Handling', () => {
-    it('should create service with fallback disabled', () => {
+    it('should create service with fallback disabled', async () => {
       const noFallbackFactory = new AIServiceFactory({ enableFallback: false });
 
-      const service = noFallbackFactory.createTextServiceWithFallback(
+      const service = await noFallbackFactory.createTextServiceWithFallback(
         'openai',
         'gpt-4o-mini'
       );
@@ -236,7 +250,7 @@ describe('AIServiceFactory', () => {
       expect(service.getProvider()).toBe('openai');
     });
 
-    it('should attempt fallback when primary provider fails', () => {
+    it('should attempt fallback when primary provider fails', async () => {
       // Disable OpenAI
       factory.updateProviderConfig('openai', {
         provider: 'openai',
@@ -244,7 +258,7 @@ describe('AIServiceFactory', () => {
         priority: 1,
       });
 
-      const service = factory.createTextServiceWithFallback(
+      const service = await factory.createTextServiceWithFallback(
         'openai',
         'gpt-4o-mini'
       );
@@ -254,7 +268,7 @@ describe('AIServiceFactory', () => {
       expect(service.getProvider()).not.toBe('openai');
     });
 
-    it('should throw error when all fallbacks fail', () => {
+    it('should throw error when all fallbacks fail', async () => {
       // Disable all providers
       factory.updateProviderConfig('openai', {
         provider: 'openai',
@@ -277,9 +291,9 @@ describe('AIServiceFactory', () => {
         priority: 4,
       });
 
-      expect(() => {
-        factory.createTextServiceWithFallback('openai', 'gpt-4o-mini');
-      }).toThrow('Failed to create text service');
+      await expect(
+        factory.createTextServiceWithFallback('openai', 'gpt-4o-mini')
+      ).rejects.toThrow('Failed to create text service');
     });
   });
 
@@ -301,7 +315,7 @@ describe('AIServiceFactory', () => {
   });
 
   describe('Model Filtering', () => {
-    it('should filter models by provider and capability', () => {
+    it('should filter models by provider and capability', async () => {
       const openaiTextModels = await factory.getModelsByProvider(
         'openai',
         'text-generation'

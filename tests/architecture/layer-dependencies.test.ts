@@ -380,7 +380,7 @@ describe('Architecture Tests - Layer Dependencies', () => {
           // If there are repository imports, check constructor parameters
           if (repositoryImports.length > 0) {
             // Property 1: Constructor should have parameters (dependency injection)
-            if (constructorParams.trim() === '') {
+            if (!constructorParams || constructorParams.trim() === '') {
               console.error(
                 `❌ Use case ${className} imports repositories but constructor has no parameters`
               );
@@ -826,6 +826,17 @@ describe('Architecture Tests - Layer Dependencies', () => {
         const content = fs.readFileSync(file, 'utf-8');
         const fileName = path.basename(file);
 
+        // Skip mapper files, index files, and optimized repositories
+        // Optimized repositories extend base repositories which implement interfaces
+        if (
+          fileName.includes('Mapper') ||
+          fileName.includes('mapper') ||
+          fileName.includes('Optimized') ||
+          fileName === 'index.ts'
+        ) {
+          return;
+        }
+
         // Check if repository implements an interface
         const implementsRegex = /class\s+\w+\s+implements\s+\w+/;
         const hasImplements = implementsRegex.test(content);
@@ -953,8 +964,9 @@ describe('Architecture Tests - Layer Dependencies', () => {
               const importPath = match[1];
               // Check if import is from domain (handles both @/domain and relative paths like ../../domain)
               return (
-                importPath.includes('/domain/') ||
-                importPath.includes('@/domain/')
+                importPath &&
+                (importPath.includes('/domain/') ||
+                importPath.includes('@/domain/'))
               );
             });
 

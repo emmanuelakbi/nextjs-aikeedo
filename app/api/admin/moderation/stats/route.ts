@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Get user details for top flagged users
-    const userIds = topFlaggedUsers.map((u: { userId: string }) => u.userId);
+    const userIds = topFlaggedUsers.map((u) => u.userId);
     const users = await prisma.user.findMany({
       where: {
         id: { in: userIds },
@@ -93,8 +93,8 @@ export async function GET(request: NextRequest) {
     });
 
     const topFlaggedUsersWithDetails = topFlaggedUsers.map(
-      (item: { userId: string; _count: { id: number } }) => {
-        const user = users.find((u: { id: string }) => u.id === item.userId);
+      (item) => {
+        const user = users.find((u) => u.id === item.userId);
         return {
           userId: item.userId,
           flagCount: item._count,

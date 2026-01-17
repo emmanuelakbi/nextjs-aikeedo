@@ -1,59 +1,88 @@
 /**
  * Request Payout Use Case Tests
  * Requirements: Affiliate 3 - Request payouts
+ * Requirements: 6.1, 6.5 - Test files must use properly typed mock objects
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { RequestPayoutUseCase } from '../request-payout';
+import type { AffiliateRepository } from '@/domain/affiliate/repositories/affiliate-repository';
+import type { PayoutRepository } from '@/domain/affiliate/repositories/payout-repository';
+import type { Affiliate, Payout, PayoutMethod } from '@/types/affiliate';
 
 // Mock the repositories
 vi.mock('@/infrastructure/affiliate/prisma-affiliate-repository');
 vi.mock('@/infrastructure/affiliate/prisma-payout-repository');
 
+/**
+ * Type-safe mock for AffiliateRepository
+ * Implements only the methods used by RequestPayoutUseCase
+ */
+type MockAffiliateRepository = {
+  findByUserId: Mock<AffiliateRepository['findByUserId']>;
+};
+
+/**
+ * Type-safe mock for PayoutRepository
+ * Implements only the methods used by RequestPayoutUseCase
+ */
+type MockPayoutRepository = {
+  create: Mock<PayoutRepository['create']>;
+};
+
 describe('RequestPayoutUseCase', () => {
   let useCase: RequestPayoutUseCase;
-  let mockAffiliateRepository: any;
-  let mockPayoutRepository: any;
+  let mockAffiliateRepository: MockAffiliateRepository;
+  let mockPayoutRepository: MockPayoutRepository;
 
   beforeEach(() => {
     mockAffiliateRepository = {
-      findById: vi.fn(),
-      updateEarnings: vi.fn(),
+      findByUserId: vi.fn(),
     };
     mockPayoutRepository = {
       create: vi.fn(),
     };
     useCase = new RequestPayoutUseCase(
-      mockAffiliateRepository,
-      mockPayoutRepository
+      mockAffiliateRepository as unknown as AffiliateRepository,
+      mockPayoutRepository as unknown as PayoutRepository
     );
   });
 
   it('should create payout request with valid data', async () => {
     // Arrange
-    const affiliateId = 'affiliate-123';
+    const userId = 'user-123';
     const amount = 10000; // $100.00
-    const mockAffiliate = {
-      id: affiliateId,
-      pendingEarnings: 15000, // $150.00
+    const mockAffiliate: Affiliate = {
+      id: 'affiliate-123',
+      userId,
+      code: 'TESTCODE',
+      commissionRate: 20,
+      tier: 1,
       status: 'ACTIVE',
+      totalEarnings: 20000,
+      pendingEarnings: 15000, // $150.00
+      paidEarnings: 5000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    const mockPayout = {
+    const mockPayout: Payout = {
       id: 'payout-123',
-      affiliateId,
+      affiliateId: mockAffiliate.id,
       amount,
       method: 'PAYPAL',
       status: 'PENDING',
+      processedAt: null,
+      notes: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    mockAffiliateRepository.findById.mockResolvedValue(mockAffiliate);
+    mockAffiliateRepository.findByUserId.mockResolvedValue(mockAffiliate);
     mockPayoutRepository.create.mockResolvedValue(mockPayout);
-    mockAffiliateRepository.updateEarnings.mockResolvedValue(undefined);
 
     // Act
     const result = await useCase.execute({
-      affiliateId,
+      userId,
       amount,
       method: 'PAYPAL',
     });
@@ -64,98 +93,141 @@ describe('RequestPayoutUseCase', () => {
     expect(mockPayoutRepository.create).toHaveBeenCalled();
   });
 
-  it('should throw error if affiliate not found', async () => {
+  it('should return error if affiliate not found', async () => {
     // Arrange
-    mockAffiliateRepository.findById.mockResolvedValue(null);
+    mockAffiliateRepository.findByUserId.mockResolvedValue(null);
 
-    // Act & Assert
-    await expect(
-      useCase.execute({
-        affiliateId: 'invalid-id',
-        amount: 10000,
-        method: 'PAYPAL',
-      })
-    ).rejects.toThrow('Affiliate not found');
+    // Act
+    const result = await useCase.execute({
+      userId: 'invalid-user',
+      amount: 10000,
+      method: 'PAYPAL',
+    });
+
+    // Assert
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Affiliate account not found');
   });
 
-  it('should throw error if affiliate is not active', async () => {
+  it('should return error if affiliate is not active', async () => {
     // Arrange
-    const mockAffiliate = {
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
-      pendingEarnings: 15000,
+      userId: 'user-123',
+      code: 'TESTCODE',
+      commissionRate: 20,
+      tier: 1,
       status: 'SUSPENDED',
+      totalEarnings: 20000,
+      pendingEarnings: 15000,
+      paidEarnings: 5000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    mockAffiliateRepository.findById.mockResolvedValue(mockAffiliate);
+    mockAffiliateRepository.findByUserId.mockResolvedValue(mockAffiliate);
 
-    // Act & Assert
-    await expect(
-      useCase.execute({
-        affiliateId: 'affiliate-123',
-        amount: 10000,
-        method: 'PAYPAL',
-      })
-    ).rejects.toThrow('Affiliate account is not active');
+    // Act
+    const result = await useCase.execute({
+      userId: 'user-123',
+      amount: 10000,
+      method: 'PAYPAL',
+    });
+
+    // Assert
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Affiliate account is not active');
   });
 
-  it('should throw error if insufficient balance', async () => {
+  it('should return error if insufficient balance', async () => {
     // Arrange
-    const mockAffiliate = {
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
-      pendingEarnings: 5000, // $50.00
+      userId: 'user-123',
+      code: 'TESTCODE',
+      commissionRate: 20,
+      tier: 1,
       status: 'ACTIVE',
+      totalEarnings: 10000,
+      pendingEarnings: 5000, // $50.00
+      paidEarnings: 5000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    mockAffiliateRepository.findById.mockResolvedValue(mockAffiliate);
+    mockAffiliateRepository.findByUserId.mockResolvedValue(mockAffiliate);
 
-    // Act & Assert
-    await expect(
-      useCase.execute({
-        affiliateId: 'affiliate-123',
-        amount: 10000, // Requesting $100.00
-        method: 'PAYPAL',
-      })
-    ).rejects.toThrow('Insufficient balance');
+    // Act
+    const result = await useCase.execute({
+      userId: 'user-123',
+      amount: 10000, // Requesting $100.00
+      method: 'PAYPAL',
+    });
+
+    // Assert
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('Insufficient pending earnings');
   });
 
   it('should enforce minimum payout amount', async () => {
     // Arrange
-    const mockAffiliate = {
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
-      pendingEarnings: 10000,
+      userId: 'user-123',
+      code: 'TESTCODE',
+      commissionRate: 20,
+      tier: 1,
       status: 'ACTIVE',
+      totalEarnings: 15000,
+      pendingEarnings: 10000,
+      paidEarnings: 5000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    mockAffiliateRepository.findById.mockResolvedValue(mockAffiliate);
+    mockAffiliateRepository.findByUserId.mockResolvedValue(mockAffiliate);
 
-    // Act & Assert
-    await expect(
-      useCase.execute({
-        affiliateId: 'affiliate-123',
-        amount: 1000, // $10.00 - below minimum
-        method: 'PAYPAL',
-      })
-    ).rejects.toThrow('Minimum payout amount is $50.00');
+    // Act
+    const result = await useCase.execute({
+      userId: 'user-123',
+      amount: 1000, // $10.00 - below minimum
+      method: 'PAYPAL',
+    });
+
+    // Assert
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('Minimum payout amount');
   });
 
   it('should support different payout methods', async () => {
     // Arrange
-    const mockAffiliate = {
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
-      pendingEarnings: 15000,
+      userId: 'user-123',
+      code: 'TESTCODE',
+      commissionRate: 20,
+      tier: 1,
       status: 'ACTIVE',
+      totalEarnings: 20000,
+      pendingEarnings: 15000,
+      paidEarnings: 5000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    mockAffiliateRepository.findById.mockResolvedValue(mockAffiliate);
-    mockPayoutRepository.create.mockResolvedValue({
+    const mockPayout: Payout = {
       id: 'payout-123',
       affiliateId: 'affiliate-123',
       amount: 10000,
       method: 'STRIPE',
       status: 'PENDING',
+      processedAt: null,
+      notes: null,
       createdAt: new Date(),
-    });
-    mockAffiliateRepository.updateEarnings.mockResolvedValue(undefined);
+      updatedAt: new Date(),
+    };
+    mockAffiliateRepository.findByUserId.mockResolvedValue(mockAffiliate);
+    mockPayoutRepository.create.mockResolvedValue(mockPayout);
 
     // Act
     const result = await useCase.execute({
-      affiliateId: 'affiliate-123',
+      userId: 'user-123',
       amount: 10000,
       method: 'STRIPE',
     });
@@ -165,38 +237,51 @@ describe('RequestPayoutUseCase', () => {
     expect(result.payout?.method).toBe('STRIPE');
   });
 
-  it('should update affiliate pending earnings after payout request', async () => {
+  it('should create payout with correct affiliate ID', async () => {
     // Arrange
+    const userId = 'user-123';
     const affiliateId = 'affiliate-123';
     const amount = 10000;
-    const mockAffiliate = {
+    const mockAffiliate: Affiliate = {
       id: affiliateId,
-      pendingEarnings: 15000,
+      userId,
+      code: 'TESTCODE',
+      commissionRate: 20,
+      tier: 1,
       status: 'ACTIVE',
+      totalEarnings: 20000,
+      pendingEarnings: 15000,
+      paidEarnings: 5000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    mockAffiliateRepository.findById.mockResolvedValue(mockAffiliate);
-    mockPayoutRepository.create.mockResolvedValue({
+    const mockPayout: Payout = {
       id: 'payout-123',
       affiliateId,
       amount,
       method: 'PAYPAL',
       status: 'PENDING',
+      processedAt: null,
+      notes: null,
       createdAt: new Date(),
-    });
-    mockAffiliateRepository.updateEarnings.mockResolvedValue(undefined);
+      updatedAt: new Date(),
+    };
+    mockAffiliateRepository.findByUserId.mockResolvedValue(mockAffiliate);
+    mockPayoutRepository.create.mockResolvedValue(mockPayout);
 
     // Act
     await useCase.execute({
-      affiliateId,
+      userId,
       amount,
       method: 'PAYPAL',
     });
 
     // Assert
-    expect(mockAffiliateRepository.updateEarnings).toHaveBeenCalledWith(
-      affiliateId,
+    expect(mockPayoutRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        pendingEarnings: 5000, // 15000 - 10000
+        affiliateId,
+        amount,
+        method: 'PAYPAL',
       })
     );
   });

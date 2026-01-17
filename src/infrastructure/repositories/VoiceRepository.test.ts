@@ -84,12 +84,29 @@ describe('VoiceRepository', () => {
 
   describe('findById', () => {
     it('should find a voice by id', async () => {
+      // Create a sample file first
+      const fileProps = {
+        id: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
+        userId: fixtures.user.id,
+        name: 'find-sample.mp3',
+        type: 'audio/mpeg',
+        size: 2048,
+        url: 'https://example.com/find-sample.mp3',
+        storageKey: `samples/${crypto.randomUUID()}.mp3`,
+        metadata: {},
+        createdAt: new Date(),
+      };
+      const file = new FileEntity(fileProps);
+      await fileRepository.save(file);
+      testFileIds.push(file.getId());
+
       const voiceProps = {
         id: crypto.randomUUID(),
-        workspaceId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
         name: 'Find Test Voice',
         description: 'Find test description',
-        sampleFileId: crypto.randomUUID(),
+        sampleFileId: file.getId(),
         modelId: null,
         status: 'TRAINING' as const,
         createdAt: new Date(),
@@ -113,12 +130,29 @@ describe('VoiceRepository', () => {
 
   describe('exists', () => {
     it('should return true for existing voice', async () => {
+      // Create a sample file first
+      const fileProps = {
+        id: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
+        userId: fixtures.user.id,
+        name: 'exists-sample.mp3',
+        type: 'audio/mpeg',
+        size: 2048,
+        url: 'https://example.com/exists-sample.mp3',
+        storageKey: `samples/${crypto.randomUUID()}.mp3`,
+        metadata: {},
+        createdAt: new Date(),
+      };
+      const file = new FileEntity(fileProps);
+      await fileRepository.save(file);
+      testFileIds.push(file.getId());
+
       const voiceProps = {
         id: crypto.randomUUID(),
-        workspaceId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
         name: 'Exists Test Voice',
         description: 'Exists test description',
-        sampleFileId: crypto.randomUUID(),
+        sampleFileId: file.getId(),
         modelId: null,
         status: 'TRAINING' as const,
         createdAt: new Date(),

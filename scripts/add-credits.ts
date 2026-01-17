@@ -99,7 +99,7 @@ Examples:
   }
 
   if (args[0] === '--all' || args[0] === '-a') {
-    if (args.length < 2) {
+    if (args.length < 2 || !args[1]) {
       console.error('❌ Error: Amount is required');
       console.log('Usage: tsx scripts/add-credits.ts --all <amount>');
       process.exit(1);
@@ -122,7 +122,15 @@ Examples:
   }
 
   const workspaceId = args[0];
-  const amount = parseInt(args[1], 10);
+  const amountArg = args[1];
+  
+  if (!workspaceId || !amountArg) {
+    console.error('❌ Error: Workspace ID and amount are required');
+    console.log('Usage: tsx scripts/add-credits.ts <workspace-id> <amount>');
+    process.exit(1);
+  }
+  
+  const amount = parseInt(amountArg, 10);
 
   if (isNaN(amount) || amount <= 0) {
     console.error('❌ Error: Amount must be a positive number');

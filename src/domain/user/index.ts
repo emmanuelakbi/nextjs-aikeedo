@@ -13,9 +13,5 @@ export { Password } from './value-objects/Password';
 export { Id } from './value-objects/Id';
 
 // Repository Interface and Types
-export {
-  IUserRepository,
-  UserRole,
-  UserStatus,
-  type FindAllOptions,
-} from './repositories/IUserRepository';
+export type { IUserRepository, FindAllOptions } from './repositories/IUserRepository';
+export { UserRole, UserStatus } from './repositories/IUserRepository';

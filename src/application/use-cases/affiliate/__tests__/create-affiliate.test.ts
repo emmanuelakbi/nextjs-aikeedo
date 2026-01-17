@@ -1,33 +1,47 @@
 /**
  * Create Affiliate Use Case Tests
  * Requirements: Affiliate 1 - Generate unique referral codes
+ * Requirements: 6.1, 6.5 - Test files must use properly typed mock objects
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { CreateAffiliateUseCase } from '../create-affiliate';
-import { PrismaAffiliateRepository } from '@/infrastructure/affiliate/prisma-affiliate-repository';
+import type { AffiliateRepository } from '@/domain/affiliate/repositories/affiliate-repository';
+import type { Affiliate } from '@/types/affiliate';
 
 // Mock the repository
 vi.mock('@/infrastructure/affiliate/prisma-affiliate-repository');
 
+/**
+ * Type-safe mock for AffiliateRepository
+ * Implements only the methods used by CreateAffiliateUseCase
+ */
+type MockAffiliateRepository = {
+  findByUserId: Mock<AffiliateRepository['findByUserId']>;
+  codeExists: Mock<AffiliateRepository['codeExists']>;
+  create: Mock<AffiliateRepository['create']>;
+};
+
 describe('CreateAffiliateUseCase', () => {
   let useCase: CreateAffiliateUseCase;
-  let mockRepository: any;
+  let mockRepository: MockAffiliateRepository;
 
   beforeEach(() => {
     mockRepository = {
       findByUserId: vi.fn(),
-      findByCode: vi.fn(),
+      codeExists: vi.fn(),
       create: vi.fn(),
     };
-    useCase = new CreateAffiliateUseCase(mockRepository);
+    useCase = new CreateAffiliateUseCase(
+      mockRepository as unknown as AffiliateRepository
+    );
   });
 
   it('should create an affiliate with valid data', async () => {
     // Arrange
     const userId = 'user-123';
     const code = 'TESTCODE';
-    const mockAffiliate = {
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
       userId,
       code,
@@ -38,10 +52,11 @@ describe('CreateAffiliateUseCase', () => {
       pendingEarnings: 0,
       paidEarnings: 0,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     mockRepository.findByUserId.mockResolvedValue(null);
-    mockRepository.findByCode.mockResolvedValue(null);
+    mockRepository.codeExists.mockResolvedValue(false);
     mockRepository.create.mockResolvedValue(mockAffiliate);
 
     // Act
@@ -55,14 +70,27 @@ describe('CreateAffiliateUseCase', () => {
     // Assert
     expect(result).toEqual(mockAffiliate);
     expect(mockRepository.findByUserId).toHaveBeenCalledWith(userId);
-    expect(mockRepository.findByCode).toHaveBeenCalledWith(code);
+    expect(mockRepository.codeExists).toHaveBeenCalledWith(code);
     expect(mockRepository.create).toHaveBeenCalled();
   });
 
   it('should throw error if user already has affiliate account', async () => {
     // Arrange
     const userId = 'user-123';
-    mockRepository.findByUserId.mockResolvedValue({ id: 'existing-affiliate' });
+    const existingAffiliate: Affiliate = {
+      id: 'existing-affiliate',
+      userId,
+      code: 'EXISTING',
+      commissionRate: 20,
+      tier: 1,
+      status: 'ACTIVE',
+      totalEarnings: 0,
+      pendingEarnings: 0,
+      paidEarnings: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    mockRepository.findByUserId.mockResolvedValue(existingAffiliate);
 
     // Act & Assert
     await expect(
@@ -79,7 +107,7 @@ describe('CreateAffiliateUseCase', () => {
     // Arrange
     const code = 'TESTCODE';
     mockRepository.findByUserId.mockResolvedValue(null);
-    mockRepository.findByCode.mockResolvedValue({ id: 'existing-affiliate' });
+    mockRepository.codeExists.mockResolvedValue(true);
 
     // Act & Assert
     await expect(
@@ -95,12 +123,10 @@ describe('CreateAffiliateUseCase', () => {
   it('should generate code if not provided', async () => {
     // Arrange
     const userId = 'user-123';
-    mockRepository.findByUserId.mockResolvedValue(null);
-    mockRepository.findByCode.mockResolvedValue(null);
-    mockRepository.create.mockResolvedValue({
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
       userId,
-      code: expect.any(String),
+      code: 'GENERATED123',
       commissionRate: 20,
       tier: 1,
       status: 'ACTIVE',
@@ -108,7 +134,11 @@ describe('CreateAffiliateUseCase', () => {
       pendingEarnings: 0,
       paidEarnings: 0,
       createdAt: new Date(),
-    });
+      updatedAt: new Date(),
+    };
+    mockRepository.findByUserId.mockResolvedValue(null);
+    mockRepository.codeExists.mockResolvedValue(false);
+    mockRepository.create.mockResolvedValue(mockAffiliate);
 
     // Act
     const result = await useCase.execute({
@@ -125,9 +155,7 @@ describe('CreateAffiliateUseCase', () => {
   it('should use default commission rate if not provided', async () => {
     // Arrange
     const userId = 'user-123';
-    mockRepository.findByUserId.mockResolvedValue(null);
-    mockRepository.findByCode.mockResolvedValue(null);
-    mockRepository.create.mockResolvedValue({
+    const mockAffiliate: Affiliate = {
       id: 'affiliate-123',
       userId,
       code: 'TESTCODE',
@@ -138,7 +166,11 @@ describe('CreateAffiliateUseCase', () => {
       pendingEarnings: 0,
       paidEarnings: 0,
       createdAt: new Date(),
-    });
+      updatedAt: new Date(),
+    };
+    mockRepository.findByUserId.mockResolvedValue(null);
+    mockRepository.codeExists.mockResolvedValue(false);
+    mockRepository.create.mockResolvedValue(mockAffiliate);
 
     // Act
     const result = await useCase.execute({

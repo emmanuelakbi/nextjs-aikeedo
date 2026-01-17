@@ -47,12 +47,15 @@ describe('Configuration System', () => {
 
   it('should have valid credit rates', () => {
     // All rates should be positive numbers
-    Object.values(appConfig.credits.text).forEach((rate: any) => {
+    // Using type assertion since we're iterating over dynamic config values
+    const textRates = Object.values(appConfig.credits.text) as number[];
+    textRates.forEach((rate) => {
       expect(typeof rate).toBe('number');
       expect(rate).toBeGreaterThan(0);
     });
 
-    Object.values(appConfig.credits.image).forEach((rate: any) => {
+    const imageRates = Object.values(appConfig.credits.image) as number[];
+    imageRates.forEach((rate) => {
       expect(typeof rate).toBe('number');
       expect(rate).toBeGreaterThan(0);
     });

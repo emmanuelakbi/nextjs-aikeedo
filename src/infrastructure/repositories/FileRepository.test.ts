@@ -60,8 +60,8 @@ describe('FileRepository', () => {
     it('should find a file by id', async () => {
       const fileProps = {
         id: crypto.randomUUID(),
-        workspaceId: crypto.randomUUID(),
-        userId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
+        userId: fixtures.user.id,
         name: 'find-test.jpg',
         type: 'image/jpeg',
         size: 2048,
@@ -91,8 +91,8 @@ describe('FileRepository', () => {
     it('should return true for existing file', async () => {
       const fileProps = {
         id: crypto.randomUUID(),
-        workspaceId: crypto.randomUUID(),
-        userId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
+        userId: fixtures.user.id,
         name: 'exists-test.jpg',
         type: 'image/jpeg',
         size: 1024,

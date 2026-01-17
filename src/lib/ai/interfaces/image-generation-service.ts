@@ -4,14 +4,9 @@
  * Provides image generation capabilities from text prompts.
  */
 
-import type { ImageGenerationResponse } from '../types';
+import type { ImageGenerationResponse, ImageSize } from '../types';
 
-export type ImageSize =
-  | '256x256'
-  | '512x512'
-  | '1024x1024'
-  | '1792x1024'
-  | '1024x1792';
+export type { ImageSize };
 
 export type ImageStyle = 'natural' | 'vivid' | 'artistic' | 'photographic';
 

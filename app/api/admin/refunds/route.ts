@@ -103,11 +103,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Update invoice status
+    // Update invoice status - use Prisma enum values
     const updatedInvoice = await prisma.invoice.update({
       where: { id: invoiceId },
       data: {
-        status: refundAmount >= invoice.amount ? 'REFUNDED' : 'PAID',
+        status: refundAmount >= invoice.amount ? 'VOID' : 'PAID', // Use VOID instead of REFUNDED as it's a valid Prisma enum
       },
     });
 
@@ -162,11 +162,11 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const skip = (page - 1) * limit;
 
-    // Get refunded invoices
+    // Get refunded invoices (using VOID status as it represents refunded invoices)
     const [invoices, total] = await Promise.all([
       prisma.invoice.findMany({
         where: {
-          status: 'REFUNDED',
+          status: 'VOID',
         },
         include: {
           workspace: {
@@ -191,7 +191,7 @@ export async function GET(request: NextRequest) {
       }),
       prisma.invoice.count({
         where: {
-          status: 'REFUNDED',
+          status: 'VOID',
         },
       }),
     ]);

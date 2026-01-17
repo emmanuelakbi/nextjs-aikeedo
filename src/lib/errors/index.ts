@@ -13,6 +13,12 @@ export {
   RateLimitError,
   ServerError,
   type ErrorResponse,
+  type SimpleErrorResponse,
+  type ApiErrorResponse,
+  isStandardErrorResponse,
+  isSimpleErrorResponse,
+  createErrorResponse,
+  createSimpleErrorResponse,
 } from './base';
 
 export { handleApiError, withErrorHandler } from './handler';

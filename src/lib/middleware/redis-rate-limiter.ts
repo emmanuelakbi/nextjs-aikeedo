@@ -124,24 +124,23 @@ export class RedisRateLimiter {
       // Score is timestamp, member is unique request ID
       const requestId = `${now}:${Math.random()}`;
 
-      // Remove old entries outside the window
+      // Remove old entries outside the window first
       await client.zRemRangeByScore(key, 0, windowStart);
 
-      // Count current requests in window
+      // Count current requests in window BEFORE adding new one
       const currentCount = await client.zCard(key);
 
       if (currentCount >= config.maxRequests) {
-        // Rate limit exceeded
-        const oldestEntry = await client.zRange(key, 0, 0, {
-          withScores: true,
-        } as any);
+        // Rate limit exceeded - don't add the request
+        // Get oldest entry to calculate reset time
+        const oldestEntries = await client.zRangeWithScores(key, 0, 0);
 
-        const resetTime =
-          oldestEntry.length > 0
-            ? Number((oldestEntry[0] as any).score) + config.windowMs
-            : now + config.windowMs;
+        let resetTime = now + config.windowMs;
+        if (oldestEntries.length > 0) {
+          resetTime = oldestEntries[0].score + config.windowMs;
+        }
 
-        const retryAfter = Math.ceil((resetTime - now) / 1000);
+        const retryAfter = Math.max(1, Math.ceil((resetTime - now) / 1000));
 
         return {
           allowed: false,
@@ -158,8 +157,8 @@ export class RedisRateLimiter {
         value: requestId,
       });
 
-      // Set expiration on the key
-      await client.expire(key, Math.ceil(config.windowMs / 1000));
+      // Set expiration on the key (add buffer for safety)
+      await client.expire(key, Math.ceil(config.windowMs / 1000) + 1);
 
       const remaining = config.maxRequests - currentCount - 1;
 

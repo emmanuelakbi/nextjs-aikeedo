@@ -9,14 +9,15 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { AnthropicTextGenerationService } from '../providers/anthropic-text-generation';
 import { getEnv } from '@/lib/env';
 
+// Check API key availability at module load time to avoid TypeScript errors
+// with it.skipIf() which evaluates the condition before beforeAll runs
+const env = getEnv();
+const hasApiKey = !!env.ANTHROPIC_API_KEY;
+
 describe('Anthropic Integration Tests', () => {
   let service: AnthropicTextGenerationService;
-  let hasApiKey: boolean;
 
   beforeAll(() => {
-    const env = getEnv();
-    hasApiKey = !!env.ANTHROPIC_API_KEY;
-
     if (hasApiKey) {
       service = new AnthropicTextGenerationService(
         'claude-3-5-sonnet-20241022'

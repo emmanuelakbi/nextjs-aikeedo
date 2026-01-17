@@ -19,7 +19,6 @@ export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   SUSPENDED = 'SUSPENDED',
-  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
 }
 
 // ============================================================================
@@ -34,9 +33,12 @@ export enum GenerationType {
   CHAT = 'CHAT',
 }
 
+/**
+ * GenerationStatus - Status of AI generation tasks
+ * Note: Values must match Prisma GenerationStatus enum exactly
+ */
 export enum GenerationStatus {
   PENDING = 'PENDING',
-  PROCESSING = 'PROCESSING',
   COMPLETED = 'COMPLETED',
   FAILED = 'FAILED',
 }
@@ -55,9 +57,11 @@ export enum WorkspaceMemberRole {
 // Billing Domain Types
 // ============================================================================
 
+/**
+ * PlanInterval - Billing interval for subscription plans
+ * Note: Values must match Prisma PlanInterval enum exactly
+ */
 export enum PlanInterval {
-  DAY = 'DAY',
-  WEEK = 'WEEK',
   MONTH = 'MONTH',
   YEAR = 'YEAR',
 }

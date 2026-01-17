@@ -37,12 +37,12 @@ describe('Conversation Use Cases', () => {
       // Mock the repositories
       const mockWorkspace = Workspace.create({
         name: 'Test Workspace',
-        ownerId: '123e4567-e89b-12d3-a456-426614174000',
+        ownerId: '123e4567-e89b-42d3-a456-426614174000',
         creditCount: 100,
       });
 
       // Create a mock user object that matches the expected interface
-      const mockUserId = '123e4567-e89b-12d3-a456-426614174001';
+      const mockUserId = '123e4567-e89b-42d3-a456-426614174001';
       const mockUser = {
         getId: () => ({ getValue: () => mockUserId }),
       } as any;
@@ -81,8 +81,8 @@ describe('Conversation Use Cases', () => {
       vi.spyOn(workspaceRepository, 'findById').mockResolvedValue(null);
 
       const command = {
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-        userId: '123e4567-e89b-12d3-a456-426614174001',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+        userId: '123e4567-e89b-42d3-a456-426614174001',
         title: 'Test Conversation',
         model: 'gpt-4',
         provider: 'openai',
@@ -102,8 +102,8 @@ describe('Conversation Use Cases', () => {
       );
 
       const mockConversation = Conversation.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-        userId: '123e4567-e89b-12d3-a456-426614174001',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+        userId: '123e4567-e89b-42d3-a456-426614174001',
         title: 'Test Conversation',
         model: 'gpt-4',
         provider: 'openai',
@@ -142,9 +142,11 @@ describe('Conversation Use Cases', () => {
       vi.spyOn(conversationRepository, 'findById').mockResolvedValue(null);
 
       const command = {
-        conversationId: '123e4567-e89b-12d3-a456-426614174000',
+        conversationId: '123e4567-e89b-42d3-a456-426614174000',
         role: 'user' as const,
         content: 'Hello, AI!',
+        tokens: 0,
+        credits: 0,
       };
 
       await expect(useCase.execute(command)).rejects.toThrow(
@@ -160,9 +162,9 @@ describe('Conversation Use Cases', () => {
         messageRepository
       );
 
-      const userId = '123e4567-e89b-12d3-a456-426614174001';
+      const userId = '123e4567-e89b-42d3-a456-426614174001';
       const mockConversation = Conversation.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         userId,
         title: 'Test Conversation',
         model: 'gpt-4',
@@ -198,8 +200,12 @@ describe('Conversation Use Cases', () => {
 
       expect(result.conversation).toBeInstanceOf(Conversation);
       expect(result.messages).toHaveLength(2);
-      expect(result.messages[0].getContent()).toBe('Hello');
-      expect(result.messages[1].getContent()).toBe('Hi there!');
+      const firstMessage = result.messages[0];
+      const secondMessage = result.messages[1];
+      if (firstMessage && secondMessage) {
+        expect(firstMessage.getContent()).toBe('Hello');
+        expect(secondMessage.getContent()).toBe('Hi there!');
+      }
     });
 
     it('should throw error if user does not own conversation', async () => {
@@ -209,8 +215,8 @@ describe('Conversation Use Cases', () => {
       );
 
       const mockConversation = Conversation.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-        userId: '123e4567-e89b-12d3-a456-426614174001',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+        userId: '123e4567-e89b-42d3-a456-426614174001',
         title: 'Test Conversation',
         model: 'gpt-4',
         provider: 'openai',
@@ -222,7 +228,7 @@ describe('Conversation Use Cases', () => {
 
       const command = {
         conversationId: mockConversation.getId().getValue(),
-        userId: '123e4567-e89b-12d3-a456-426614174999', // Different user
+        userId: '123e4567-e89b-42d3-a456-426614174999', // Different user
       };
 
       await expect(useCase.execute(command)).rejects.toThrow('Unauthorized');
@@ -235,15 +241,15 @@ describe('Conversation Use Cases', () => {
 
       const mockConversations = [
         Conversation.create({
-          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-          userId: '123e4567-e89b-12d3-a456-426614174001',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+          userId: '123e4567-e89b-42d3-a456-426614174001',
           title: 'Conversation 1',
           model: 'gpt-4',
           provider: 'openai',
         }),
         Conversation.create({
-          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-          userId: '123e4567-e89b-12d3-a456-426614174001',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+          userId: '123e4567-e89b-42d3-a456-426614174001',
           title: 'Conversation 2',
           model: 'claude-3',
           provider: 'anthropic',
@@ -255,8 +261,8 @@ describe('Conversation Use Cases', () => {
       );
 
       const command = {
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-        userId: '123e4567-e89b-12d3-a456-426614174001',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+        userId: '123e4567-e89b-42d3-a456-426614174001',
         limit: 50,
         offset: 0,
       };
@@ -264,8 +270,12 @@ describe('Conversation Use Cases', () => {
       const result = await useCase.execute(command);
 
       expect(result).toHaveLength(2);
-      expect(result[0].getTitle()).toBe('Conversation 1');
-      expect(result[1].getTitle()).toBe('Conversation 2');
+      const firstConv = result[0];
+      const secondConv = result[1];
+      if (firstConv && secondConv) {
+        expect(firstConv.getTitle()).toBe('Conversation 1');
+        expect(secondConv.getTitle()).toBe('Conversation 2');
+      }
     });
   });
 
@@ -276,9 +286,9 @@ describe('Conversation Use Cases', () => {
         messageRepository
       );
 
-      const userId = '123e4567-e89b-12d3-a456-426614174001';
+      const userId = '123e4567-e89b-42d3-a456-426614174001';
       const mockConversation = Conversation.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         userId,
         title: 'Test Conversation',
         model: 'gpt-4',
@@ -315,8 +325,8 @@ describe('Conversation Use Cases', () => {
       );
 
       const mockConversation = Conversation.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
-        userId: '123e4567-e89b-12d3-a456-426614174001',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
+        userId: '123e4567-e89b-42d3-a456-426614174001',
         title: 'Test Conversation',
         model: 'gpt-4',
         provider: 'openai',
@@ -328,7 +338,7 @@ describe('Conversation Use Cases', () => {
 
       const command = {
         conversationId: mockConversation.getId().getValue(),
-        userId: '123e4567-e89b-12d3-a456-426614174999', // Different user
+        userId: '123e4567-e89b-42d3-a456-426614174999', // Different user
       };
 
       await expect(useCase.execute(command)).rejects.toThrow('Unauthorized');

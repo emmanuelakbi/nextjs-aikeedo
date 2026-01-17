@@ -7,9 +7,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError, ZodSchema } from 'zod';
+import {
+  createErrorResponse,
+  type ErrorResponse,
+} from '../errors/base';
 
 /**
  * Validation error response format
+ * @deprecated Use ErrorResponse from '../errors/base' instead
  */
 export interface ValidationErrorResponse {
   error: {
@@ -48,9 +53,7 @@ export async function validateRequestBody<T>(
  * @param error Zod validation error
  * @returns Formatted error response
  */
-export function formatValidationError(
-  error: ZodError
-): ValidationErrorResponse {
+export function formatValidationError(error: ZodError): ErrorResponse {
   const fieldErrors: Record<string, string[]> = {};
 
   error.issues.forEach((issue) => {
@@ -61,13 +64,7 @@ export function formatValidationError(
     fieldErrors[field].push(issue.message);
   });
 
-  return {
-    error: {
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid input data',
-      fields: fieldErrors,
-    },
-  };
+  return createErrorResponse('VALIDATION_ERROR', 'Invalid input data', fieldErrors);
 }
 
 /**
@@ -76,7 +73,7 @@ export function formatValidationError(
  * @param error Zod validation error
  * @returns NextResponse with validation error
  */
-export function validationErrorResponse(error: ZodError): NextResponse {
+export function validationErrorResponse(error: ZodError): NextResponse<ErrorResponse> {
   return NextResponse.json(formatValidationError(error), { status: 400 });
 }
 
@@ -102,12 +99,7 @@ export function withValidation<T>(
 
       if (error instanceof Error && error.message.includes('Invalid JSON')) {
         return NextResponse.json(
-          {
-            error: {
-              code: 'INVALID_JSON',
-              message: 'Request body must be valid JSON',
-            },
-          },
+          createErrorResponse('INVALID_JSON', 'Request body must be valid JSON'),
           { status: 400 }
         );
       }

@@ -183,8 +183,10 @@ export function checkEmailPattern(
   let riskScore = 0;
 
   // Extract email username (before @)
-  const affiliateUsername = affiliateEmail.split('@')[0].toLowerCase();
-  const referredUsername = referredEmail.split('@')[0].toLowerCase();
+  const affiliateParts = affiliateEmail.split('@');
+  const referredParts = referredEmail.split('@');
+  const affiliateUsername = affiliateParts[0]?.toLowerCase() || '';
+  const referredUsername = referredParts[0]?.toLowerCase() || '';
 
   // Check for similar usernames
   if (affiliateUsername === referredUsername) {
@@ -212,8 +214,8 @@ export function checkEmailPattern(
     const [, affiliateBase2, affiliateNum] = affiliateMatch;
     const [, referredBase2, referredNum] = referredMatch;
 
-    if (affiliateBase2 === referredBase2) {
-      const numDiff = Math.abs(parseInt(affiliateNum) - parseInt(referredNum));
+    if (affiliateBase2 === referredBase2 && affiliateNum && referredNum) {
+      const numDiff = Math.abs(parseInt(affiliateNum, 10) - parseInt(referredNum, 10));
       if (numDiff <= 5) {
         reasons.push('Sequential email pattern detected');
         riskScore += 35;

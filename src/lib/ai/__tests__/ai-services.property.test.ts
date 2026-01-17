@@ -509,7 +509,7 @@ describe('Property 7: Credit refund on failure', () => {
       fc.asyncProperty(
         fc.integer({ min: 100, max: 10000 }),
         fc.integer({ min: 10, max: 100 }),
-        fc.float({ min: 0, max: 1 }),
+        fc.float({ min: 0, max: 1, noNaN: true }),
         async (initialCredits, creditCost, completionRatio) => {
           let currentCredits = initialCredits;
 
@@ -573,6 +573,246 @@ describe('Property 7: Credit refund on failure', () => {
           expect(currentCredits).toBeLessThanOrEqual(initialCredits);
         }
       ),
+      { numRuns: 100 }
+    );
+  });
+});
+
+
+/**
+ * Property 6: AI Provider Response Type Safety
+ * Feature: critical-fixes, Property 6: AI Provider Response Type Safety
+ * Validates: Requirements 4.1, 4.2, 4.5
+ *
+ * For any AI provider API response, the system should handle the response type
+ * correctly without runtime type errors, including proper handling of undefined values.
+ */
+describe('Property 6: AI Provider Response Type Safety', () => {
+  // Generate valid response metadata
+  const responseMetadataArbitrary = fc.record({
+    model: modelNameArbitrary,
+    provider: fc.constantFrom<AIProvider>('openai', 'anthropic', 'google', 'mistral'),
+    tokens: fc.option(
+      fc.record({
+        input: fc.integer({ min: 0, max: 100000 }),
+        output: fc.integer({ min: 0, max: 100000 }),
+        total: fc.integer({ min: 0, max: 200000 }),
+      }),
+      { nil: undefined }
+    ),
+    credits: fc.integer({ min: 0, max: 10000 }),
+    finishReason: fc.option(
+      fc.constantFrom('stop', 'length', 'content_filter', 'other'),
+      { nil: undefined }
+    ),
+  });
+
+  // Generate text generation responses with optional undefined fields
+  const textGenerationResponseArbitrary = fc.record({
+    content: fc.string({ minLength: 0, maxLength: 5000 }),
+    metadata: responseMetadataArbitrary,
+  });
+
+  // Generate streaming chunks with optional metadata
+  const streamChunkArbitrary = fc.record({
+    content: fc.string({ minLength: 0, maxLength: 500 }),
+    isComplete: fc.boolean(),
+    metadata: fc.option(responseMetadataArbitrary, { nil: undefined }),
+  });
+
+  it('should handle text generation responses with all fields present', async () => {
+    await fc.assert(
+      fc.asyncProperty(textGenerationResponseArbitrary, async (response) => {
+        // Verify response structure is valid
+        expect(response).toHaveProperty('content');
+        expect(response).toHaveProperty('metadata');
+        expect(typeof response.content).toBe('string');
+        expect(response.metadata).toHaveProperty('model');
+        expect(response.metadata).toHaveProperty('provider');
+        expect(response.metadata).toHaveProperty('credits');
+        expect(response.metadata.credits).toBeGreaterThanOrEqual(0);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should handle streaming chunks with optional metadata', async () => {
+    await fc.assert(
+      fc.asyncProperty(streamChunkArbitrary, async (chunk) => {
+        // Verify chunk structure
+        expect(chunk).toHaveProperty('content');
+        expect(chunk).toHaveProperty('isComplete');
+        expect(typeof chunk.content).toBe('string');
+        expect(typeof chunk.isComplete).toBe('boolean');
+
+        // Metadata should only be present on complete chunks (or optionally)
+        if (chunk.metadata !== undefined) {
+          expect(chunk.metadata).toHaveProperty('model');
+          expect(chunk.metadata).toHaveProperty('provider');
+          expect(chunk.metadata).toHaveProperty('credits');
+        }
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should safely handle undefined token counts with fallback to zero', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.option(
+          fc.record({
+            input: fc.integer({ min: 0, max: 100000 }),
+            output: fc.integer({ min: 0, max: 100000 }),
+            total: fc.integer({ min: 0, max: 200000 }),
+          }),
+          { nil: undefined }
+        ),
+        async (tokens) => {
+          // Simulate safe token extraction with fallback
+          const inputTokens = tokens?.input ?? 0;
+          const outputTokens = tokens?.output ?? 0;
+          const totalTokens = tokens?.total ?? 0;
+
+          // All values should be non-negative numbers
+          expect(inputTokens).toBeGreaterThanOrEqual(0);
+          expect(outputTokens).toBeGreaterThanOrEqual(0);
+          expect(totalTokens).toBeGreaterThanOrEqual(0);
+          expect(Number.isFinite(inputTokens)).toBe(true);
+          expect(Number.isFinite(outputTokens)).toBe(true);
+          expect(Number.isFinite(totalTokens)).toBe(true);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should handle provider-specific response variations', async () => {
+    // Simulate different provider response structures
+    const providerResponseArbitrary = fc.oneof(
+      // OpenAI-style response
+      fc.record({
+        choices: fc.array(
+          fc.record({
+            message: fc.record({
+              content: fc.option(fc.string(), { nil: null }),
+              role: fc.constantFrom('assistant', 'user', 'system'),
+            }),
+            finish_reason: fc.option(fc.string(), { nil: null }),
+          }),
+          { minLength: 1, maxLength: 5 }
+        ),
+        usage: fc.option(
+          fc.record({
+            prompt_tokens: fc.integer({ min: 0, max: 10000 }),
+            completion_tokens: fc.integer({ min: 0, max: 10000 }),
+            total_tokens: fc.integer({ min: 0, max: 20000 }),
+          }),
+          { nil: undefined }
+        ),
+      }),
+      // Anthropic-style response
+      fc.record({
+        content: fc.array(
+          fc.record({
+            type: fc.constant('text'),
+            text: fc.string(),
+          }),
+          { minLength: 1, maxLength: 3 }
+        ),
+        usage: fc.record({
+          input_tokens: fc.integer({ min: 0, max: 10000 }),
+          output_tokens: fc.integer({ min: 0, max: 10000 }),
+        }),
+        stop_reason: fc.option(fc.string(), { nil: null }),
+      })
+    );
+
+    await fc.assert(
+      fc.asyncProperty(providerResponseArbitrary, async (response) => {
+        // Extract content safely regardless of provider format
+        let content: string | null = null;
+
+        if ('choices' in response && response.choices.length > 0) {
+          // OpenAI format
+          content = response.choices[0]?.message?.content ?? null;
+        } else if ('content' in response && Array.isArray(response.content)) {
+          // Anthropic format
+          const textBlocks = response.content.filter(
+            (block): block is { type: 'text'; text: string } =>
+              block.type === 'text'
+          );
+          content = textBlocks.map((b) => b.text).join('') || null;
+        }
+
+        // Content extraction should not throw
+        expect(content === null || typeof content === 'string').toBe(true);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should map finish reasons consistently across providers', async () => {
+    const finishReasonMappings: Record<string, string> = {
+      stop: 'stop',
+      end_turn: 'stop',
+      STOP: 'stop',
+      length: 'length',
+      max_tokens: 'length',
+      MAX_TOKENS: 'length',
+      content_filter: 'content_filter',
+      SAFETY: 'content_filter',
+    };
+
+    const finishReasonArbitrary = fc.constantFrom(
+      ...Object.keys(finishReasonMappings),
+      null,
+      undefined
+    );
+
+    await fc.assert(
+      fc.asyncProperty(finishReasonArbitrary, async (reason) => {
+        // Map finish reason to standard format
+        const mapFinishReason = (
+          r: string | null | undefined
+        ): string | undefined => {
+          if (r === null || r === undefined) return undefined;
+          return finishReasonMappings[r] ?? r.toLowerCase();
+        };
+
+        const mapped = mapFinishReason(reason);
+
+        // Result should be undefined or a string
+        expect(mapped === undefined || typeof mapped === 'string').toBe(true);
+
+        // If input was defined, output should be defined
+        if (reason !== null && reason !== undefined) {
+          expect(mapped).toBeDefined();
+        }
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should handle image generation responses with optional fields', async () => {
+    const imageResponseArbitrary = fc.record({
+      url: fc.option(fc.webUrl(), { nil: undefined }),
+      b64_json: fc.option(fc.base64String(), { nil: undefined }),
+      revised_prompt: fc.option(fc.string(), { nil: undefined }),
+    });
+
+    await fc.assert(
+      fc.asyncProperty(imageResponseArbitrary, async (imageData) => {
+        // Extract URL with fallback
+        const url = imageData.url ?? imageData.b64_json ?? '';
+
+        // URL should be a string (possibly empty)
+        expect(typeof url).toBe('string');
+
+        // If both are undefined, url should be empty string
+        if (imageData.url === undefined && imageData.b64_json === undefined) {
+          expect(url).toBe('');
+        }
+      }),
       { numRuns: 100 }
     );
   });

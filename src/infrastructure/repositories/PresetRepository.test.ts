@@ -56,7 +56,7 @@ describe('PresetRepository', () => {
   describe('findById', () => {
     it('should find a preset by id', async () => {
       const presetData = {
-        workspaceId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
         name: 'Find Test',
         description: 'Find test description',
         category: 'content',
@@ -82,7 +82,7 @@ describe('PresetRepository', () => {
   describe('save', () => {
     it('should save a new preset', async () => {
       const preset = Preset.create({
-        workspaceId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
         name: 'Save Test',
         description: 'Save test description',
         category: 'content',
@@ -98,7 +98,7 @@ describe('PresetRepository', () => {
 
     it('should update an existing preset', async () => {
       const preset = Preset.create({
-        workspaceId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
         name: 'Update Test',
         description: 'Update test description',
         category: 'content',
@@ -120,7 +120,7 @@ describe('PresetRepository', () => {
   describe('incrementUsageCount', () => {
     it('should increment usage count', async () => {
       const preset = Preset.create({
-        workspaceId: crypto.randomUUID(),
+        workspaceId: fixtures.workspace.id,
         name: 'Usage Test',
         description: 'Usage test description',
         category: 'content',

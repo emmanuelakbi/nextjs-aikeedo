@@ -3,7 +3,7 @@
  * Requirements: Content Management 1.1
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { FileEntity } from '../../domain/file/entities/File';
 import { FileRepositoryInterface } from '../../domain/file/repositories/FileRepositoryInterface';
 import { prisma } from '../../lib/db/prisma';
@@ -16,6 +16,9 @@ export class FileRepository implements FileRepositoryInterface {
   }
 
   async save(file: FileEntity): Promise<FileEntity> {
+    // Cast metadata to Prisma.InputJsonValue for JSON field compatibility
+    const metadata = file.getMetadata() as Prisma.InputJsonValue;
+
     const data = {
       id: file.getId(),
       workspaceId: file.getWorkspaceId(),
@@ -25,7 +28,7 @@ export class FileRepository implements FileRepositoryInterface {
       size: file.getSize(),
       url: file.getUrl(),
       storageKey: file.getStorageKey(),
-      metadata: file.getMetadata(),
+      metadata,
       createdAt: file.getCreatedAt(),
     };
 
@@ -107,9 +110,17 @@ export class FileRepository implements FileRepositoryInterface {
     size: number;
     url: string;
     storageKey: string;
-    metadata: unknown;
+    metadata: Prisma.JsonValue;
     createdAt: Date;
   }): FileEntity {
+    // Safely convert Prisma JsonValue to Record<string, unknown>
+    const metadata =
+      record.metadata !== null &&
+      typeof record.metadata === 'object' &&
+      !Array.isArray(record.metadata)
+        ? (record.metadata as Record<string, unknown>)
+        : {};
+
     return new FileEntity({
       id: record.id,
       workspaceId: record.workspaceId,
@@ -119,7 +130,7 @@ export class FileRepository implements FileRepositoryInterface {
       size: record.size,
       url: record.url,
       storageKey: record.storageKey,
-      metadata: (record.metadata as Record<string, unknown>) ?? {},
+      metadata,
       createdAt: record.createdAt,
     });
   }

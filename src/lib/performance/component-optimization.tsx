@@ -12,7 +12,7 @@
 
 'use client';
 
-import {
+import React, {
   memo,
   useCallback,
   useMemo,
@@ -25,12 +25,13 @@ import {
 
 /**
  * Memoize a component with custom comparison
+ * Returns a memoized version of the component that preserves prop types
  */
 export function memoComponent<P extends object>(
   Component: ComponentType<P>,
   propsAreEqual?: (prevProps: Readonly<P>, nextProps: Readonly<P>) => boolean
-): ComponentType<P> {
-  return memo(Component, propsAreEqual) as ComponentType<P>;
+): React.MemoExoticComponent<ComponentType<P>> {
+  return memo(Component, propsAreEqual);
 }
 
 /**

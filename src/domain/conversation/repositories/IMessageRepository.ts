@@ -67,4 +67,12 @@ export interface IMessageRepository {
    * @returns Promise resolving when deletion is complete
    */
   deleteByConversationId(conversationId: string): Promise<void>;
+
+  /**
+   * Delete a message by its unique identifier
+   *
+   * @param id - The message's unique identifier
+   * @returns Promise resolving when deletion is complete
+   */
+  delete(id: string): Promise<void>;
 }

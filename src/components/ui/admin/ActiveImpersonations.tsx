@@ -5,7 +5,7 @@ import {
   useImpersonation,
   ImpersonationSession,
 } from '@/lib/hooks/use-impersonation';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
 
 /**
  * Active Impersonations Component

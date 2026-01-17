@@ -1,7 +1,5 @@
-import {
-  VerificationTokenRepository,
-  VerificationTokenType,
-} from '../../infrastructure/repositories/VerificationTokenRepository';
+import { VerificationTokenRepository } from '../../infrastructure/repositories/VerificationTokenRepository';
+import type { VerificationTokenType } from '../../domain/auth/repositories/IVerificationTokenRepository';
 import {
   generateVerificationToken,
   generatePasswordResetToken,

@@ -8,14 +8,14 @@ import { DocumentEntity } from '../entities/Document';
 
 describe('DocumentEntity', () => {
   const mockDocumentProps = {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-    userId: '123e4567-e89b-12d3-a456-426614174002',
+    id: '123e4567-e89b-42d3-a456-426614174000',
+    workspaceId: '123e4567-e89b-42d3-a456-426614174001',
+    userId: '123e4567-e89b-42d3-a456-426614174002',
     title: 'Test Document',
     content: 'This is test content',
     type: 'TEXT' as const,
     fileId: null,
-    generationId: '123e4567-e89b-12d3-a456-426614174003',
+    generationId: '123e4567-e89b-42d3-a456-426614174003',
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
   };
@@ -78,7 +78,7 @@ describe('DocumentEntity', () => {
 
     const documentWithFile = new DocumentEntity({
       ...mockDocumentProps,
-      fileId: '123e4567-e89b-12d3-a456-426614174004',
+      fileId: '123e4567-e89b-42d3-a456-426614174004',
     });
     expect(documentWithFile.hasFile()).toBe(true);
   });

@@ -18,7 +18,7 @@ export const UpdatePresetCommandSchema = z.object({
   category: z.string().min(1, 'Category cannot be empty').trim().optional(),
   template: z.string().min(1, 'Template cannot be empty').trim().optional(),
   model: z.string().min(1, 'Model cannot be empty').optional(),
-  parameters: z.record(z.any()).optional(),
+  parameters: z.record(z.string(), z.any()).optional(),
   isPublic: z.boolean().optional(),
 });
 

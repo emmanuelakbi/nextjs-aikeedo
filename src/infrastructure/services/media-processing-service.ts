@@ -178,11 +178,12 @@ export class MediaProcessingService {
     );
 
     return results.map((result, index) => {
+      const imageEntry = images[index];
       if (result.status === 'fulfilled') {
         return result.value;
       } else {
         return {
-          filename: images[index].filename,
+          filename: imageEntry?.filename ?? 'unknown',
           result: Buffer.from([]),
           error: result.reason?.message ?? 'Unknown error',
         };

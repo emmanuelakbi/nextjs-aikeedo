@@ -91,7 +91,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
     setIsDragging(false);
 
     const files = e.dataTransfer.files;
-    if (files.length > 0) {
+    if (files.length > 0 && files[0]) {
       handleFileSelect(files[0]);
     }
   };
@@ -99,7 +99,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
   // Handle file input change
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && files.length > 0) {
+    if (files && files.length > 0 && files[0]) {
       handleFileSelect(files[0]);
     }
   };

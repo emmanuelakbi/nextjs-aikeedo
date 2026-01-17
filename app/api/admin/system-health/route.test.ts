@@ -46,9 +46,7 @@ describe('Admin System Health API', () => {
       .mockResolvedValueOnce(1000) // recent generations
       .mockResolvedValueOnce(10); // recent errors
 
-    const request = new NextRequest('http://localhost/api/admin/system-health');
-
-    const response = await GET(request);
+    const response = await GET();
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -75,9 +73,7 @@ describe('Admin System Health API', () => {
     vi.mocked(prisma.subscription.count).mockResolvedValue(0);
     vi.mocked(prisma.generation.count).mockResolvedValue(0);
 
-    const request = new NextRequest('http://localhost/api/admin/system-health');
-
-    const response = await GET(request);
+    const response = await GET();
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -96,9 +92,7 @@ describe('Admin System Health API', () => {
       .mockResolvedValueOnce(100) // recent generations
       .mockResolvedValueOnce(15); // recent errors (15%)
 
-    const request = new NextRequest('http://localhost/api/admin/system-health');
-
-    const response = await GET(request);
+    const response = await GET();
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -115,9 +109,7 @@ describe('Admin System Health API', () => {
     vi.mocked(prisma.subscription.count).mockResolvedValue(0);
     vi.mocked(prisma.generation.count).mockResolvedValue(0);
 
-    const request = new NextRequest('http://localhost/api/admin/system-health');
-
-    const response = await GET(request);
+    const response = await GET();
     const data = await response.json();
 
     expect(response.status).toBe(200);

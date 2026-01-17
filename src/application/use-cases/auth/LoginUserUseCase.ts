@@ -1,5 +1,6 @@
 import { User } from '../../../domain/user/entities/User';
 import { Password } from '../../../domain/user/value-objects/Password';
+import { Email } from '../../../domain/user/value-objects/Email';
 import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
 import { SessionRepository } from '../../../infrastructure/repositories/SessionRepository';
 import { generateSessionToken } from '../../../lib/auth/tokens';
@@ -26,7 +27,8 @@ export class LoginUserUseCase {
 
   async execute(command: LoginUserCommand): Promise<LoginUserResult> {
     // Find user by email
-    const user = await this.userRepository.findByEmail(command.email);
+    const email = Email.create(command.email);
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new Error('Invalid email or password');
     }

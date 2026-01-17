@@ -8,7 +8,7 @@ import { Preset } from '../entities/Preset';
 
 describe('Preset', () => {
   const mockCreateProps = {
-    workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+    workspaceId: '123e4567-e89b-42d3-a456-426614174001',
     name: 'Test Preset',
     description: 'A test preset',
     category: 'content',

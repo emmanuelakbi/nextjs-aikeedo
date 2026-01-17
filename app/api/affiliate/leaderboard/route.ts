@@ -121,17 +121,26 @@ export async function GET(request: NextRequest) {
       where: { userId: session.user.id },
     });
 
-    let currentUserRank = null;
+    let currentUserRank: {
+      rank: number;
+      affiliate?: typeof leaderboard[0]['affiliate'];
+      metrics?: typeof leaderboard[0]['metrics'];
+      sortValue: undefined;
+    } | null = null;
     if (currentUserAffiliate) {
       const userIndex = leaderboard.findIndex(
         (item) => item.affiliate.id === currentUserAffiliate.id
       );
       if (userIndex !== -1) {
-        currentUserRank = {
-          rank: userIndex + 1,
-          ...leaderboard[userIndex],
-          sortValue: undefined,
-        };
+        const userEntry = leaderboard[userIndex];
+        if (userEntry) {
+          currentUserRank = {
+            rank: userIndex + 1,
+            affiliate: userEntry.affiliate,
+            metrics: userEntry.metrics,
+            sortValue: undefined,
+          };
+        }
       }
     }
 

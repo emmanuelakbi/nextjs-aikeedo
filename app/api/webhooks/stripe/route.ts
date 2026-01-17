@@ -4,7 +4,29 @@ import { stripeService } from '@/infrastructure/services/StripeService';
 import { invoiceService } from '@/infrastructure/services/InvoiceService';
 import { prisma } from '@/lib/db';
 import Stripe from 'stripe';
+import { Prisma, SubscriptionStatus } from '@prisma/client';
 export const dynamic = 'force-dynamic';
+
+// Type for Prisma transaction client
+type TransactionClient = Prisma.TransactionClient;
+
+/**
+ * Helper function to get current period from subscription items
+ * In Stripe v20, current_period_start and current_period_end are on subscription items
+ */
+function getSubscriptionPeriod(subscription: Stripe.Subscription): {
+  currentPeriodStart: number;
+  currentPeriodEnd: number;
+} {
+  const firstItem = subscription.items.data[0];
+  if (!firstItem) {
+    throw new Error('Subscription has no items');
+  }
+  return {
+    currentPeriodStart: firstItem.current_period_start,
+    currentPeriodEnd: firstItem.current_period_end,
+  };
+}
 
 
 /**
@@ -171,8 +193,11 @@ async function handleCheckoutSessionCompleted(
     session.subscription as string
   );
 
+  // Get current period from subscription items (Stripe v20)
+  const { currentPeriodStart, currentPeriodEnd } = getSubscriptionPeriod(stripeSubscription);
+
   // FIX: Use transaction with upsert to handle race condition
-  await prisma.$transaction(async (tx: any) => {
+  await prisma.$transaction(async (tx: TransactionClient) => {
     const customerId =
       typeof stripeSubscription.customer === 'string'
         ? stripeSubscription.customer
@@ -184,10 +209,8 @@ async function handleCheckoutSessionCompleted(
       stripeSubscriptionId: stripeSubscription.id,
       stripeCustomerId: customerId,
       status: mapStripeStatus(stripeSubscription.status),
-      currentPeriodStart: new Date(
-        stripeSubscription.current_period_start * 1000
-      ),
-      currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
+      currentPeriodStart: new Date(currentPeriodStart * 1000),
+      currentPeriodEnd: new Date(currentPeriodEnd * 1000),
       cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
       canceledAt: stripeSubscription.canceled_at
         ? new Date(stripeSubscription.canceled_at * 1000)
@@ -241,10 +264,12 @@ async function handleInvoicePaymentSucceeded(
 ): Promise<void> {
   console.log(`Processing invoice.payment_succeeded: ${invoice.id}`);
 
-  const subscriptionId =
-    typeof invoice.subscription === 'string'
-      ? invoice.subscription
-      : invoice.subscription?.id;
+  // In Stripe v20+, subscription is accessed via parent property or metadata
+  const subscriptionId = (invoice as any).subscription
+    ? typeof (invoice as any).subscription === 'string'
+      ? (invoice as any).subscription
+      : (invoice as any).subscription?.id
+    : null;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
@@ -297,10 +322,12 @@ async function handleInvoicePaymentFailed(
 ): Promise<void> {
   console.log(`Processing invoice.payment_failed: ${invoice.id}`);
 
-  const subscriptionId =
-    typeof invoice.subscription === 'string'
-      ? invoice.subscription
-      : invoice.subscription?.id;
+  // In Stripe v20+, subscription is accessed via parent property or metadata
+  const subscriptionId = (invoice as any).subscription
+    ? typeof (invoice as any).subscription === 'string'
+      ? (invoice as any).subscription
+      : (invoice as any).subscription?.id
+    : null;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
@@ -348,12 +375,15 @@ async function handleSubscriptionUpdated(
 ): Promise<void> {
   console.log(`Processing customer.subscription.updated: ${subscription.id}`);
 
+  // Get current period from subscription items (Stripe v20)
+  const { currentPeriodStart, currentPeriodEnd } = getSubscriptionPeriod(subscription);
+
   const maxRetries = 3;
   let retries = 0;
 
   while (retries < maxRetries) {
     try {
-      await prisma.$transaction(async (tx: any) => {
+      await prisma.$transaction(async (tx: TransactionClient) => {
         // Get current subscription with version
         const current = await tx.subscription.findUnique({
           where: { stripeSubscriptionId: subscription.id },
@@ -372,10 +402,8 @@ async function handleSubscriptionUpdated(
           },
           data: {
             status: mapStripeStatus(subscription.status),
-            currentPeriodStart: new Date(
-              subscription.current_period_start * 1000
-            ),
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            currentPeriodStart: new Date(currentPeriodStart * 1000),
+            currentPeriodEnd: new Date(currentPeriodEnd * 1000),
             cancelAtPeriodEnd: subscription.cancel_at_period_end,
             canceledAt: subscription.canceled_at
               ? new Date(subscription.canceled_at * 1000)
@@ -481,7 +509,7 @@ async function handlePaymentIntentSucceeded(
 
   // FIX: Use transaction with unique constraint to prevent race condition
   try {
-    await prisma.$transaction(async (tx: any) => {
+    await prisma.$transaction(async (tx: TransactionClient) => {
       // Try to create transaction record first (will fail if duplicate due to unique constraint)
       const workspace = await tx.workspace.findUnique({
         where: { id: workspaceId },
@@ -579,16 +607,17 @@ async function createOrUpdateSubscription(
       ? stripeSubscription.customer
       : stripeSubscription.customer?.id || '';
 
+  // Get current period from subscription items (Stripe v20)
+  const { currentPeriodStart, currentPeriodEnd } = getSubscriptionPeriod(stripeSubscription);
+
   const subscriptionData = {
     workspaceId,
     planId,
     stripeSubscriptionId: stripeSubscription.id,
     stripeCustomerId: customerId,
     status: mapStripeStatus(stripeSubscription.status),
-    currentPeriodStart: new Date(
-      stripeSubscription.current_period_start * 1000
-    ),
-    currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
+    currentPeriodStart: new Date(currentPeriodStart * 1000),
+    currentPeriodEnd: new Date(currentPeriodEnd * 1000),
     cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
     canceledAt: stripeSubscription.canceled_at
       ? new Date(stripeSubscription.canceled_at * 1000)
@@ -612,14 +641,15 @@ async function updateSubscriptionFromStripe(
   stripeSubscription: Stripe.Subscription,
   workspaceId: string
 ): Promise<void> {
+  // Get current period from subscription items (Stripe v20)
+  const { currentPeriodStart, currentPeriodEnd } = getSubscriptionPeriod(stripeSubscription);
+
   await prisma.subscription.update({
     where: { stripeSubscriptionId: stripeSubscription.id },
     data: {
       status: mapStripeStatus(stripeSubscription.status),
-      currentPeriodStart: new Date(
-        stripeSubscription.current_period_start * 1000
-      ),
-      currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
+      currentPeriodStart: new Date(currentPeriodStart * 1000),
+      currentPeriodEnd: new Date(currentPeriodEnd * 1000),
       cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
       canceledAt: stripeSubscription.canceled_at
         ? new Date(stripeSubscription.canceled_at * 1000)
@@ -733,8 +763,8 @@ async function allocatePurchasedCredits(
 /**
  * Map Stripe subscription status to our enum
  */
-function mapStripeStatus(status: Stripe.Subscription.Status): string {
-  const statusMap: Record<Stripe.Subscription.Status, string> = {
+function mapStripeStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
+  const statusMap: Record<Stripe.Subscription.Status, SubscriptionStatus> = {
     active: 'ACTIVE',
     canceled: 'CANCELED',
     incomplete: 'INCOMPLETE',
@@ -814,7 +844,7 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
   }
 
   // Deduct the credits back
-  await prisma.$transaction(async (tx: any) => {
+  await prisma.$transaction(async (tx: TransactionClient) => {
     const workspace = await tx.workspace.findUnique({
       where: { id: transaction.workspaceId },
     });
@@ -868,8 +898,8 @@ async function handleDisputeCreated(dispute: Stripe.Dispute): Promise<void> {
     return;
   }
 
-  // Find associated transaction
-  const charge = await stripeService.stripe.charges.retrieve(chargeId);
+  // Find associated transaction - use the public retrieveCharge method
+  const charge = await stripeService.retrieveCharge(chargeId);
   const paymentIntentId =
     typeof charge.payment_intent === 'string'
       ? charge.payment_intent

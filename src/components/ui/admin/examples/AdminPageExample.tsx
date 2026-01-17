@@ -28,7 +28,7 @@ import {
   QuickAction,
   QuickActionsGrid,
 } from '@/components/ui/admin';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
 
 // Example data types
 interface User {

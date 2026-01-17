@@ -5,23 +5,31 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import DocumentList from '../DocumentList';
+import DocumentList, { Document } from '../DocumentList';
 
 describe('DocumentList Component', () => {
-  const mockDocuments = [
+  const mockDocuments: Document[] = [
     {
       id: '1',
+      workspaceId: 'workspace-1',
+      userId: 'user-1',
       title: 'Document 1',
       content: 'Content 1',
       type: 'TEXT' as const,
+      fileId: null,
+      generationId: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       id: '2',
+      workspaceId: 'workspace-1',
+      userId: 'user-1',
       title: 'Document 2',
       content: 'Content 2',
       type: 'IMAGE' as const,
+      fileId: null,
+      generationId: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     },

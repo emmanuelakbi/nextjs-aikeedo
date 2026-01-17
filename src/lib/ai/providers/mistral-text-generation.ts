@@ -18,6 +18,44 @@ import type {
 } from '../types';
 import { getEnv } from '@/lib/env';
 
+/**
+ * Type guard to check if a content chunk is a text chunk
+ */
+interface TextChunk {
+  type?: 'text';
+  text: string;
+}
+
+/**
+ * ContentChunk type from Mistral SDK - can be text, image, or other content types
+ */
+type ContentChunk = TextChunk | { type: string; [key: string]: unknown };
+
+/**
+ * Extract text content from Mistral response content
+ * Handles both string content and ContentChunk[] arrays
+ */
+function extractTextContent(
+  content: string | ContentChunk[] | null | undefined
+): string {
+  if (!content) {
+    return '';
+  }
+
+  if (typeof content === 'string') {
+    return content;
+  }
+
+  // Handle ContentChunk[] - extract text from text chunks
+  return content
+    .filter(
+      (chunk): chunk is TextChunk =>
+        chunk.type === 'text' || ('text' in chunk && typeof chunk.text === 'string')
+    )
+    .map((chunk) => chunk.text)
+    .join('');
+}
+
 export class MistralTextGenerationService implements TextGenerationService {
   private client: Mistral;
   private model: string;
@@ -54,7 +92,9 @@ export class MistralTextGenerationService implements TextGenerationService {
       });
 
       const choice = response.choices?.[0];
-      if (!choice?.message?.content) {
+      const textContent = extractTextContent(choice?.message?.content);
+      
+      if (!textContent) {
         throw new Error('No content in Mistral response');
       }
 
@@ -67,11 +107,11 @@ export class MistralTextGenerationService implements TextGenerationService {
           total: response.usage?.totalTokens || 0,
         },
         credits: this.calculateCredits(response.usage?.totalTokens || 0),
-        finishReason: choice.finishReason || undefined,
+        finishReason: choice?.finishReason || undefined,
       };
 
       return {
-        content: choice.message.content,
+        content: textContent,
         metadata,
       };
     });
@@ -95,7 +135,9 @@ export class MistralTextGenerationService implements TextGenerationService {
       });
 
       const choice = response.choices?.[0];
-      if (!choice?.message?.content) {
+      const textContent = extractTextContent(choice?.message?.content);
+      
+      if (!textContent) {
         throw new Error('No content in Mistral response');
       }
 
@@ -108,11 +150,11 @@ export class MistralTextGenerationService implements TextGenerationService {
           total: response.usage?.totalTokens || 0,
         },
         credits: this.calculateCredits(response.usage?.totalTokens || 0),
-        finishReason: choice.finishReason || undefined,
+        finishReason: choice?.finishReason || undefined,
       };
 
       return {
-        content: choice.message.content,
+        content: textContent,
         metadata,
       };
     });
@@ -139,7 +181,7 @@ export class MistralTextGenerationService implements TextGenerationService {
     try {
       for await (const chunk of stream) {
         const delta = chunk.data.choices?.[0]?.delta;
-        const content = delta?.content || '';
+        const content = extractTextContent(delta?.content);
 
         if (content) {
           totalContent += content;
@@ -208,7 +250,7 @@ export class MistralTextGenerationService implements TextGenerationService {
     try {
       for await (const chunk of stream) {
         const delta = chunk.data.choices?.[0]?.delta;
-        const content = delta?.content || '';
+        const content = extractTextContent(delta?.content);
 
         if (content) {
           totalContent += content;

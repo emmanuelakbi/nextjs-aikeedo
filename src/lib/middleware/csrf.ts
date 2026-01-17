@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { createErrorResponse, type ErrorResponse } from '../errors/base';
 
 /**
  * CSRF Protection Middleware
@@ -37,7 +38,7 @@ export function validateCsrfToken(
 
 export async function withCsrfProtection(
   request: NextRequest
-): Promise<NextResponse | null> {
+): Promise<NextResponse<ErrorResponse> | null> {
   // Only check for state-changing methods
   if (!['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
     return null;
@@ -47,11 +48,20 @@ export async function withCsrfProtection(
   const cookieToken = request.cookies.get(CSRF_COOKIE_NAME)?.value;
 
   if (!validateCsrfToken(request, cookieToken)) {
-    return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    return NextResponse.json(
+      createErrorResponse('CSRF_ERROR', 'Invalid CSRF token'),
+      { status: 403 }
+    );
   }
 
   return null; // Allow request
 }
+
+/**
+ * CSRF protection middleware
+ * Alias for withCsrfProtection for backward compatibility
+ */
+export const csrfProtection = withCsrfProtection;
 
 // Helper to set CSRF token in response
 export function setCsrfTokenCookie(response: NextResponse): NextResponse {

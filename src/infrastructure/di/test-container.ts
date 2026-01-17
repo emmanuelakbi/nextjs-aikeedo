@@ -86,6 +86,10 @@ export function createMockWorkspaceRepository(): IWorkspaceRepository {
     findByUserId: async () => [],
     updateCredits: async () => {},
     existsByName: async () => false,
+    addMember: async () => {},
+    removeMember: async () => {},
+    isMember: async () => false,
+    getMembers: async () => [],
   };
 }
 
@@ -94,9 +98,12 @@ export function createMockDocumentRepository(): DocumentRepositoryInterface {
     save: async (document) => document,
     findById: async () => null,
     delete: async () => {},
-    findByWorkspace: async () => [],
-    findByUser: async () => [],
+    findByWorkspaceId: async () => [],
+    countByWorkspaceId: async () => 0,
     search: async () => [],
+    exists: async () => false,
+    findByGenerationId: async () => [],
+    findByFileId: async () => [],
   };
 }
 
@@ -105,9 +112,9 @@ export function createMockFileRepository(): FileRepositoryInterface {
     save: async (file) => file,
     findById: async () => null,
     delete: async () => {},
-    findByWorkspace: async () => [],
-    findByUser: async () => [],
-    findUnused: async () => [],
+    findByWorkspaceId: async () => [],
+    countByWorkspaceId: async () => 0,
+    exists: async () => false,
   };
 }
 
@@ -116,20 +123,37 @@ export function createMockConversationRepository(): IConversationRepository {
     save: async (conversation) => conversation,
     findById: async () => null,
     delete: async () => {},
-    findByWorkspace: async () => [],
-    findByUser: async () => [],
-    addMessage: async (conversationId, message) => message,
-    getMessages: async () => [],
+    findByWorkspaceId: async () => [],
+    findByUserId: async () => [],
+    list: async () => [],
+    count: async () => 0,
+    listWithPagination: async () => ({
+      conversations: [],
+      total: 0,
+      hasMore: false,
+    }),
   };
 }
 
 export function createMockMessageRepository(): IMessageRepository {
   return {
+    create: async (data) => {
+      const { Message } = await import(
+        '@/domain/conversation/entities/Message'
+      );
+      return Message.create({
+        conversationId: data.conversationId,
+        role: data.role,
+        content: data.content,
+        tokens: data.tokens,
+        credits: data.credits,
+      });
+    },
     save: async (message) => message,
     findById: async () => null,
+    findByConversationId: async () => [],
+    deleteByConversationId: async () => {},
     delete: async () => {},
-    findByConversation: async () => [],
-    deleteByConversation: async () => {},
   };
 }
 
@@ -137,9 +161,12 @@ export function createMockPresetRepository(): IPresetRepository {
   return {
     save: async (preset) => preset,
     findById: async () => null,
+    findByWorkspaceId: async () => [],
+    findByCategory: async () => [],
+    findSystemPresets: async () => [],
+    list: async () => [],
+    incrementUsageCount: async () => {},
     delete: async () => {},
-    findByWorkspace: async () => [],
-    findByUser: async () => [],
   };
 }
 
@@ -148,7 +175,15 @@ export function createMockFileStorage(): FileStorage {
     upload: async () => 'mock-file-path',
     download: async () => Buffer.from(''),
     delete: async () => {},
-    getPresignedUrl: async () => 'mock-presigned-url',
+    exists: async () => false,
+    getMetadata: async () => ({
+      contentType: 'application/octet-stream',
+      contentLength: 0,
+    }),
+    getPublicUrl: () => 'mock-public-url',
+    getPresignedUploadUrl: async () => 'mock-presigned-upload-url',
+    getPresignedDownloadUrl: async () => 'mock-presigned-download-url',
+    list: async () => [],
   };
 }
 

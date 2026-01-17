@@ -101,6 +101,28 @@ export class MessageRepository implements IMessageRepository {
   }
 
   /**
+   * Deletes a message by its unique identifier
+   * Requirements: 2.1, 2.2
+   */
+  async delete(id: string): Promise<void> {
+    try {
+      await prisma.message.delete({
+        where: { id },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          // Record not found - silently succeed (idempotent delete)
+          return;
+        }
+      }
+      throw new Error(
+        `Failed to delete message: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
    * Saves a Message entity
    */
   async save(message: Message): Promise<Message> {

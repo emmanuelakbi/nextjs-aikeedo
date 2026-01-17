@@ -31,11 +31,14 @@ describe('User Entity', () => {
           maxLength: 10,
         })
       )
-      .map(([lower, upper, numbers, special]) => {
-        const combined = [...lower, ...upper, ...numbers, ...special];
+      .map((tuple) => {
+        const [lower, upper, numbers, special] = tuple;
+        const combined: string[] = [...lower, ...upper, ...numbers, ...special];
         for (let i = combined.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [combined[i], combined[j]] = [combined[j], combined[i]];
+          const temp = combined[i];
+          combined[i] = combined[j] as string;
+          combined[j] = temp as string;
         }
         return combined.join('').substring(0, 50);
       });

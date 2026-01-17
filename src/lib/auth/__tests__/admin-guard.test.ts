@@ -1,4 +1,19 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { Session } from 'next-auth';
+
+/**
+ * Admin Guard Tests
+ *
+ * Requirements: Admin Dashboard 2 - Role-based access control
+ * Requirements: 3.3 - Authentication test type alignment
+ */
+
+// Mock the auth module - factory must not reference external variables
+vi.mock('../auth', () => ({
+  auth: vi.fn(),
+}));
+
+// Import after mock setup
 import {
   isAdminSession,
   checkIsAdmin,
@@ -7,17 +22,13 @@ import {
   withAdminAuth,
   AdminAccessDeniedError,
 } from '../admin-guard';
-import type { Session } from 'next-auth';
+import { auth } from '../auth';
 
-/**
- * Admin Guard Tests
- *
- * Requirements: Admin Dashboard 2 - Role-based access control
- */
-
-vi.mock('../auth', () => ({
-  auth: vi.fn(),
-}));
+// Type the mocked auth function
+const mockedAuth = auth as unknown as ReturnType<typeof vi.fn> & {
+  mockResolvedValue: (value: Session | null) => void;
+  mockClear: () => void;
+};
 
 describe('Admin Guard', () => {
   const mockAdminSession: Session = {
@@ -25,8 +36,8 @@ describe('Admin Guard', () => {
       id: 'admin-1',
       email: 'admin@example.com',
       role: 'ADMIN',
-      firstName: 'Admin',
-      lastName: 'User',
+      currentWorkspaceId: null,
+      name: 'Admin User',
     },
     expires: new Date(Date.now() + 86400000).toISOString(),
   };
@@ -36,8 +47,8 @@ describe('Admin Guard', () => {
       id: 'user-1',
       email: 'user@example.com',
       role: 'USER',
-      firstName: 'Regular',
-      lastName: 'User',
+      currentWorkspaceId: null,
+      name: 'Regular User',
     },
     expires: new Date(Date.now() + 86400000).toISOString(),
   };
@@ -71,6 +82,7 @@ describe('Admin Guard', () => {
         user: {
           id: 'user-1',
           email: 'user@example.com',
+          currentWorkspaceId: null,
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       } as Session;
@@ -80,8 +92,7 @@ describe('Admin Guard', () => {
 
   describe('checkIsAdmin', () => {
     it('should return true when user is admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockAdminSession);
+      mockedAuth.mockResolvedValue(mockAdminSession);
 
       const result = await checkIsAdmin();
 
@@ -89,8 +100,7 @@ describe('Admin Guard', () => {
     });
 
     it('should return false when user is not admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockUserSession);
+      mockedAuth.mockResolvedValue(mockUserSession);
 
       const result = await checkIsAdmin();
 
@@ -98,8 +108,7 @@ describe('Admin Guard', () => {
     });
 
     it('should return false when no session', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(null);
+      mockedAuth.mockResolvedValue(null);
 
       const result = await checkIsAdmin();
 
@@ -109,8 +118,7 @@ describe('Admin Guard', () => {
 
   describe('requireAdmin', () => {
     it('should return session when user is admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockAdminSession);
+      mockedAuth.mockResolvedValue(mockAdminSession);
 
       const result = await requireAdmin();
 
@@ -118,24 +126,21 @@ describe('Admin Guard', () => {
     });
 
     it('should throw AdminAccessDeniedError when user is not admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockUserSession);
+      mockedAuth.mockResolvedValue(mockUserSession);
 
       await expect(requireAdmin()).rejects.toThrow(AdminAccessDeniedError);
       await expect(requireAdmin()).rejects.toThrow('Admin access required');
     });
 
     it('should throw AdminAccessDeniedError when no session', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(null);
+      mockedAuth.mockResolvedValue(null);
 
       await expect(requireAdmin()).rejects.toThrow(AdminAccessDeniedError);
       await expect(requireAdmin()).rejects.toThrow('Authentication required');
     });
 
     it('should throw AdminAccessDeniedError when session has no user', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue({
+      mockedAuth.mockResolvedValue({
         expires: new Date(Date.now() + 86400000).toISOString(),
       } as Session);
 
@@ -146,8 +151,7 @@ describe('Admin Guard', () => {
 
   describe('getAdminSession', () => {
     it('should return session when user is admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockAdminSession);
+      mockedAuth.mockResolvedValue(mockAdminSession);
 
       const result = await getAdminSession();
 
@@ -155,8 +159,7 @@ describe('Admin Guard', () => {
     });
 
     it('should return null when user is not admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockUserSession);
+      mockedAuth.mockResolvedValue(mockUserSession);
 
       const result = await getAdminSession();
 
@@ -164,8 +167,7 @@ describe('Admin Guard', () => {
     });
 
     it('should return null when no session', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(null);
+      mockedAuth.mockResolvedValue(null);
 
       const result = await getAdminSession();
 
@@ -175,8 +177,7 @@ describe('Admin Guard', () => {
 
   describe('withAdminAuth', () => {
     it('should call handler when user is admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockAdminSession);
+      mockedAuth.mockResolvedValue(mockAdminSession);
 
       const mockHandler = vi
         .fn()
@@ -192,8 +193,7 @@ describe('Admin Guard', () => {
     });
 
     it('should return 403 when user is not admin', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockUserSession);
+      mockedAuth.mockResolvedValue(mockUserSession);
 
       const mockHandler = vi.fn();
       const wrappedHandler = withAdminAuth(mockHandler);
@@ -208,8 +208,7 @@ describe('Admin Guard', () => {
     });
 
     it('should return 403 when no session', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(null);
+      mockedAuth.mockResolvedValue(null);
 
       const mockHandler = vi.fn();
       const wrappedHandler = withAdminAuth(mockHandler);
@@ -224,8 +223,7 @@ describe('Admin Guard', () => {
     });
 
     it('should propagate non-AdminAccessDeniedError errors', async () => {
-      const { auth } = await import('../auth');
-      vi.mocked(auth).mockResolvedValue(mockAdminSession);
+      mockedAuth.mockResolvedValue(mockAdminSession);
 
       const mockError = new Error('Database error');
       const mockHandler = vi.fn().mockRejectedValue(mockError);

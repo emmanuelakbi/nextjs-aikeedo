@@ -166,7 +166,7 @@ export async function GET(request: NextRequest) {
       : [];
 
     // Calculate days until next billing
-    let daysUntilNextBilling = null;
+    let daysUntilNextBilling: number | null = null;
     if (currentSubscription) {
       const now = new Date();
       const nextBilling = new Date(currentSubscription.currentPeriodEnd);

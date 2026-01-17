@@ -34,26 +34,26 @@ export async function basicFactoryUsage() {
 /**
  * Example 2: Using the model registry
  */
-export function exploreModelRegistry() {
+export async function exploreModelRegistry() {
   const factory = getAIServiceFactory();
 
   // Get all available models
-  const allModels = factory.getAvailableModels();
+  const allModels = await factory.getAvailableModels();
   console.log('Total models:', allModels.length);
 
   // Get text generation models only
-  const textModels = factory.getAvailableModels('text-generation');
+  const textModels = await factory.getAvailableModels('text-generation');
   console.log('Text generation models:', textModels.length);
 
   // Get models by provider
-  const openaiModels = factory.getModelsByProvider('openai');
+  const openaiModels = await factory.getModelsByProvider('openai');
   console.log(
     'OpenAI models:',
     openaiModels.map((m) => m.name)
   );
 
   // Get specific model info
-  const modelInfo = factory.getModelInfo('gpt-4o-mini');
+  const modelInfo = await factory.getModelInfo('gpt-4o-mini');
   if (modelInfo) {
     console.log('Model:', modelInfo.name);
     console.log('Context window:', modelInfo.contextWindow);
@@ -64,7 +64,7 @@ export function exploreModelRegistry() {
 /**
  * Example 3: Provider validation
  */
-export function checkProviderAvailability() {
+export async function checkProviderAvailability() {
   const factory = getAIServiceFactory();
 
   // Check which providers are available
@@ -76,7 +76,7 @@ export function checkProviderAvailability() {
   ];
 
   for (const provider of providers) {
-    const isAvailable = factory.isProviderAvailable(provider);
+    const isAvailable = await factory.isProviderAvailable(provider);
     console.log(`${provider}: ${isAvailable ? 'Available' : 'Not available'}`);
   }
 }
@@ -90,7 +90,7 @@ export async function fallbackExample() {
   try {
     // Try to create a service with fallback
     // If OpenAI is unavailable, it will try Anthropic, Google, then Mistral
-    const textService = factory.createTextServiceWithFallback(
+    const textService = await factory.createTextServiceWithFallback(
       'openai',
       'gpt-4o-mini'
     );
@@ -153,7 +153,7 @@ export async function multiServiceExample() {
 /**
  * Example 7: Registering custom models
  */
-export function registerCustomModel() {
+export async function registerCustomModel() {
   const factory = getAIServiceFactory();
 
   // Register a custom model
@@ -169,7 +169,7 @@ export function registerCustomModel() {
   });
 
   // Now you can use it
-  const customModel = factory.getModelInfo('custom-model-v1');
+  const customModel = await factory.getModelInfo('custom-model-v1');
   console.log('Custom model registered:', customModel?.name);
 }
 
@@ -228,10 +228,10 @@ export async function runAllExamples() {
   await basicFactoryUsage();
 
   console.log('\n=== Example 2: Model Registry ===');
-  exploreModelRegistry();
+  await exploreModelRegistry();
 
   console.log('\n=== Example 3: Provider Availability ===');
-  checkProviderAvailability();
+  await checkProviderAvailability();
 
   console.log('\n=== Example 4: Fallback ===');
   await fallbackExample();
@@ -243,7 +243,7 @@ export async function runAllExamples() {
   await multiServiceExample();
 
   console.log('\n=== Example 7: Custom Model ===');
-  registerCustomModel();
+  await registerCustomModel();
 
   console.log('\n=== Example 8: Error Handling ===');
   await errorHandlingExample();

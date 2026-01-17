@@ -31,12 +31,8 @@ export interface UpdateConversationData {
   title?: string;
 }
 
-export interface ListConversationsOptions {
-  workspaceId?: string;
-  userId?: string;
-  limit?: number;
-  offset?: number;
-}
+// Re-export ListConversationsOptions from domain for backward compatibility
+export type { ListConversationsOptions } from '../../domain/conversation/repositories/IConversationRepository';
 
 export class ConversationRepository implements IConversationRepository {
   /**

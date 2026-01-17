@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import * as fc from 'fast-check';
 import { UpdatePasswordUseCase } from '../UpdatePasswordUseCase';
 import { UserRepository } from '../../../../infrastructure/repositories/UserRepository';
-import { SessionRepository } from '../../../../infrastructure/repositories/SessionRepository';
 import { User } from '../../../../domain/user/entities/User';
 import { Email } from '../../../../domain/user/value-objects/Email';
 import { Password } from '../../../../domain/user/value-objects/Password';
@@ -44,13 +43,11 @@ const validPasswordArbitrary = (): fc.Arbitrary<string> => {
 
 describe('UpdatePasswordUseCase - Property Tests', () => {
   let userRepository: UserRepository;
-  let sessionRepository: SessionRepository;
   let useCase: UpdatePasswordUseCase;
 
   beforeEach(() => {
     userRepository = new UserRepository();
-    sessionRepository = new SessionRepository();
-    useCase = new UpdatePasswordUseCase(userRepository, sessionRepository);
+    useCase = new UpdatePasswordUseCase(userRepository);
   });
 
   /**
@@ -117,7 +114,7 @@ describe('UpdatePasswordUseCase - Property Tests', () => {
             expect(result).toBeDefined();
 
             // Verify the new password works
-            const updatedUser = await userRepository.findById(userId);
+            const updatedUser = await userRepository.findById(Id.fromString(userId));
             expect(updatedUser).toBeDefined();
             const newPasswordObj = Password.create(newPassword);
             const isNewPasswordValid =
@@ -132,7 +129,7 @@ describe('UpdatePasswordUseCase - Property Tests', () => {
           } finally {
             // Cleanup - always delete the user
             try {
-              await userRepository.delete(userId);
+              await userRepository.delete(Id.fromString(userId));
             } catch (error) {
               // Ignore cleanup errors
               console.warn('Failed to cleanup user:', error);
@@ -187,7 +184,7 @@ describe('UpdatePasswordUseCase - Property Tests', () => {
             });
 
             // Verify user identity is preserved
-            const updatedUser = await userRepository.findById(userId);
+            const updatedUser = await userRepository.findById(Id.fromString(userId));
             expect(updatedUser).toBeDefined();
             expect(updatedUser!.getEmail().getValue()).toBe(originalEmail);
             expect(updatedUser!.getFirstName()).toBe(originalFirstName);
@@ -195,7 +192,7 @@ describe('UpdatePasswordUseCase - Property Tests', () => {
           } finally {
             // Cleanup - always delete the user
             try {
-              await userRepository.delete(userId);
+              await userRepository.delete(Id.fromString(userId));
             } catch (error) {
               // Ignore cleanup errors
               console.warn('Failed to cleanup user:', error);

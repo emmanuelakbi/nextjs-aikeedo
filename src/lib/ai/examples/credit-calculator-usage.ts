@@ -366,7 +366,9 @@ async function mockImageGeneration(
   prompt: string,
   size: string
 ): Promise<ImageGenerationResponse> {
-  const [width, height] = size.split('x').map(Number);
+  const parts = size.split('x').map(Number);
+  const width = parts[0] ?? 1024;
+  const height = parts[1] ?? 1024;
   return {
     url: 'https://example.com/image.png',
     width,

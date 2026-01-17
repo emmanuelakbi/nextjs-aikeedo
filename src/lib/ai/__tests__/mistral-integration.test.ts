@@ -7,6 +7,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { MistralTextGenerationService } from '../providers/mistral-text-generation';
+import type { ResponseMetadata } from '../types';
 
 describe.skip('Mistral Integration Tests', () => {
   // These tests require a valid MISTRAL_API_KEY in .env
@@ -44,7 +45,7 @@ describe.skip('Mistral Integration Tests', () => {
   it('should stream a completion', async () => {
     let fullContent = '';
     let chunkCount = 0;
-    let finalMetadata = null;
+    let finalMetadata: ResponseMetadata | null = null;
 
     for await (const chunk of service.streamCompletion('Count from 1 to 5.', {
       maxTokens: 50,

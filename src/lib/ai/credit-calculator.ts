@@ -33,6 +33,17 @@ export interface CreditConfig {
 }
 
 /**
+ * Partial credit configuration for updates
+ * Allows partial updates to nested objects
+ */
+export interface PartialCreditConfig {
+  textCreditsPerKToken?: Partial<Record<string, number>>;
+  imageCredits?: Partial<Record<ImageSize, number>>;
+  speechCreditsPerKChar?: number;
+  transcriptionCreditsPerMinute?: number;
+}
+
+/**
  * Load default credit configuration from centralized config
  */
 function loadDefaultCreditConfig(): CreditConfig {
@@ -112,9 +123,23 @@ export class CreditCalculator {
     }
 
     // Get rate for specific model or use default
-    const ratePerKToken =
-      this.config.textCreditsPerKToken[model] ??
-      this.config.textCreditsPerKToken['default'];
+    // Use type guard to ensure we always have a valid number
+    // Check hasOwnProperty to avoid prototype pollution issues (e.g., 'constructor')
+    const modelRate = Object.prototype.hasOwnProperty.call(
+      this.config.textCreditsPerKToken,
+      model
+    )
+      ? this.config.textCreditsPerKToken[model]
+      : undefined;
+    const defaultRate = this.config.textCreditsPerKToken['default'];
+
+    // Ensure we have a valid numeric rate, falling back to hardcoded default
+    const ratePerKToken: number =
+      typeof modelRate === 'number' && Number.isFinite(modelRate)
+        ? modelRate
+        : typeof defaultRate === 'number' && Number.isFinite(defaultRate)
+          ? defaultRate
+          : 10;
 
     // Calculate credits: (tokens / 1000) * rate
     const credits = (tokens / 1000) * ratePerKToken;
@@ -267,10 +292,21 @@ export class CreditCalculator {
    * @returns Credits per 1000 tokens
    */
   getModelRate(model: string): number {
-    return (
-      this.config.textCreditsPerKToken[model] ??
-      this.config.textCreditsPerKToken['default']
-    );
+    // Check hasOwnProperty to avoid prototype pollution issues (e.g., 'constructor')
+    const modelRate = Object.prototype.hasOwnProperty.call(
+      this.config.textCreditsPerKToken,
+      model
+    )
+      ? this.config.textCreditsPerKToken[model]
+      : undefined;
+    const defaultRate = this.config.textCreditsPerKToken['default'];
+
+    // Ensure we have a valid numeric rate, falling back to hardcoded default
+    return typeof modelRate === 'number' && Number.isFinite(modelRate)
+      ? modelRate
+      : typeof defaultRate === 'number' && Number.isFinite(defaultRate)
+        ? defaultRate
+        : 10;
   }
 
   /**
@@ -305,18 +341,41 @@ export class CreditCalculator {
    *
    * @param config - New configuration (partial update supported)
    */
-  updateConfig(config: Partial<CreditConfig>): void {
+  updateConfig(config: PartialCreditConfig): void {
+    // Build updated text credits, filtering out undefined values
+    const updatedTextCredits: Record<string, number> = {
+      ...this.config.textCreditsPerKToken,
+    };
+    if (config.textCreditsPerKToken) {
+      for (const [key, value] of Object.entries(config.textCreditsPerKToken)) {
+        if (value !== undefined) {
+          updatedTextCredits[key] = value;
+        }
+      }
+    }
+
+    // Build updated image credits, filtering out undefined values
+    const updatedImageCredits = {
+      ...this.config.imageCredits,
+    } as Record<ImageSize, number>;
+    if (config.imageCredits) {
+      for (const [key, value] of Object.entries(config.imageCredits)) {
+        if (value !== undefined) {
+          updatedImageCredits[key as ImageSize] = value;
+        }
+      }
+    }
+
     this.config = {
       ...this.config,
-      ...config,
-      textCreditsPerKToken: {
-        ...this.config.textCreditsPerKToken,
-        ...(config.textCreditsPerKToken ?? {}),
-      },
-      imageCredits: {
-        ...this.config.imageCredits,
-        ...(config.imageCredits ?? {}),
-      },
+      ...(config.speechCreditsPerKChar !== undefined && {
+        speechCreditsPerKChar: config.speechCreditsPerKChar,
+      }),
+      ...(config.transcriptionCreditsPerMinute !== undefined && {
+        transcriptionCreditsPerMinute: config.transcriptionCreditsPerMinute,
+      }),
+      textCreditsPerKToken: updatedTextCredits,
+      imageCredits: updatedImageCredits,
     };
   }
 }

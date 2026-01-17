@@ -31,7 +31,11 @@ function hasRapidConversions(
   if (conversions.length < 5) return false;
 
   const sorted = conversions.sort((a, b) => a.getTime() - b.getTime());
-  const timeSpan = sorted[sorted.length - 1].getTime() - sorted[0].getTime();
+  const lastConversion = sorted[sorted.length - 1];
+  const firstConversion = sorted[0];
+  if (!lastConversion || !firstConversion) return false;
+  
+  const timeSpan = lastConversion.getTime() - firstConversion.getTime();
   const hoursSpan = timeSpan / (1000 * 60 * 60);
 
   return hoursSpan < hoursThreshold;

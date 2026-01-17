@@ -65,7 +65,9 @@ export const phoneNumberArbitrary = fc
   .map(([country, number]) => `+${country}${number}`);
 
 /**
- * Generate a valid UUID v4
+ * Generate a valid UUID
+ * Note: fc.uuid() generates valid UUIDs but not necessarily v4 format.
+ * For tests that require UUID v4 specifically, use crypto.randomUUID() instead.
  */
 export const uuidArbitrary = fc.uuid();
 

@@ -208,8 +208,9 @@ export class UsageLoggingService {
       { count: number; credits: number; tokens: number }
     >();
     generations.forEach((gen) => {
-      const dateKey = gen.createdAt.toISOString().split('T')[0];
-      const existing = byDayMap.get(dateKey) || {
+      const dateKeyParts = gen.createdAt.toISOString().split('T');
+      const dateKey = dateKeyParts[0] ?? gen.createdAt.toISOString().slice(0, 10);
+      const existing = byDayMap.get(dateKey) ?? {
         count: 0,
         credits: 0,
         tokens: 0,
@@ -449,20 +450,27 @@ export class UsageLoggingService {
     // Group by date
     const byDateMap = new Map<string, { credits: number; count: number }>();
 
+    // Helper function to safely extract date key from ISO string
+    const getDateKey = (date: Date): string => {
+      const isoString = date.toISOString();
+      const parts = isoString.split('T');
+      return parts[0] ?? isoString.slice(0, 10);
+    };
+
     // Initialize all dates in range
     for (
       let d = new Date(startDate);
       d <= endDate;
       d.setDate(d.getDate() + 1)
     ) {
-      const dateKey = d.toISOString().split('T')[0];
+      const dateKey = getDateKey(d);
       byDateMap.set(dateKey, { credits: 0, count: 0 });
     }
 
     // Aggregate data
     generations.forEach((gen) => {
-      const dateKey = gen.createdAt.toISOString().split('T')[0];
-      const existing = byDateMap.get(dateKey) || { credits: 0, count: 0 };
+      const dateKey = getDateKey(gen.createdAt);
+      const existing = byDateMap.get(dateKey) ?? { credits: 0, count: 0 };
       byDateMap.set(dateKey, {
         credits: existing.credits + gen.credits,
         count: existing.count + 1,

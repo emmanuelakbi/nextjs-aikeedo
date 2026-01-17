@@ -9,5 +9,5 @@ export { Preset } from './entities/Preset';
 export type { PresetProps, CreatePresetProps } from './entities/Preset';
 
 // Repository Interface
-export { IPresetRepository } from './repositories/IPresetRepository';
+export type { IPresetRepository } from './repositories/IPresetRepository';
 export type { ListPresetsOptions } from './repositories/IPresetRepository';

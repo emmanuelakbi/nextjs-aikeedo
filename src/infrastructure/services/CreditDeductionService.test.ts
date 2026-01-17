@@ -8,6 +8,7 @@ import { WorkspaceRepository } from '../repositories/WorkspaceRepository';
 import { UserRepository } from '../repositories/UserRepository';
 import { Workspace } from '../../domain/workspace/entities/Workspace';
 import { User } from '../../domain/user/entities/User';
+import { Id } from '../../domain/user/value-objects/Id';
 import { prisma } from '../../lib/db';
 import {
   createTestFixtures,
@@ -39,12 +40,12 @@ describe('CreditDeductionService', () => {
     // Use test fixtures
     fixtures = await createTestFixtures({ workspace: { credits: 1000 } });
 
-    // Load workspace and user entities
+    // Load workspace and user entities using Id value objects
     testWorkspace = (await workspaceRepository.findById(
       fixtures.workspace.id
     ))!;
     testWorkspaceId = fixtures.workspace.id;
-    testUser = (await userRepository.findById(fixtures.user.id))!;
+    testUser = (await userRepository.findById(Id.fromString(fixtures.user.id)))!;
     testUserId = fixtures.user.id;
   });
 

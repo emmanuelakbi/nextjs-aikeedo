@@ -218,7 +218,8 @@ describe('Input Validation - Property-Based Tests', () => {
             const sanitized = sanitizeObject(obj);
 
             // Check all string values are sanitized
-            const checkSanitized = (value: any): void => {
+            // Using unknown type for recursive value checking
+            const checkSanitized = (value: unknown): void => {
               if (typeof value === 'string') {
                 expect(value.toLowerCase()).not.toContain('<script');
                 expect(value.toLowerCase()).not.toContain('javascript:');
@@ -276,13 +277,14 @@ describe('Input Validation - Property-Based Tests', () => {
             fc.constant(''),
             fc.string({ maxLength: 10000 }),
             fc.string({ minLength: 0, maxLength: 100 }),
-            fc.constant(null as any),
-            fc.constant(undefined as any),
-            fc.constant(123 as any),
-            fc.constant({} as any)
+            // Testing edge cases with non-string inputs that might be passed
+            fc.constant(null as unknown as string),
+            fc.constant(undefined as unknown as string),
+            fc.constant(123 as unknown as string),
+            fc.constant({} as unknown as string)
           ),
           (input) => {
-            // Should not throw
+            // Should not throw - functions should handle invalid inputs gracefully
             expect(() => sanitizeString(input)).not.toThrow();
             expect(() => containsInjectionAttempt(input)).not.toThrow();
           }

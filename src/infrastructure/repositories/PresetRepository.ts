@@ -36,14 +36,8 @@ export interface UpdatePresetData {
   isPublic?: boolean;
 }
 
-export interface ListPresetsOptions {
-  workspaceId?: string | null;
-  category?: string;
-  isPublic?: boolean;
-  includeSystemPresets?: boolean;
-  limit?: number;
-  offset?: number;
-}
+// Re-export ListPresetsOptions from domain interface for convenience
+export type { ListPresetsOptions } from '../../domain/preset/repositories/IPresetRepository';
 
 export class PresetRepository implements IPresetRepository {
   /**

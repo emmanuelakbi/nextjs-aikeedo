@@ -1,6 +1,6 @@
 import { Plan } from '../entities/Plan';
 import { Id } from '../../user/value-objects/Id';
-import { PlanInterval } from '../types';
+import { PlanInterval } from '../../types';
 
 /**
  * IPlanRepository - Domain interface for Plan persistence

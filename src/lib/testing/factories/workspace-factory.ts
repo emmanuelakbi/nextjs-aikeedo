@@ -91,7 +91,8 @@ export class WorkspaceFactory {
   ) {
     const workspace = await this.create(options);
 
-    const members = [];
+    type UserType = Awaited<ReturnType<typeof this.prisma.user.create>>;
+    const members: UserType[] = [];
     for (let i = 0; i < memberCount; i++) {
       const user = await this.prisma.user.create({
         data: {
@@ -121,7 +122,8 @@ export class WorkspaceFactory {
    * Create multiple workspaces
    */
   async createMany(count: number, options: CreateWorkspaceOptions = {}) {
-    const workspaces = [];
+    type WorkspaceType = Awaited<ReturnType<typeof this.create>>;
+    const workspaces: WorkspaceType[] = [];
     for (let i = 0; i < count; i++) {
       workspaces.push(await this.create(options));
     }

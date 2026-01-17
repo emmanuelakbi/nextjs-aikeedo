@@ -15,6 +15,13 @@ import {
   RateLimitError,
   ServerError,
   handleApiError,
+  createErrorResponse,
+  createSimpleErrorResponse,
+  isStandardErrorResponse,
+  isSimpleErrorResponse,
+  type ErrorResponse,
+  type SimpleErrorResponse,
+  type ApiErrorResponse,
 } from '../index';
 import { ZodError, z } from 'zod';
 
@@ -293,6 +300,124 @@ describe('Property 13: API error responses are consistent', () => {
         }
       }),
       { numRuns: 10 }
+    );
+  });
+});
+
+describe('Error response helper functions', () => {
+  /**
+   * Property: createErrorResponse produces valid ErrorResponse structure
+   * **Validates: Requirements 8.2, 8.4**
+   */
+  it('should create valid ErrorResponse with createErrorResponse', () => {
+    fc.assert(
+      fc.property(
+        fc.string({ minLength: 1, maxLength: 50 }),
+        fc.string({ minLength: 1, maxLength: 200 }),
+        (code, message) => {
+          const response = createErrorResponse(code, message);
+
+          // Verify structure
+          expect(response).toHaveProperty('error');
+          expect(response.error).toHaveProperty('code', code);
+          expect(response.error).toHaveProperty('message', message);
+          expect(isStandardErrorResponse(response)).toBe(true);
+          expect(isSimpleErrorResponse(response)).toBe(false);
+        }
+      ),
+      { numRuns: 20 }
+    );
+  });
+
+  /**
+   * Property: createErrorResponse includes fields when provided
+   * **Validates: Requirements 8.2, 8.4**
+   */
+  it('should include fields in ErrorResponse when provided', () => {
+    fc.assert(
+      fc.property(
+        fc.string({ minLength: 1, maxLength: 50 }),
+        fc.string({ minLength: 1, maxLength: 200 }),
+        fc.dictionary(
+          fc.string({ minLength: 1, maxLength: 30 }),
+          fc.array(fc.string({ minLength: 1, maxLength: 100 }), {
+            minLength: 1,
+            maxLength: 3,
+          })
+        ),
+        (code, message, fields) => {
+          const response = createErrorResponse(code, message, fields);
+
+          // Verify structure
+          expect(response).toHaveProperty('error');
+          expect(response.error).toHaveProperty('code', code);
+          expect(response.error).toHaveProperty('message', message);
+
+          // Fields should be included only if non-empty
+          if (Object.keys(fields).length > 0) {
+            expect(response.error).toHaveProperty('fields');
+            expect(response.error.fields).toEqual(fields);
+          } else {
+            expect(response.error.fields).toBeUndefined();
+          }
+        }
+      ),
+      { numRuns: 20 }
+    );
+  });
+
+  /**
+   * Property: createSimpleErrorResponse produces valid SimpleErrorResponse
+   * **Validates: Requirements 8.2, 8.4**
+   */
+  it('should create valid SimpleErrorResponse with createSimpleErrorResponse', () => {
+    fc.assert(
+      fc.property(fc.string({ minLength: 1, maxLength: 200 }), (message) => {
+        const response = createSimpleErrorResponse(message);
+
+        // Verify structure
+        expect(response).toHaveProperty('error', message);
+        expect(typeof response.error).toBe('string');
+        expect(isSimpleErrorResponse(response)).toBe(true);
+        expect(isStandardErrorResponse(response)).toBe(false);
+      }),
+      { numRuns: 20 }
+    );
+  });
+
+  /**
+   * Property: Type guards correctly identify response types
+   * **Validates: Requirements 8.2, 8.4**
+   */
+  it('should correctly identify response types with type guards', () => {
+    fc.assert(
+      fc.property(
+        fc.string({ minLength: 1, maxLength: 50 }),
+        fc.string({ minLength: 1, maxLength: 200 }),
+        (code, message) => {
+          const standardResponse: ErrorResponse = createErrorResponse(
+            code,
+            message
+          );
+          const simpleResponse: SimpleErrorResponse =
+            createSimpleErrorResponse(message);
+
+          // Type guards should correctly identify each type
+          expect(isStandardErrorResponse(standardResponse)).toBe(true);
+          expect(isSimpleErrorResponse(standardResponse)).toBe(false);
+
+          expect(isSimpleErrorResponse(simpleResponse)).toBe(true);
+          expect(isStandardErrorResponse(simpleResponse)).toBe(false);
+
+          // Both should be valid ApiErrorResponse
+          const apiResponses: ApiErrorResponse[] = [
+            standardResponse,
+            simpleResponse,
+          ];
+          expect(apiResponses.length).toBe(2);
+        }
+      ),
+      { numRuns: 20 }
     );
   });
 });

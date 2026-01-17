@@ -14,12 +14,12 @@ import { Id } from '../value-objects/Id';
 
 /**
  * User status enumeration (domain-level)
+ * Note: Values must match Prisma UserStatus enum exactly
  */
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   SUSPENDED = 'SUSPENDED',
-  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
 }
 
 /**

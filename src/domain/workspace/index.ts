@@ -12,8 +12,6 @@ export type {
 } from './entities/Workspace';
 
 // Repository Interface
-export {
-  IWorkspaceRepository,
-  WorkspaceMemberRole,
-} from './repositories/IWorkspaceRepository';
+export type { IWorkspaceRepository } from './repositories/IWorkspaceRepository';
+export { WorkspaceMemberRole } from './repositories/IWorkspaceRepository';
 export type { WorkspaceMember } from './repositories/IWorkspaceRepository';

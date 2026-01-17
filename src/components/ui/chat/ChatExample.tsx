@@ -116,7 +116,9 @@ console.log(greeting);
     setConversations((prev) => prev.filter((c) => c.id !== id));
     if (activeConversationId === id && conversations.length > 1) {
       const remaining = conversations.filter((c) => c.id !== id);
-      setActiveConversationId(remaining[0].id);
+      if (remaining[0]) {
+        setActiveConversationId(remaining[0].id);
+      }
     }
   };
 

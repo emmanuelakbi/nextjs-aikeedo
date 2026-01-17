@@ -185,12 +185,22 @@ export class SubscriptionService {
       // Map Stripe status to our status
       const status = this.mapStripeStatus(stripeSubscription.status);
 
-      // Convert timestamps
+      // In Stripe v20, period info is on subscription items
+      // Get the first subscription item to extract period information
+      const firstItem = stripeSubscription.items.data[0];
+      if (!firstItem) {
+        throw new SubscriptionServiceError(
+          'Subscription has no items',
+          'INVALID_SUBSCRIPTION'
+        );
+      }
+
+      // Convert timestamps from subscription items
       const currentPeriodStart = new Date(
-        stripeSubscription.current_period_start * 1000
+        firstItem.current_period_start * 1000
       );
       const currentPeriodEnd = new Date(
-        stripeSubscription.current_period_end * 1000
+        firstItem.current_period_end * 1000
       );
       const trialEnd = stripeSubscription.trial_end
         ? new Date(stripeSubscription.trial_end * 1000)

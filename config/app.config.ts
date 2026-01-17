@@ -16,10 +16,113 @@
 import type { ImageSize } from '@/lib/ai/types';
 
 /**
+ * Type definitions for configuration
+ * These interfaces allow environment-specific overrides with different values
+ */
+
+export interface FeaturesConfig {
+  authentication: boolean;
+  workspaces: boolean;
+  billing: boolean;
+  textGeneration: boolean;
+  imageGeneration: boolean;
+  speechSynthesis: boolean;
+  transcription: boolean;
+  voiceCloning: boolean;
+  affiliateProgram: boolean;
+  subscriptions: boolean;
+  oneTimePurchases: boolean;
+  trialPeriod: boolean;
+  adminDashboard: boolean;
+  userImpersonation: boolean;
+  auditLogging: boolean;
+  contentModeration: boolean;
+  fileUpload: boolean;
+  documentManagement: boolean;
+  presets: boolean;
+  usageAnalytics: boolean;
+}
+
+export interface RateLimitsApiConfig {
+  default: number;
+  ai: number;
+  upload: number;
+  auth: number;
+}
+
+export interface RateLimitsAiOperationsConfig {
+  text: number;
+  image: number;
+  speech: number;
+  transcription: number;
+}
+
+export interface RateLimitsUploadConfig {
+  maxFileSize: number;
+  maxFiles: number;
+  allowedTypes: readonly string[];
+}
+
+export interface RateLimitsConfig {
+  api: RateLimitsApiConfig;
+  aiOperations: RateLimitsAiOperationsConfig;
+  upload: RateLimitsUploadConfig;
+}
+
+export interface CircuitBreakerConfig {
+  failureThreshold: number;
+  successThreshold: number;
+  timeout: number;
+  monitoringPeriod: number;
+}
+
+export interface RetryConfig {
+  maxRetries: number;
+  initialDelay: number;
+  maxDelay: number;
+  backoffMultiplier: number;
+  timeout: number;
+}
+
+export interface SessionConfig {
+  maxAge: number;
+  updateAge: number;
+}
+
+export interface SecurityConfig {
+  bcryptRounds: number;
+  passwordMinLength: number;
+  passwordRequireUppercase: boolean;
+  passwordRequireLowercase: boolean;
+  passwordRequireNumbers: boolean;
+  passwordRequireSpecialChars: boolean;
+  csrfEnabled: boolean;
+  cspEnabled: boolean;
+}
+
+export interface CacheTtlConfig {
+  session: number;
+  user: number;
+  workspace: number;
+  usage: number;
+}
+
+export interface CacheConfig {
+  ttl: CacheTtlConfig;
+  enabled: boolean;
+}
+
+export interface DevelopmentConfig {
+  debug: boolean;
+  mockServices: boolean;
+  autoSeed: boolean;
+}
+
+/**
  * Feature Flags
  * Enable/disable features without code changes
  */
-export const features = {
+export const features: FeaturesConfig = {
   // Core features
   authentication: true,
   workspaces: true,
@@ -49,7 +152,7 @@ export const features = {
   documentManagement: true,
   presets: true,
   usageAnalytics: true,
-} as const;
+};
 
 /**
  * AI Provider Configuration
@@ -186,7 +289,7 @@ export const affiliate = {
  * Rate Limiting Configuration
  * Define rate limits for different operations
  */
-export const rateLimits = {
+export const rateLimits: RateLimitsConfig = {
   // API endpoints (requests per minute)
   api: {
     default: 60,
@@ -219,43 +322,43 @@ export const rateLimits = {
       'text/plain',
     ],
   },
-} as const;
+};
 
 /**
  * Circuit Breaker Configuration
  * Prevent cascading failures
  */
-export const circuitBreaker = {
+export const circuitBreaker: CircuitBreakerConfig = {
   failureThreshold: 5,
   successThreshold: 2,
   timeout: 60000, // 1 minute
   monitoringPeriod: 120000, // 2 minutes
-} as const;
+};
 
 /**
  * Retry Configuration
  * Automatic retry for failed operations
  */
-export const retry = {
+export const retry: RetryConfig = {
   maxRetries: 3,
   initialDelay: 1000, // 1 second
   maxDelay: 30000, // 30 seconds
   backoffMultiplier: 2,
   timeout: 60000, // 60 seconds
-} as const;
+};
 
 /**
  * Session Configuration
  */
-export const session = {
+export const session: SessionConfig = {
   maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
   updateAge: 24 * 60 * 60, // Update session every 24 hours
-} as const;
+};
 
 /**
  * Security Configuration
  */
-export const security = {
+export const security: SecurityConfig = {
   bcryptRounds: 12,
   passwordMinLength: 8,
   passwordRequireUppercase: true,
@@ -268,7 +371,7 @@ export const security = {
 
   // Content Security Policy
   cspEnabled: true,
-} as const;
+};
 
 /**
  * Email Configuration
@@ -302,7 +405,7 @@ export const pagination = {
 /**
  * Cache Configuration
  */
-export const cache = {
+export const cache: CacheConfig = {
   // Cache TTL (seconds)
   ttl: {
     session: 3600, // 1 hour
@@ -313,7 +416,7 @@ export const cache = {
 
   // Enable/disable caching
   enabled: true,
-} as const;
+};
 
 /**
  * Audit Logging Configuration
@@ -375,7 +478,7 @@ export const ui = {
 /**
  * Development Configuration
  */
-export const development = {
+export const development: DevelopmentConfig = {
   // Enable debug mode
   debug: process.env.NODE_ENV === 'development',
 
@@ -384,7 +487,7 @@ export const development = {
 
   // Seed database on startup
   autoSeed: false,
-} as const;
+};
 
 /**
  * Export all configuration
@@ -407,6 +510,28 @@ export const appConfig = {
   moderation,
   ui,
   development,
-} as const;
+};
 
-export type AppConfig = typeof appConfig;
+/**
+ * AppConfig type definition
+ * Uses explicit interfaces for sections that need to be overridable
+ */
+export interface AppConfig {
+  features: FeaturesConfig;
+  aiProviders: typeof aiProviders;
+  credits: typeof credits;
+  subscriptionPlans: typeof subscriptionPlans;
+  affiliate: typeof affiliate;
+  rateLimits: RateLimitsConfig;
+  circuitBreaker: CircuitBreakerConfig;
+  retry: RetryConfig;
+  session: SessionConfig;
+  security: SecurityConfig;
+  email: typeof email;
+  pagination: typeof pagination;
+  cache: CacheConfig;
+  auditLog: typeof auditLog;
+  moderation: typeof moderation;
+  ui: typeof ui;
+  development: DevelopmentConfig;
+}

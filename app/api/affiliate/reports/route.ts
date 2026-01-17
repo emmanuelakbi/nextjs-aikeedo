@@ -237,7 +237,9 @@ async function generateConversionsReport(affiliateId: string, startDate: Date) {
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay());
       const weekKey = weekStart.toISOString().split('T')[0];
-      conversionsByWeek[weekKey] = (conversionsByWeek[weekKey] || 0) + 1;
+      if (weekKey) {
+        conversionsByWeek[weekKey] = (conversionsByWeek[weekKey] || 0) + 1;
+      }
     });
 
   return {

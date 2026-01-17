@@ -14,7 +14,7 @@ export const CreatePresetCommandSchema = z.object({
   category: z.string().min(1, 'Category is required').trim(),
   template: z.string().min(1, 'Template is required').trim(),
   model: z.string().min(1, 'Model is required'),
-  parameters: z.record(z.any()).optional(),
+  parameters: z.record(z.string(), z.any()).optional(),
   isPublic: z.boolean().optional(),
 });
 

@@ -36,7 +36,7 @@ export abstract class AppError extends Error {
   /**
    * Convert error to JSON format for API responses
    */
-  override toJSON(): ErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       error: {
         code: this.code,
@@ -171,6 +171,7 @@ export class ServerError extends AppError {
 
 /**
  * Error response format for API responses
+ * This is the standard format used by handleApiError and all AppError subclasses
  */
 export type ErrorResponse = {
   error: {
@@ -179,3 +180,72 @@ export type ErrorResponse = {
     fields?: Record<string, string[]>;
   };
 };
+
+/**
+ * Simple error response format for quick error responses
+ * Use this for simple error messages without codes
+ * Note: Prefer ErrorResponse for consistency across the API
+ */
+export type SimpleErrorResponse = {
+  error: string;
+};
+
+/**
+ * Union type for all possible API error response formats
+ * This allows handlers to return either format while maintaining type safety
+ */
+export type ApiErrorResponse = ErrorResponse | SimpleErrorResponse;
+
+/**
+ * Type guard to check if an error response is a standard ErrorResponse
+ */
+export function isStandardErrorResponse(
+  response: ApiErrorResponse
+): response is ErrorResponse {
+  return (
+    typeof response.error === 'object' &&
+    response.error !== null &&
+    'code' in response.error &&
+    'message' in response.error
+  );
+}
+
+/**
+ * Type guard to check if an error response is a SimpleErrorResponse
+ */
+export function isSimpleErrorResponse(
+  response: ApiErrorResponse
+): response is SimpleErrorResponse {
+  return typeof response.error === 'string';
+}
+
+/**
+ * Create a standard error response object
+ * Use this helper to ensure consistent error response structure
+ */
+export function createErrorResponse(
+  code: string,
+  message: string,
+  fields?: Record<string, string[]>
+): ErrorResponse {
+  const response: ErrorResponse = {
+    error: {
+      code,
+      message,
+    },
+  };
+
+  if (fields && Object.keys(fields).length > 0) {
+    response.error.fields = fields;
+  }
+
+  return response;
+}
+
+/**
+ * Create a simple error response object
+ * Use this for quick error responses where a code is not needed
+ */
+export function createSimpleErrorResponse(message: string): SimpleErrorResponse {
+  return { error: message };
+}

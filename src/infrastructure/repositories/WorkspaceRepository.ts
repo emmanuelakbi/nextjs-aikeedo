@@ -292,6 +292,31 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   }
 
   /**
+   * Update the credit count for a workspace
+   * Requirements: 2.1, 2.2
+   */
+  async updateCredits(id: string, credits: number): Promise<void> {
+    try {
+      await prisma.workspace.update({
+        where: { id },
+        data: {
+          creditCount: credits,
+          updatedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new Error('Workspace not found');
+        }
+      }
+      throw new Error(
+        `Failed to update workspace credits: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  /**
    * Saves a Workspace entity (create or update)
    */
   async save(workspace: Workspace): Promise<Workspace> {

@@ -188,7 +188,8 @@ export class UserRepository implements IUserRepository {
       const where: Prisma.UserWhereInput = {};
 
       if (options?.status) {
-        where.status = options.status;
+        // Cast domain UserStatus to Prisma-compatible string
+        where.status = options.status as string as Prisma.UserWhereInput['status'];
       }
 
       const users = await prisma.user.findMany({
@@ -215,7 +216,8 @@ export class UserRepository implements IUserRepository {
       const where: Prisma.UserWhereInput = {};
 
       if (filters?.status) {
-        where.status = filters.status;
+        // Cast domain UserStatus to Prisma-compatible string
+        where.status = filters.status as string as Prisma.UserWhereInput['status'];
       }
 
       return await prisma.user.count({ where });
@@ -236,7 +238,7 @@ export class UserRepository implements IUserRepository {
         where: {
           OR: [
             { ownedWorkspaces: { some: { id: workspaceId } } },
-            { workspaceMemberships: { some: { workspaceId } } },
+            { workspaceMembers: { some: { workspaceId } } },
           ],
         },
         orderBy: { createdAt: 'desc' },

@@ -122,4 +122,13 @@ export interface IWorkspaceRepository {
    * @returns Promise resolving to true if exists, false otherwise
    */
   existsByName(name: string, ownerId: string): Promise<boolean>;
+
+  /**
+   * Update the credit count for a workspace
+   *
+   * @param id - The workspace's unique identifier
+   * @param credits - The new credit count
+   * @returns Promise resolving when update is complete
+   */
+  updateCredits(id: string, credits: number): Promise<void>;
 }

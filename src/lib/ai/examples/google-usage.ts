@@ -6,6 +6,7 @@
  */
 
 import { GoogleTextGenerationService } from '../providers';
+import type { ChatMessage } from '../interfaces/text-generation-service';
 
 /**
  * Example 1: Simple text completion
@@ -130,8 +131,8 @@ export async function withErrorHandling() {
 export async function multiTurnConversation() {
   const service = new GoogleTextGenerationService('gemini-1.5-flash');
 
-  const conversation = [
-    { role: 'user' as const, content: 'I want to learn about TypeScript.' },
+  const conversation: ChatMessage[] = [
+    { role: 'user', content: 'I want to learn about TypeScript.' },
   ];
 
   // First turn
@@ -139,9 +140,9 @@ export async function multiTurnConversation() {
   console.log('Assistant:', response.content);
 
   // Add to conversation
-  conversation.push({ role: 'assistant' as const, content: response.content });
+  conversation.push({ role: 'assistant', content: response.content });
   conversation.push({
-    role: 'user' as const,
+    role: 'user',
     content: 'What are the main benefits?',
   });
 
@@ -150,9 +151,9 @@ export async function multiTurnConversation() {
   console.log('Assistant:', response.content);
 
   // Add to conversation
-  conversation.push({ role: 'assistant' as const, content: response.content });
+  conversation.push({ role: 'assistant', content: response.content });
   conversation.push({
-    role: 'user' as const,
+    role: 'user',
     content: 'Can you show me an example?',
   });
 

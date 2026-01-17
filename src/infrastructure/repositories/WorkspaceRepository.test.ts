@@ -5,6 +5,7 @@ import { Workspace } from '../../domain/workspace/entities/Workspace';
 import { Email } from '../../domain/user/value-objects/Email';
 import { Password } from '../../domain/user/value-objects/Password';
 import { User } from '../../domain/user/entities/User';
+import { WorkspaceMemberRole } from '../../domain/workspace/repositories/IWorkspaceRepository';
 import { prisma } from '../../lib/db';
 
 /**
@@ -116,7 +117,7 @@ describe('WorkspaceRepository', () => {
     it('should throw error when creating workspace with non-existent owner', async () => {
       const workspaceData = {
         name: 'Invalid Workspace',
-        ownerId: '00000000-0000-0000-0000-000000000000',
+        ownerId: '00000000-0000-4000-8000-000000000000',
       };
 
       await expect(repository.create(workspaceData)).rejects.toThrow(
@@ -153,7 +154,7 @@ describe('WorkspaceRepository', () => {
     });
 
     it('should return null when workspace is not found', async () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const nonExistentId = '00000000-0000-4000-8000-000000000000';
       const workspace = await repository.findById(nonExistentId);
 
       expect(workspace).toBeNull();
@@ -227,7 +228,7 @@ describe('WorkspaceRepository', () => {
       const workspaces = await repository.findByUserId(user.getId().getValue());
 
       expect(workspaces).toHaveLength(1);
-      expect(workspaces[0].getName()).toBe('User Workspace');
+      expect(workspaces[0]!.getName()).toBe('User Workspace');
     });
 
     it('should find workspaces where user is a member', async () => {
@@ -264,7 +265,7 @@ describe('WorkspaceRepository', () => {
       );
 
       expect(workspaces).toHaveLength(1);
-      expect(workspaces[0].getName()).toBe('Shared Workspace');
+      expect(workspaces[0]!.getName()).toBe('Shared Workspace');
     });
   });
 
@@ -300,7 +301,7 @@ describe('WorkspaceRepository', () => {
     });
 
     it('should throw error when updating non-existent workspace', async () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const nonExistentId = '00000000-0000-4000-8000-000000000000';
       const updateData = { name: 'Test' };
 
       await expect(
@@ -332,7 +333,7 @@ describe('WorkspaceRepository', () => {
     });
 
     it('should throw error when deleting non-existent workspace', async () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+      const nonExistentId = '00000000-0000-4000-8000-000000000000';
 
       await expect(repository.delete(nonExistentId)).rejects.toThrow(
         'Workspace not found'
@@ -493,7 +494,7 @@ describe('WorkspaceRepository', () => {
       await repository.addMember(
         workspace.getId().getValue(),
         member2.getId().getValue(),
-        'ADMIN'
+        WorkspaceMemberRole.ADMIN
       );
 
       const members = await repository.getMembers(workspace.getId().getValue());

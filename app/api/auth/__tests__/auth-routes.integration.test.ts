@@ -19,6 +19,8 @@ import { UserRepository } from '@/infrastructure/repositories/UserRepository';
 import { WorkspaceRepository } from '@/infrastructure/repositories/WorkspaceRepository';
 import { VerificationTokenRepository } from '@/infrastructure/repositories/VerificationTokenRepository';
 import { SessionRepository } from '@/infrastructure/repositories/SessionRepository';
+import { Id } from '@/domain/user/value-objects/Id';
+import { Password } from '@/domain/user/value-objects/Password';
 
 // Mock the email service to avoid sending actual emails in tests
 vi.mock('../../../../lib/email/service', () => ({
@@ -28,7 +30,7 @@ vi.mock('../../../../lib/email/service', () => ({
 
 // Helper to create a mock NextRequest with unique IP to avoid rate limiting
 let requestCounter = 0;
-function createMockRequest(body: any): NextRequest {
+function createMockRequest(body: Record<string, unknown>): NextRequest {
   requestCounter++;
   const url = 'http://localhost:3000/api/auth/test';
   const request = new NextRequest(url, {
@@ -89,7 +91,7 @@ describe('Authentication API Routes - Integration Tests', () => {
         }
 
         // Delete user
-        await userRepository.delete(createdUserId);
+        await userRepository.delete(Id.fromString(createdUserId));
       }
     } catch (error) {
       console.error('Cleanup error:', error);
@@ -132,7 +134,7 @@ describe('Authentication API Routes - Integration Tests', () => {
       createdWorkspaceId = data.data.workspaceId;
 
       // Verify user was created in database
-      const user = await userRepository.findById(createdUserId);
+      const user = await userRepository.findById(Id.fromString(createdUserId!));
       expect(user).toBeDefined();
       expect(user?.getEmail().getValue()).toBe(testEmail);
       expect(user?.getFirstName()).toBe(testFirstName);
@@ -140,7 +142,7 @@ describe('Authentication API Routes - Integration Tests', () => {
       expect(user?.isEmailVerified()).toBe(false);
 
       // Verify workspace was created
-      const workspace = await workspaceRepository.findById(createdWorkspaceId);
+      const workspace = await workspaceRepository.findById(createdWorkspaceId!);
       expect(workspace).toBeDefined();
       expect(workspace?.getName()).toBe('Personal');
       expect(workspace?.getOwnerId()).toBe(createdUserId);
@@ -268,7 +270,7 @@ describe('Authentication API Routes - Integration Tests', () => {
       expect(data.message).toContain('Email verified successfully');
 
       // Verify user email is marked as verified
-      const user = await userRepository.findById(createdUserId!);
+      const user = await userRepository.findById(Id.fromString(createdUserId!));
       expect(user?.isEmailVerified()).toBe(true);
 
       // Verify token was deleted
@@ -394,12 +396,10 @@ describe('Authentication API Routes - Integration Tests', () => {
       );
 
       // Verify password was changed
-      const user = await userRepository.findById(createdUserId!);
+      const user = await userRepository.findById(Id.fromString(createdUserId!));
       expect(user).toBeDefined();
 
       // Verify old password doesn't work
-      const { Password } =
-        await import('../../../../domain/user/value-objects/Password');
       const oldPasswordVO = Password.create(testPassword);
       const oldPasswordValid = await user!.verifyPassword(oldPasswordVO);
       expect(oldPasswordValid).toBe(false);

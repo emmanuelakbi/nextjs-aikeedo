@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { csrfProtection } from './csrf';
-import { rateLimit, RateLimitConfig } from './rate-limit';
+import { RateLimiter, RateLimitConfig } from './rate-limit';
 import { addSecurityHeaders } from './security-headers';
 import { containsInjectionAttempt } from './validation';
 
@@ -48,15 +48,37 @@ export async function applySecurity(
 
   // Apply rate limiting
   if (finalConfig.rateLimit) {
-    const rateLimitResponse = await rateLimit(request, finalConfig.rateLimit);
-    if (rateLimitResponse) {
+    const rateLimiter = new RateLimiter(finalConfig.rateLimit);
+    const identifier =
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+    const result = await rateLimiter.checkLimit(identifier);
+    if (!result.allowed) {
+      const rateLimitResponse = NextResponse.json(
+        {
+          error: 'Too many requests',
+          retryAfter: result.resetAt.toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': finalConfig.rateLimit.maxRequests.toString(),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': result.resetAt.getTime().toString(),
+            'Retry-After': Math.ceil(
+              (result.resetAt.getTime() - Date.now()) / 1000
+            ).toString(),
+          },
+        }
+      );
       return addSecurityHeaders(rateLimitResponse);
     }
   }
 
   // Apply CSRF protection for mutation methods
   if (finalConfig.csrf) {
-    const csrfResponse = csrfProtection(request);
+    const csrfResponse = await csrfProtection(request);
     if (csrfResponse) {
       return addSecurityHeaders(csrfResponse);
     }
@@ -140,7 +162,8 @@ export function withSecurity(
  * Export individual middleware components
  */
 export { csrfProtection, generateCsrfToken, setCsrfTokenCookie } from './csrf';
-export { rateLimit, RATE_LIMITS } from './rate-limit';
+export { RateLimiter, RATE_LIMITS, withRateLimit } from './rate-limit';
+export type { RateLimitConfig } from './rate-limit';
 export { addSecurityHeaders, secureResponse } from './security-headers';
 export {
   sanitizeString,

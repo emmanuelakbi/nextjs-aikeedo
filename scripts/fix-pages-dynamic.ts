@@ -42,7 +42,7 @@ function fixPage(filePath: string): boolean {
     
     // Find the correct position: after imports and comments, before first export
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+      const line = lines[i]?.trim() ?? '';
       
       // Track multi-line imports
       if (line.startsWith('import ') && line.includes('{') && !line.includes('}')) {

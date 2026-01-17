@@ -15,6 +15,7 @@ import { UserRepository } from '../../../../infrastructure/repositories/UserRepo
 import { InsufficientCreditsError } from '../../../../infrastructure/services/CreditDeductionService';
 import { Workspace } from '../../../../domain/workspace/entities/Workspace';
 import { User } from '../../../../domain/user/entities/User';
+import { Id } from '../../../../domain/user/value-objects/Id';
 
 describe('Text Generation Use Cases', () => {
   let workspaceRepository: WorkspaceRepository;
@@ -48,7 +49,7 @@ describe('Text Generation Use Cases', () => {
       await workspaceRepository.delete(testWorkspace.getId().getValue());
     }
     if (testUser) {
-      await userRepository.delete(testUser.getId().getValue());
+      await userRepository.delete(testUser.getId());
     }
   });
 
@@ -67,6 +68,7 @@ describe('Text Generation Use Cases', () => {
         prompt: 'Test prompt',
         model: 'gpt-4o-mini',
         provider: 'openai',
+        stream: false,
       };
 
       const useCase = new GenerateCompletionUseCase();
@@ -112,6 +114,7 @@ describe('Text Generation Use Cases', () => {
         messages: [{ role: 'user', content: 'Hello' }],
         model: 'gpt-4o-mini',
         provider: 'openai',
+        stream: false,
       };
 
       const useCase = new GenerateChatCompletionUseCase();

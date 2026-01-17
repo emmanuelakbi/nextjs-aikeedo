@@ -1,4 +1,5 @@
 import { Password } from '../../../domain/user/value-objects/Password';
+import { Email } from '../../../domain/user/value-objects/Email';
 import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
 import { VerificationTokenRepository } from '../../../infrastructure/repositories/VerificationTokenRepository';
 import { SessionRepository } from '../../../infrastructure/repositories/SessionRepository';
@@ -40,9 +41,8 @@ export class ResetPasswordUseCase {
     }
 
     // Find user by email (identifier)
-    const user = await this.userRepository.findByEmail(
-      verificationToken.identifier
-    );
+    const email = Email.create(verificationToken.identifier);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new Error('User not found');

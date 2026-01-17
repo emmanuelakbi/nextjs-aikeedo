@@ -4,6 +4,7 @@ import bcryptjs from 'bcryptjs';
 import { Workspace } from '../Workspace';
 import { WorkspaceRepository } from '../../../../infrastructure/repositories/WorkspaceRepository';
 import { UserRepository } from '../../../../infrastructure/repositories/UserRepository';
+import { Id } from '../../../../domain/user/value-objects/Id';
 import { prisma } from '../../../../lib/db';
 
 /**
@@ -75,7 +76,7 @@ describe('Workspace - Ownership Property Tests', () => {
 
             // Verify owner is a valid user
             const ownerUser = await userRepository.findById(
-              workspace.getOwnerId()
+              Id.fromString(workspace.getOwnerId())
             );
             expect(ownerUser).toBeDefined();
             expect(ownerUser?.getId().getValue()).toBe(
@@ -213,7 +214,7 @@ describe('Workspace - Ownership Property Tests', () => {
 
             // Verify new owner is a valid user
             const newOwnerUser = await userRepository.findById(
-              updatedWorkspace.getOwnerId()
+              Id.fromString(updatedWorkspace.getOwnerId())
             );
             expect(newOwnerUser).toBeDefined();
             expect(newOwnerUser?.getId().getValue()).toBe(

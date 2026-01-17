@@ -10,6 +10,7 @@ import { POST as checkoutPost } from '../route';
 import { POST as creditCheckoutPost } from '../../credits/checkout/route';
 import { GET as checkoutSuccessGet } from '../success/route';
 import { NextRequest } from 'next/server';
+import type { Session } from 'next-auth';
 
 // Mock dependencies
 vi.mock('@/lib/auth', () => ({
@@ -52,13 +53,16 @@ import { prisma } from '@/lib/db';
 import { subscriptionService } from '@/infrastructure/services/SubscriptionService';
 import { stripeService } from '@/infrastructure/services/StripeService';
 
+// Type the auth mock properly
+const mockAuth = vi.mocked(auth);
+
 describe('POST /api/billing/checkout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('should return 401 if user is not authenticated', async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    mockAuth.mockResolvedValue(null as any);
 
     const request = new NextRequest(
       'http://localhost:3000/api/billing/checkout',
@@ -79,7 +83,7 @@ describe('POST /api/billing/checkout', () => {
   });
 
   it('should return 400 if request data is invalid', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
@@ -102,7 +106,7 @@ describe('POST /api/billing/checkout', () => {
   });
 
   it('should return 404 if workspace not found', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
@@ -113,8 +117,8 @@ describe('POST /api/billing/checkout', () => {
       {
         method: 'POST',
         body: JSON.stringify({
-          planId: '123e4567-e89b-12d3-a456-426614174000',
-          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          planId: '123e4567-e89b-42d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174001',
         }),
       }
     );
@@ -127,7 +131,7 @@ describe('POST /api/billing/checkout', () => {
   });
 
   it('should return 400 if workspace already has active subscription', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
@@ -145,8 +149,8 @@ describe('POST /api/billing/checkout', () => {
       {
         method: 'POST',
         body: JSON.stringify({
-          planId: '123e4567-e89b-12d3-a456-426614174000',
-          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          planId: '123e4567-e89b-42d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174001',
         }),
       }
     );
@@ -159,7 +163,7 @@ describe('POST /api/billing/checkout', () => {
   });
 
   it('should create checkout session successfully', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
@@ -187,8 +191,8 @@ describe('POST /api/billing/checkout', () => {
       {
         method: 'POST',
         body: JSON.stringify({
-          planId: '123e4567-e89b-12d3-a456-426614174000',
-          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          planId: '123e4567-e89b-42d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174001',
           trialDays: 14,
         }),
       }
@@ -205,7 +209,7 @@ describe('POST /api/billing/checkout', () => {
   });
 
   it('should not offer trial if workspace has already used trial', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
@@ -233,8 +237,8 @@ describe('POST /api/billing/checkout', () => {
       {
         method: 'POST',
         body: JSON.stringify({
-          planId: '123e4567-e89b-12d3-a456-426614174000',
-          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          planId: '123e4567-e89b-42d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174001',
           trialDays: 14,
         }),
       }
@@ -255,7 +259,7 @@ describe('POST /api/billing/credits/checkout', () => {
   });
 
   it('should return 401 if user is not authenticated', async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    mockAuth.mockResolvedValue(null as any);
 
     const request = new NextRequest(
       'http://localhost:3000/api/billing/credits/checkout',
@@ -277,7 +281,7 @@ describe('POST /api/billing/credits/checkout', () => {
   });
 
   it('should create credit checkout session successfully', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 
@@ -296,7 +300,7 @@ describe('POST /api/billing/credits/checkout', () => {
       {
         method: 'POST',
         body: JSON.stringify({
-          workspaceId: '123e4567-e89b-12d3-a456-426614174001',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174001',
           creditAmount: 1000,
           pricePerCredit: 0.01,
         }),
@@ -320,7 +324,7 @@ describe('GET /api/billing/checkout/success', () => {
   });
 
   it('should return 401 if user is not authenticated', async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    mockAuth.mockResolvedValue(null as any);
 
     const request = new NextRequest(
       'http://localhost:3000/api/billing/checkout/success?session_id=cs_test_123'
@@ -334,7 +338,7 @@ describe('GET /api/billing/checkout/success', () => {
   });
 
   it('should retrieve checkout session successfully', async () => {
-    vi.mocked(auth).mockResolvedValue({
+    mockAuth.mockResolvedValue({
       user: { id: 'user-123', email: 'test@example.com' },
     } as any);
 

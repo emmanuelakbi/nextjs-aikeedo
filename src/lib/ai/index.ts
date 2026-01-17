@@ -5,8 +5,20 @@
  * including OpenAI, Anthropic, Google, and Mistral.
  */
 
-// Export common types
-export * from './types';
+// Export common types (excluding AIServiceError interface which conflicts with class)
+export type {
+  AIProvider,
+  ImageSize,
+  GenerationStatus,
+  MessageRole,
+  ResponseMetadata,
+  TextGenerationResponse,
+  TextStreamChunk,
+  ImageGenerationResponse,
+  SpeechSynthesisResponse,
+  TranscriptionResponse,
+  TranscriptionSegment,
+} from './types';
 
 // Export service interfaces
 export * from './interfaces';
@@ -23,7 +35,7 @@ export * from './credit-calculator';
 // Export streaming handler
 export * from './streaming-handler';
 
-// Export error handling
+// Export error handling (AIServiceError class takes precedence)
 export * from './errors';
 export * from './error-handler';
 

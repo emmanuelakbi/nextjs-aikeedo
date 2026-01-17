@@ -8,9 +8,9 @@ import { FileEntity } from '../entities/File';
 
 describe('FileEntity', () => {
   const mockFileProps = {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    workspaceId: '123e4567-e89b-12d3-a456-426614174001',
-    userId: '123e4567-e89b-12d3-a456-426614174002',
+    id: '123e4567-e89b-42d3-a456-426614174000',
+    workspaceId: '123e4567-e89b-42d3-a456-426614174001',
+    userId: '123e4567-e89b-42d3-a456-426614174002',
     name: 'test-file.jpg',
     type: 'image/jpeg',
     size: 1024000,

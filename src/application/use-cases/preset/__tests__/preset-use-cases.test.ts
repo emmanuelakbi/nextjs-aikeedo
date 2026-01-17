@@ -27,7 +27,7 @@ describe('Preset Use Cases', () => {
 
       const mockWorkspace = Workspace.create({
         name: 'Test Workspace',
-        ownerId: '123e4567-e89b-12d3-a456-426614174000',
+        ownerId: '123e4567-e89b-42d3-a456-426614174000',
         creditCount: 100,
       });
 
@@ -93,7 +93,7 @@ describe('Preset Use Cases', () => {
       vi.spyOn(workspaceRepository, 'findById').mockResolvedValue(null);
 
       const command = {
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         name: 'Test Preset',
         description: 'Test description',
         category: 'Test',
@@ -113,7 +113,7 @@ describe('Preset Use Cases', () => {
 
       const mockPresets = [
         Preset.create({
-          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174000',
           name: 'Preset 1',
           description: 'Description 1',
           category: 'Category A',
@@ -134,15 +134,19 @@ describe('Preset Use Cases', () => {
       vi.spyOn(presetRepository, 'list').mockResolvedValue(mockPresets);
 
       const command = {
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         includeSystemPresets: true,
       };
 
       const result = await useCase.execute(command);
 
       expect(result).toHaveLength(2);
-      expect(result[0].getName()).toBe('Preset 1');
-      expect(result[1].getName()).toBe('System Preset');
+      const firstPreset = result[0];
+      const secondPreset = result[1];
+      if (firstPreset && secondPreset) {
+        expect(firstPreset.getName()).toBe('Preset 1');
+        expect(secondPreset.getName()).toBe('System Preset');
+      }
     });
 
     it('should filter presets by category', async () => {
@@ -150,7 +154,7 @@ describe('Preset Use Cases', () => {
 
       const mockPresets = [
         Preset.create({
-          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-42d3-a456-426614174000',
           name: 'Preset 1',
           description: 'Description 1',
           category: 'Content Writing',
@@ -162,14 +166,17 @@ describe('Preset Use Cases', () => {
       vi.spyOn(presetRepository, 'list').mockResolvedValue(mockPresets);
 
       const command = {
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         category: 'Content Writing',
       };
 
       const result = await useCase.execute(command);
 
       expect(result).toHaveLength(1);
-      expect(result[0].getCategory()).toBe('Content Writing');
+      const firstPreset = result[0];
+      if (firstPreset) {
+        expect(firstPreset.getCategory()).toBe('Content Writing');
+      }
     });
   });
 
@@ -178,7 +185,7 @@ describe('Preset Use Cases', () => {
       const useCase = new GetPresetUseCase(presetRepository);
 
       const mockPreset = Preset.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         name: 'Test Preset',
         description: 'Test description',
         category: 'Test',
@@ -193,7 +200,7 @@ describe('Preset Use Cases', () => {
 
       const command = {
         id: mockPreset.getId().getValue(),
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
       };
 
       const result = await useCase.execute(command);
@@ -211,7 +218,7 @@ describe('Preset Use Cases', () => {
       vi.spyOn(presetRepository, 'findById').mockResolvedValue(null);
 
       const command = {
-        id: '123e4567-e89b-12d3-a456-426614174000',
+        id: '123e4567-e89b-42d3-a456-426614174000',
       };
 
       await expect(useCase.execute(command)).rejects.toThrow(
@@ -223,7 +230,7 @@ describe('Preset Use Cases', () => {
       const useCase = new GetPresetUseCase(presetRepository);
 
       const mockPreset = Preset.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         name: 'Test Preset',
         description: 'Test description',
         category: 'Test',
@@ -236,7 +243,7 @@ describe('Preset Use Cases', () => {
 
       const command = {
         id: mockPreset.getId().getValue(),
-        workspaceId: '123e4567-e89b-12d3-a456-426614174999', // Different workspace
+        workspaceId: '123e4567-e89b-42d3-a456-426614174999', // Different workspace
       };
 
       await expect(useCase.execute(command)).rejects.toThrow(
@@ -250,7 +257,7 @@ describe('Preset Use Cases', () => {
       const useCase = new UpdatePresetUseCase(presetRepository);
 
       const mockPreset = Preset.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         name: 'Original Name',
         description: 'Original description',
         category: 'Original Category',
@@ -281,7 +288,7 @@ describe('Preset Use Cases', () => {
       vi.spyOn(presetRepository, 'findById').mockResolvedValue(null);
 
       const command = {
-        id: '123e4567-e89b-12d3-a456-426614174000',
+        id: '123e4567-e89b-42d3-a456-426614174000',
         name: 'Updated Name',
       };
 
@@ -320,7 +327,7 @@ describe('Preset Use Cases', () => {
     it('should delete a preset successfully', async () => {
       const useCase = new DeletePresetUseCase(presetRepository);
 
-      const workspaceId = '123e4567-e89b-12d3-a456-426614174000';
+      const workspaceId = '123e4567-e89b-42d3-a456-426614174000';
       const mockPreset = Preset.create({
         workspaceId,
         name: 'Test Preset',
@@ -351,7 +358,7 @@ describe('Preset Use Cases', () => {
       vi.spyOn(presetRepository, 'findById').mockResolvedValue(null);
 
       const command = {
-        id: '123e4567-e89b-12d3-a456-426614174000',
+        id: '123e4567-e89b-42d3-a456-426614174000',
       };
 
       await expect(useCase.execute(command)).rejects.toThrow(
@@ -387,7 +394,7 @@ describe('Preset Use Cases', () => {
       const useCase = new DeletePresetUseCase(presetRepository);
 
       const mockPreset = Preset.create({
-        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        workspaceId: '123e4567-e89b-42d3-a456-426614174000',
         name: 'Test Preset',
         description: 'Test description',
         category: 'Test',
@@ -399,7 +406,7 @@ describe('Preset Use Cases', () => {
 
       const command = {
         id: mockPreset.getId().getValue(),
-        workspaceId: '123e4567-e89b-12d3-a456-426614174999', // Different workspace
+        workspaceId: '123e4567-e89b-42d3-a456-426614174999', // Different workspace
       };
 
       await expect(useCase.execute(command)).rejects.toThrow(

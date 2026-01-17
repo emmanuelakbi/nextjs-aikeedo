@@ -398,12 +398,12 @@ export class StripeService {
    *
    * @param subscriptionId - Subscription ID
    * @param newPriceId - New price ID
-   * @returns Upcoming invoice with proration details
+   * @returns Invoice preview with proration details
    */
   public async calculateProration(
     subscriptionId: string,
     newPriceId: string
-  ): Promise<Stripe.UpcomingInvoice> {
+  ): Promise<Stripe.Invoice> {
     const client = this.getClient();
     const subscription = await this.retrieveSubscription(subscriptionId);
 
@@ -411,16 +411,33 @@ export class StripeService {
       throw new Error('Subscription has no items');
     }
 
-    return await client.invoices.upcoming({
-      customer: subscription.customer as string,
+    // In Stripe v20, invoices.upcoming() is replaced with invoices.createPreview()
+    return await client.invoices.createPreview({
+      customer: typeof subscription.customer === 'string' 
+        ? subscription.customer 
+        : subscription.customer?.id,
       subscription: subscriptionId,
-      subscription_items: [
-        {
-          id: subscription.items.data[0].id,
-          price: newPriceId,
-        },
-      ],
+      subscription_details: {
+        items: [
+          {
+            id: subscription.items.data[0].id,
+            price: newPriceId,
+          },
+        ],
+      },
     });
+  }
+
+  /**
+   * Retrieve a charge from Stripe
+   * Used for dispute handling and refund processing
+   *
+   * @param chargeId - Stripe charge ID
+   * @returns Stripe charge
+   */
+  public async retrieveCharge(chargeId: string): Promise<Stripe.Charge> {
+    const client = this.getClient();
+    return await client.charges.retrieve(chargeId);
   }
 
   /**

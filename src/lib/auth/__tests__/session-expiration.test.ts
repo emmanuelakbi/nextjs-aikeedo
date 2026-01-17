@@ -169,7 +169,7 @@ describe('Session Expiration', () => {
         });
 
         expect(allSessions.length).toBe(1);
-        expect(isTokenExpired(allSessions[0].expires)).toBe(true);
+        expect(isTokenExpired(allSessions[0]!.expires)).toBe(true);
       } finally {
         // Clean up
         await prisma.session.deleteMany({
@@ -378,8 +378,8 @@ describe('Session Expiration', () => {
         });
 
         expect(remainingSessions.length).toBe(1);
-        expect(remainingSessions[0].sessionToken).toBe(validToken);
-        expect(isTokenExpired(remainingSessions[0].expires)).toBe(false);
+        expect(remainingSessions[0]!.sessionToken).toBe(validToken);
+        expect(isTokenExpired(remainingSessions[0]!.expires)).toBe(false);
       } finally {
         // Clean up
         await prisma.session.deleteMany({

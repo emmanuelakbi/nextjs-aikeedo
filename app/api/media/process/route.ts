@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
           quality,
         });
 
-        return new NextResponse(thumbnail, {
+        return new NextResponse(new Uint8Array(thumbnail), {
           headers: {
             'Content-Type': 'image/jpeg',
             'Content-Length': thumbnail.length.toString(),
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
           maxHeight,
         });
 
-        return new NextResponse(optimized.data, {
+        return new NextResponse(new Uint8Array(optimized.data), {
           headers: {
             'Content-Type': optimized.contentType,
             'Content-Length': optimized.data.length.toString(),
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
           quality
         );
 
-        return new NextResponse(converted, {
+        return new NextResponse(new Uint8Array(converted), {
           headers: {
             'Content-Type': `image/${format}`,
             'Content-Length': converted.length.toString(),

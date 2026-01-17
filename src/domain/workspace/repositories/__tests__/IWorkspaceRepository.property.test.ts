@@ -36,6 +36,7 @@ describe('Property 3: Repository Interface Completeness', () => {
           isMember: async () => false,
           getMembers: async () => [],
           existsByName: async () => false,
+          updateCredits: async () => {},
         };
 
         // Verify that save method exists and is a function
@@ -63,6 +64,7 @@ describe('Property 3: Repository Interface Completeness', () => {
           isMember: async () => false,
           getMembers: async () => [],
           existsByName: async () => false,
+          updateCredits: async () => {},
         };
 
         // Verify that findById method exists and is a function
@@ -90,6 +92,7 @@ describe('Property 3: Repository Interface Completeness', () => {
           isMember: async () => false,
           getMembers: async () => [],
           existsByName: async () => false,
+          updateCredits: async () => {},
         };
 
         // Verify that delete method exists and is a function
@@ -118,6 +121,7 @@ describe('Property 3: Repository Interface Completeness', () => {
           isMember: async () => false,
           getMembers: async () => [],
           existsByName: async () => false,
+          updateCredits: async () => {},
         };
 
         // Verify all three minimum methods exist
@@ -151,6 +155,7 @@ describe('Property 3: Repository Interface Completeness', () => {
           isMember: async () => false,
           getMembers: async () => [],
           existsByName: async () => false,
+          updateCredits: async () => {},
         };
 
         // If this compiles, the signatures are correct
@@ -184,6 +189,7 @@ describe('Property 3: Repository Interface Completeness', () => {
               isMember: async () => false,
               getMembers: async () => [],
               existsByName: async () => false,
+              updateCredits: async () => {},
             });
           }
 

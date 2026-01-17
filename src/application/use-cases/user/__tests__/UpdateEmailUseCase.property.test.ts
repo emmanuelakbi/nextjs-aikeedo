@@ -6,6 +6,7 @@ import { VerificationTokenRepository } from '../../../../infrastructure/reposito
 import { User } from '../../../../domain/user/entities/User';
 import { Email } from '../../../../domain/user/value-objects/Email';
 import { Password } from '../../../../domain/user/value-objects/Password';
+import { Id } from '../../../../domain/user/value-objects/Id';
 import { prisma } from '../../../../lib/db/prisma';
 
 /**
@@ -106,7 +107,7 @@ describe('UpdateEmailUseCase - Property Tests', () => {
             // Delete sessions and workspaces before user
             await prisma.session.deleteMany({ where: { userId } });
             await prisma.workspace.deleteMany({ where: { ownerId: userId } });
-            await userRepository.delete(userId);
+            await userRepository.delete(Id.fromString(userId));
           } catch (e) {
             // Ignore cleanup errors
           }
@@ -156,14 +157,14 @@ describe('UpdateEmailUseCase - Property Tests', () => {
         // Email verification status should remain unchanged
         // Note: The current implementation will still mark as unverified
         // This test documents the current behavior
-        const updatedUser = await userRepository.findById(userId);
+        const updatedUser = await userRepository.findById(Id.fromString(userId));
         expect(updatedUser).toBeDefined();
 
         // Cleanup - delete dependent records first
         try {
           await prisma.session.deleteMany({ where: { userId } });
           await prisma.workspace.deleteMany({ where: { ownerId: userId } });
-          await userRepository.delete(userId);
+          await userRepository.delete(Id.fromString(userId));
         } catch (e) {
           // Ignore cleanup errors
         }
@@ -226,14 +227,14 @@ describe('UpdateEmailUseCase - Property Tests', () => {
           try {
             await prisma.session.deleteMany({ where: { userId: userId1 } });
             await prisma.workspace.deleteMany({ where: { ownerId: userId1 } });
-            await userRepository.delete(userId1);
+            await userRepository.delete(Id.fromString(userId1));
           } catch (e) {
             // Ignore cleanup errors
           }
           try {
             await prisma.session.deleteMany({ where: { userId: userId2 } });
             await prisma.workspace.deleteMany({ where: { ownerId: userId2 } });
-            await userRepository.delete(userId2);
+            await userRepository.delete(Id.fromString(userId2));
           } catch (e) {
             // Ignore cleanup errors
           }

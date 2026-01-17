@@ -40,7 +40,7 @@ function fixRouteFile(filePath: string): boolean {
     
     // Find the correct position: after all imports
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+      const line = lines[i]?.trim() ?? '';
       
       // Track multi-line imports
       if (line.startsWith('import ') && line.includes('{') && !line.includes('}')) {

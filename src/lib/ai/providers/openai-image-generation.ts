@@ -55,6 +55,9 @@ export class OpenAIImageGenerationService implements ImageGenerationService {
       }
 
       const image = response.data[0];
+      if (!image) {
+        throw new Error('No image data in OpenAI response');
+      }
 
       const url = image.url || image.b64_json || '';
       if (!url) {
