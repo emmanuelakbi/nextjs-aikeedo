@@ -15,7 +15,7 @@ export const GenerateImageCommandSchema = z.object({
     .min(1, 'Prompt is required')
     .max(4000, 'Prompt is too long'),
   model: z.string().min(1, 'Model is required'),
-  provider: z.enum(['openai', 'google']),
+  provider: z.enum(['openai', 'google', 'pollinations']),
   size: z
     .enum(['256x256', '512x512', '1024x1024', '1792x1024', '1024x1792'])
     .optional(),

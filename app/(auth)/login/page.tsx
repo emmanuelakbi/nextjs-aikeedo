@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Input, Button, Form, FormError, useToast } from '@/components/ui';
@@ -17,6 +17,7 @@ export const dynamic = 'force-dynamic';
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormError[]>([]);
@@ -29,6 +30,13 @@ export default function LoginPage() {
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   const error = searchParams.get('error');
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.push(callbackUrl);
+    }
+  }, [status, session, router, callbackUrl]);
+
   // Show error message if present
   if (error && !loading) {
     if (error === 'CredentialsSignin') {
@@ -36,6 +44,27 @@ export default function LoginPage() {
     } else {
       showToast('An error occurred. Please try again.', 'error');
     }
+  }
+
+  // Show loading while checking session
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Don't render form if authenticated (will redirect)
+  if (status === 'authenticated') {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   const validateForm = (): boolean => {

@@ -7,7 +7,8 @@ export type AIProvider =
   | 'anthropic'
   | 'google'
   | 'mistral'
-  | 'openrouter';
+  | 'openrouter'
+  | 'pollinations';
 
 export type ImageSize =
   | '256x256'

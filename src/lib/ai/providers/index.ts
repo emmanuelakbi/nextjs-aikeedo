@@ -13,3 +13,4 @@ export { GoogleTextGenerationService } from './google-text-generation';
 export { GoogleImageGenerationService } from './google-image-generation';
 export { MistralTextGenerationService } from './mistral-text-generation';
 export { OpenRouterTextGenerationService } from './openrouter';
+export { PollinationsImageGenerationService } from './pollinations-image-generation';

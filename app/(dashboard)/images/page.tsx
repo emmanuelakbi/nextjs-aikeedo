@@ -52,7 +52,12 @@ const ImageGenerationPage: React.FC = () => {
   const [isLoadingPresets, setIsLoadingPresets] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
+
+  // Load workspace ID on mount
+  useEffect(() => {
+    loadWorkspaceId();
+  }, []);
 
   // Load models on mount
   useEffect(() => {
@@ -63,6 +68,20 @@ const ImageGenerationPage: React.FC = () => {
   useEffect(() => {
     loadPresets();
   }, []);
+
+  // Load workspace ID from session
+  const loadWorkspaceId = async () => {
+    try {
+      const sessionResponse = await fetch('/api/auth/session');
+      const sessionData = await sessionResponse.json();
+      
+      if (sessionData?.user?.currentWorkspaceId) {
+        setWorkspaceId(sessionData.user.currentWorkspaceId);
+      }
+    } catch (err) {
+      console.error('Error loading workspace ID:', err);
+    }
+  };
 
   // Load models from API
   const loadModels = async () => {
@@ -81,10 +100,11 @@ const ImageGenerationPage: React.FC = () => {
       const data = await response.json();
       setModels(data.data);
 
-      // Select first available model by default
-      const firstAvailable = data.data.find((m: AIModel) => m.available);
-      if (firstAvailable && !selectedModelId) {
-        setSelectedModelId(firstAvailable.id);
+      // Select Flux (free) model by default, or first available
+      if (!selectedModelId) {
+        const fluxModel = data.data.find((m: AIModel) => m.id === 'flux' && m.available);
+        const firstAvailable = data.data.find((m: AIModel) => m.available);
+        setSelectedModelId(fluxModel?.id || firstAvailable?.id || null);
       }
     } catch (err) {
       console.error('Error loading models:', err);
@@ -148,6 +168,26 @@ const ImageGenerationPage: React.FC = () => {
       return;
     }
 
+    // Get workspace ID from session if not already loaded
+    let currentWorkspaceId = workspaceId;
+    if (!currentWorkspaceId) {
+      try {
+        const sessionResponse = await fetch('/api/auth/session');
+        const sessionData = await sessionResponse.json();
+        currentWorkspaceId = sessionData?.user?.currentWorkspaceId;
+        if (currentWorkspaceId) {
+          setWorkspaceId(currentWorkspaceId);
+        }
+      } catch (err) {
+        console.error('Error fetching workspace ID:', err);
+      }
+    }
+
+    if (!currentWorkspaceId) {
+      setError('No workspace selected. Please select a workspace first.');
+      return;
+    }
+
     try {
       setIsGenerating(true);
       setError(null);
@@ -160,9 +200,10 @@ const ImageGenerationPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          workspaceId: currentWorkspaceId,
           prompt: prompt.trim(),
           model: selectedModelId,
-          provider: selectedModel?.provider,
+          provider: selectedModel?.provider || 'pollinations',
           size,
           style,
           quality,
@@ -240,6 +281,12 @@ const ImageGenerationPage: React.FC = () => {
     setGeneratedImages(generatedImages.filter((img) => img.id !== imageId));
   };
 
+  // Get selected model's provider
+  const selectedModel = models.find((m) => m.id === selectedModelId);
+  const selectedProvider = selectedModel?.provider || 'pollinations';
+  const isDALLE = selectedProvider === 'openai';
+  const isFlux = selectedProvider === 'pollinations';
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -262,7 +309,10 @@ const ImageGenerationPage: React.FC = () => {
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Describe the image you want to generate..."
+                placeholder={isFlux 
+                  ? "Describe the image you want to generate... (tip: include style keywords like 'photographic', 'oil painting', 'anime style')"
+                  : "Describe the image you want to generate..."
+                }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
                 rows={4}
                 maxLength={4000}
@@ -444,7 +494,7 @@ const ImageGenerationPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - Options change based on selected model */}
           <div className="space-y-6">
             {/* Model Selection */}
             <div className="bg-white rounded-lg shadow-sm p-6">
@@ -481,7 +531,7 @@ const ImageGenerationPage: React.FC = () => {
               </div>
             )}
 
-            {/* Size Selector */}
+            {/* Size Selector - Available for all models */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Image Size
@@ -510,103 +560,118 @@ const ImageGenerationPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Style Selector */}
+            {/* Number of Images - Available for all models */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Style
+                Number of Images
               </h2>
-              <div className="space-y-2">
-                {[
-                  { value: 'natural', label: 'Natural' },
-                  { value: 'vivid', label: 'Vivid' },
-                  { value: 'artistic', label: 'Artistic' },
-                  { value: 'photographic', label: 'Photographic' },
-                ].map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => setStyle(option.value as ImageStyle)}
-                    disabled={isGenerating}
-                    className={`w-full px-4 py-2 text-left rounded-lg border transition-colors ${
-                      style === option.value
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                    } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
+              <div className="space-y-3">
+                <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="1"
+                  value={numberOfImages}
+                  onChange={(e) => setNumberOfImages(parseInt(e.target.value))}
+                  disabled={isGenerating}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                </div>
+                <p className="text-center text-lg font-medium text-gray-900">
+                  {numberOfImages} image{numberOfImages > 1 ? 's' : ''}
+                </p>
               </div>
             </div>
 
-            {/* Advanced Options */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className="w-full flex items-center justify-between mb-4"
-              >
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Advanced Options
-                </h2>
-                <svg
-                  className={`w-5 h-5 text-gray-400 transition-transform ${
-                    showAdvanced ? 'transform rotate-180' : ''
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {showAdvanced && (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Quality
-                    </label>
-                    <select
-                      value={quality}
-                      onChange={(e) =>
-                        setQuality(e.target.value as ImageQuality)
-                      }
-                      disabled={isGenerating}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="standard">Standard</option>
-                      <option value="hd">HD</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Number of Images: {numberOfImages}
-                    </label>
-                    <input
-                      type="range"
-                      min="1"
-                      max="4"
-                      step="1"
-                      value={numberOfImages}
-                      onChange={(e) =>
-                        setNumberOfImages(parseInt(e.target.value))
-                      }
-                      disabled={isGenerating}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>4</span>
-                    </div>
+            {/* DALL-E Only Options */}
+            {isDALLE && (
+              <>
+                {/* Style Selector - DALL-E only */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Style
+                  </h2>
+                  <div className="space-y-2">
+                    {[
+                      { value: 'natural', label: 'Natural' },
+                      { value: 'vivid', label: 'Vivid' },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setStyle(option.value as ImageStyle)}
+                        disabled={isGenerating}
+                        className={`w-full px-4 py-2 text-left rounded-lg border transition-colors ${
+                          style === option.value
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                        } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
-              )}
-            </div>
+
+                {/* Quality - DALL-E only */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Quality
+                  </h2>
+                  <div className="space-y-2">
+                    {[
+                      { value: 'standard', label: 'Standard', desc: 'Faster generation' },
+                      { value: 'hd', label: 'HD', desc: 'Higher detail & quality' },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setQuality(option.value as ImageQuality)}
+                        disabled={isGenerating}
+                        className={`w-full px-4 py-2 text-left rounded-lg border transition-colors ${
+                          quality === option.value
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                        } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        <div className="font-medium">{option.label}</div>
+                        <div className="text-xs text-gray-500">{option.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Flux Tips */}
+            {isFlux && (
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow-sm p-6 border border-purple-100">
+                <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                  <span className="mr-2">✨</span> Flux Tips
+                </h2>
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-start">
+                    <span className="text-purple-500 mr-2">•</span>
+                    Add style keywords: "photographic", "oil painting", "watercolor", "anime", "3D render"
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-purple-500 mr-2">•</span>
+                    Be descriptive: lighting, mood, colors
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-purple-500 mr-2">•</span>
+                    Artist styles: "in the style of Van Gogh"
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-purple-500 mr-2">•</span>
+                    Takes 10-20 seconds for best quality
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@ import {
   GoogleImageGenerationService,
   MistralTextGenerationService,
   OpenRouterTextGenerationService,
+  PollinationsImageGenerationService,
 } from './providers';
 import { getEnv } from '@/lib/env';
 import { getModelCacheService } from './model-cache';
@@ -148,21 +149,24 @@ export class AIServiceFactory {
     provider: AIProvider,
     model: string
   ): ImageGenerationService {
-    this.validateProvider(provider);
-    this.validateModel(model, 'image-generation');
-
-    switch (provider) {
-      case 'openai':
-        return new OpenAIImageGenerationService(model, this.maxRetries);
-
-      case 'google':
-        return new GoogleImageGenerationService(model, this.maxRetries);
-
-      default:
-        throw new Error(
-          `Provider ${provider} does not support image generation`
-        );
+    // Use Pollinations as default/fallback for free image generation
+    if (provider === 'pollinations' || model === 'flux' || model === 'pollinations') {
+      return new PollinationsImageGenerationService(model, this.maxRetries);
     }
+
+    // For other providers, check if they're available
+    if (provider === 'openai' && this.isProviderAvailableSync('openai')) {
+      this.validateModel(model, 'image-generation');
+      return new OpenAIImageGenerationService(model, this.maxRetries);
+    }
+
+    if (provider === 'google' && this.isProviderAvailableSync('google')) {
+      this.validateModel(model, 'image-generation');
+      return new GoogleImageGenerationService(model, this.maxRetries);
+    }
+
+    // Default to Pollinations (free, no API key needed)
+    return new PollinationsImageGenerationService('flux', this.maxRetries);
   }
 
   /**
@@ -335,6 +339,11 @@ export class AIServiceFactory {
    * @returns True if provider is configured and enabled
    */
   async isProviderAvailable(provider: AIProvider): Promise<boolean> {
+    // Pollinations is always available (no API key needed)
+    if (provider === 'pollinations') {
+      return true;
+    }
+
     return this.modelCache.getProviderStatus(provider, async () => {
       const config = this.providerConfigs.get(provider);
       if (!config?.enabled) {
@@ -368,6 +377,11 @@ export class AIServiceFactory {
     const config = this.providerConfigs.get(provider);
     if (!config?.enabled) {
       return false;
+    }
+
+    // Pollinations is always available (no API key needed)
+    if (provider === 'pollinations') {
+      return true;
     }
 
     // Check if API key is configured
@@ -554,6 +568,23 @@ export class AIServiceFactory {
       provider: 'google',
       capabilities: ['image-generation'],
       description: 'High-quality image generation',
+    });
+
+    // Pollinations (Free image generation)
+    this.registerModel({
+      id: 'flux',
+      name: 'Flux (Free)',
+      provider: 'pollinations',
+      capabilities: ['image-generation'],
+      description: 'Free high-quality image generation via Pollinations.ai',
+    });
+
+    this.registerModel({
+      id: 'pollinations',
+      name: 'Pollinations (Free)',
+      provider: 'pollinations',
+      capabilities: ['image-generation'],
+      description: 'Free image generation using open-source models',
     });
 
     // Mistral models
@@ -758,6 +789,7 @@ export class AIServiceFactory {
       { provider: 'google', enabled: true, priority: 3 },
       { provider: 'mistral', enabled: true, priority: 4 },
       { provider: 'openrouter', enabled: true, priority: 5 },
+      { provider: 'pollinations', enabled: true, priority: 6 },
     ];
 
     const configs = customConfigs || defaults;
