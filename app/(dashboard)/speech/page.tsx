@@ -28,6 +28,20 @@ interface GeneratedSpeech {
 
 type OpenAIVoice = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
 
+// StreamElements voice options (free AI voices)
+const SE_VOICES = [
+  { id: 'brian', name: 'Brian', description: 'British male - clear and professional' },
+  { id: 'amy', name: 'Amy', description: 'British female - warm and friendly' },
+  { id: 'emma', name: 'Emma', description: 'British female - natural tone' },
+  { id: 'joanna', name: 'Joanna', description: 'American female - conversational' },
+  { id: 'kendra', name: 'Kendra', description: 'American female - professional' },
+  { id: 'kimberly', name: 'Kimberly', description: 'American female - energetic' },
+  { id: 'salli', name: 'Salli', description: 'American female - soft tone' },
+  { id: 'joey', name: 'Joey', description: 'American male - casual' },
+  { id: 'justin', name: 'Justin', description: 'American male - young voice' },
+  { id: 'matthew', name: 'Matthew', description: 'American male - deep voice' },
+];
+
 // Browser voice options
 const BROWSER_VOICES = [
   { id: 'default', name: 'Default', description: 'System default voice' },
@@ -65,10 +79,11 @@ const SpeechSynthesisPage: React.FC = () => {
   };
 
   const [models, setModels] = useState<AIModel[]>([]);
-  const [selectedModelId, setSelectedModelId] = useState<string | null>('speecht5');
+  const [selectedModelId, setSelectedModelId] = useState<string | null>('streamelements');
   const [text, setText] = useState('');
   const [openaiVoice, setOpenaiVoice] = useState<OpenAIVoice>('alloy');
   const [browserVoice, setBrowserVoice] = useState('default');
+  const [seVoice, setSeVoice] = useState('brian');
   const [speed, setSpeed] = useState(1.0);
   const [generatedSpeech, setGeneratedSpeech] = useState<GeneratedSpeech[]>([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
@@ -79,7 +94,7 @@ const SpeechSynthesisPage: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const isBrowserTTS = selectedModelId === 'browser-tts' || selectedModelId === 'browser';
-  const isHuggingFaceTTS = selectedModelId === 'speecht5' || selectedModelId === 'mms-tts-eng' || selectedModelId === 'bark-small';
+  const isStreamElementsTTS = selectedModelId === 'streamelements';
   const isOpenAITTS = selectedModelId === 'tts-1' || selectedModelId === 'tts-1-hd';
 
   useEffect(() => {
@@ -105,33 +120,15 @@ const SpeechSynthesisPage: React.FC = () => {
       if (!response.ok) throw new Error('Failed to load models');
       const data = await response.json();
       
-      // HuggingFace AI models (free, high quality)
-      const hfModels: AIModel[] = [
-        {
-          id: 'speecht5',
-          name: 'SpeechT5 (Free AI)',
-          provider: 'huggingface',
-          capabilities: ['speech-synthesis'],
-          available: true,
-          description: 'High-quality AI voice by Microsoft',
-        },
-        {
-          id: 'mms-tts-eng',
-          name: 'MMS-TTS English (Free AI)',
-          provider: 'huggingface',
-          capabilities: ['speech-synthesis'],
-          available: true,
-          description: 'Natural English voice by Facebook',
-        },
-        {
-          id: 'bark-small',
-          name: 'Bark Small (Free AI)',
-          provider: 'huggingface',
-          capabilities: ['speech-synthesis'],
-          available: true,
-          description: 'Expressive AI voice by Suno',
-        },
-      ];
+      // StreamElements AI model (free, high quality)
+      const seModel: AIModel = {
+        id: 'streamelements',
+        name: 'AI Voice (Free)',
+        provider: 'streamelements',
+        capabilities: ['speech-synthesis'],
+        available: true,
+        description: 'High-quality AI voices - instant generation',
+      };
       
       // Browser TTS (instant, offline)
       const browserModel: AIModel = {
@@ -147,24 +144,24 @@ const SpeechSynthesisPage: React.FC = () => {
       const apiModels = (data.data || []).map((m: AIModel) => ({
         ...m,
         capabilities: m.capabilities || [],
-      })).filter((m: AIModel) => !['browser-tts', 'speecht5', 'mms-tts-eng', 'bark-small'].includes(m.id));
+      })).filter((m: AIModel) => !['browser-tts', 'streamelements'].includes(m.id));
       
-      const allModels = [...hfModels, browserModel, ...apiModels];
+      const allModels = [seModel, browserModel, ...apiModels];
       setModels(allModels);
 
-      // Select SpeechT5 by default (free AI voice)
-      if (!selectedModelId) setSelectedModelId('speecht5');
+      // Select StreamElements by default (free AI voice)
+      if (!selectedModelId) setSelectedModelId('streamelements');
     } catch (err) {
       console.error('Error loading models:', err);
       // Fallback models
       setModels([
         {
-          id: 'speecht5',
-          name: 'SpeechT5 (Free AI)',
-          provider: 'huggingface',
+          id: 'streamelements',
+          name: 'AI Voice (Free)',
+          provider: 'streamelements',
           capabilities: ['speech-synthesis'],
           available: true,
-          description: 'High-quality AI voice by Microsoft',
+          description: 'High-quality AI voices - instant generation',
         },
         {
           id: 'browser-tts',
@@ -175,7 +172,7 @@ const SpeechSynthesisPage: React.FC = () => {
           description: 'Instant playback using browser voices',
         },
       ]);
-      setSelectedModelId('speecht5');
+      setSelectedModelId('streamelements');
     } finally {
       setIsLoadingModels(false);
     }
@@ -218,8 +215,8 @@ const SpeechSynthesisPage: React.FC = () => {
           isBrowser: true,
         };
         setGeneratedSpeech([newSpeech, ...generatedSpeech]);
-      } else if (isHuggingFaceTTS) {
-        // HuggingFace TTS - free AI voice via our API
+      } else if (isStreamElementsTTS) {
+        // StreamElements TTS - free AI voice via our API
         setError(null);
         
         const response = await fetch('/api/ai/speech', {
@@ -227,16 +224,11 @@ const SpeechSynthesisPage: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             text: text.trim(),
-            model: selectedModelId,
-            provider: 'huggingface',
+            model: 'streamelements',
+            provider: 'streamelements',
+            voice: seVoice,
           }),
         });
-
-        if (response.status === 503) {
-          const data = await response.json();
-          setError(data.error?.message || 'AI model is loading, please try again in 20-30 seconds...');
-          return;
-        }
 
         if (!response.ok) {
           const data = await response.json();
@@ -246,20 +238,20 @@ const SpeechSynthesisPage: React.FC = () => {
         const data = await response.json();
         
         // Convert base64 to blob URL
-        const audioBlob = base64ToBlob(data.data.audio, 'audio/wav');
+        const audioBlob = base64ToBlob(data.data.audio, 'audio/mp3');
         const audioUrl = URL.createObjectURL(audioBlob);
 
         const newSpeech: GeneratedSpeech = {
           id: data.data.id,
           text,
-          model: selectedModel?.name || 'HuggingFace TTS',
-          voice: 'AI Voice',
+          model: selectedModel?.name || 'AI Voice',
+          voice: data.data.voice || seVoice,
           speed,
-          format: 'wav',
+          format: 'mp3',
           credits: 0,
           timestamp: new Date(),
           isBrowser: false,
-          isHuggingFace: true,
+          isHuggingFace: false,
           audioUrl,
         };
         setGeneratedSpeech([newSpeech, ...generatedSpeech]);
@@ -332,8 +324,8 @@ const SpeechSynthesisPage: React.FC = () => {
         utterance.onerror = () => setCurrentlyPlaying(null);
         window.speechSynthesis.speak(utterance);
         setCurrentlyPlaying(speech.id);
-      } else if (speech.isHuggingFace && speech.audioUrl) {
-        // HuggingFace audio playback
+      } else if (speech.audioUrl) {
+        // StreamElements/API audio playback
         const audio = new Audio(speech.audioUrl);
         audio.playbackRate = speech.speed;
         audio.onended = () => setCurrentlyPlaying(null);
@@ -455,32 +447,40 @@ const SpeechSynthesisPage: React.FC = () => {
             </div>
 
             {/* Dynamic Voice Selector based on model */}
-            {!isHuggingFaceTTS && (
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Voice</h2>
-                {isBrowserTTS ? (
-                  <div className="space-y-2">
-                    {BROWSER_VOICES.map((option) => (
-                      <button key={option.id} onClick={() => setBrowserVoice(option.id)} disabled={isGenerating}
-                        className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${browserVoice === option.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                        <div className="font-medium">{option.name}</div>
-                        <div className="text-xs text-gray-500 mt-1">{option.description}</div>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {OPENAI_VOICES.map((option) => (
-                      <button key={option.value} onClick={() => setOpenaiVoice(option.value as OpenAIVoice)} disabled={isGenerating}
-                        className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${openaiVoice === option.value ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                        <div className="font-medium">{option.label}</div>
-                        <div className="text-xs text-gray-500 mt-1">{option.description}</div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Voice</h2>
+              {isStreamElementsTTS ? (
+                <div className="space-y-2 max-h-80 overflow-y-auto">
+                  {SE_VOICES.map((option) => (
+                    <button key={option.id} onClick={() => setSeVoice(option.id)} disabled={isGenerating}
+                      className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${seVoice === option.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <div className="font-medium">{option.name}</div>
+                      <div className="text-xs text-gray-500 mt-1">{option.description}</div>
+                    </button>
+                  ))}
+                </div>
+              ) : isBrowserTTS ? (
+                <div className="space-y-2">
+                  {BROWSER_VOICES.map((option) => (
+                    <button key={option.id} onClick={() => setBrowserVoice(option.id)} disabled={isGenerating}
+                      className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${browserVoice === option.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <div className="font-medium">{option.name}</div>
+                      <div className="text-xs text-gray-500 mt-1">{option.description}</div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {OPENAI_VOICES.map((option) => (
+                    <button key={option.value} onClick={() => setOpenaiVoice(option.value as OpenAIVoice)} disabled={isGenerating}
+                      className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${openaiVoice === option.value ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <div className="font-medium">{option.label}</div>
+                      <div className="text-xs text-gray-500 mt-1">{option.description}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Speed: {speed.toFixed(2)}x</h2>
@@ -492,15 +492,15 @@ const SpeechSynthesisPage: React.FC = () => {
             {/* Tips section - dynamic based on model */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                {isHuggingFaceTTS ? '💡 AI Voice Tips' : isBrowserTTS ? '💡 Browser TTS Tips' : '💡 OpenAI TTS Tips'}
+                {isStreamElementsTTS ? '💡 AI Voice Tips' : isBrowserTTS ? '💡 Browser TTS Tips' : '💡 OpenAI TTS Tips'}
               </h2>
-              {isHuggingFaceTTS ? (
+              {isStreamElementsTTS ? (
                 <ul className="text-sm text-gray-600 space-y-2">
                   <li>• Free high-quality AI voices</li>
+                  <li>• 10 different voice options</li>
+                  <li>• Fast generation (2-5 seconds)</li>
                   <li>• Natural sounding speech</li>
-                  <li>• May take 5-30 seconds to generate</li>
-                  <li>• Model loads on first use (wait ~20s)</li>
-                  <li>• Best for final audio output</li>
+                  <li>• No API key required</li>
                 </ul>
               ) : isBrowserTTS ? (
                 <ul className="text-sm text-gray-600 space-y-2">

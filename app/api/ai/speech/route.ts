@@ -2,18 +2,25 @@
  * Speech Synthesis API Route
  * 
  * Generates speech from text using various TTS providers:
- * - HuggingFace (free AI voices)
+ * - StreamElements (free, no API key)
  * - OpenAI TTS (paid, requires API key)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 
-// HuggingFace model mapping
-const HF_MODELS: Record<string, string> = {
-  'speecht5': 'microsoft/speecht5_tts',
-  'mms-tts-eng': 'facebook/mms-tts-eng',
-  'bark-small': 'suno/bark-small',
+// StreamElements voices (free)
+const SE_VOICES: Record<string, string> = {
+  'brian': 'Brian',
+  'amy': 'Amy', 
+  'emma': 'Emma',
+  'joanna': 'Joanna',
+  'kendra': 'Kendra',
+  'kimberly': 'Kimberly',
+  'salli': 'Salli',
+  'joey': 'Joey',
+  'justin': 'Justin',
+  'matthew': 'Matthew',
 };
 
 export async function POST(request: NextRequest) {
@@ -28,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { text, model, provider } = body;
+    const { text, model, provider, voice = 'brian' } = body;
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json(
@@ -44,39 +51,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Handle HuggingFace TTS
-    if (provider === 'huggingface' || HF_MODELS[model]) {
-      const hfModelId = HF_MODELS[model] || 'microsoft/speecht5_tts';
+    // Handle StreamElements TTS (free)
+    if (provider === 'streamelements' || model === 'streamelements' || 
+        model === 'brian' || model === 'amy' || model === 'emma') {
       
+      const seVoice = SE_VOICES[voice] || SE_VOICES[model] || 'Brian';
+      const encodedText = encodeURIComponent(text);
+      
+      // StreamElements TTS API
       const response = await fetch(
-        `https://router.huggingface.co/hf-inference/models/${hfModelId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ inputs: text }),
-        }
+        `https://api.streamelements.com/kappa/v2/speech?voice=${seVoice}&text=${encodedText}`,
+        { method: 'GET' }
       );
 
-      if (response.status === 503) {
-        // Model is loading
-        const estimatedTime = response.headers.get('X-Estimated-Time') || '20';
-        return NextResponse.json(
-          { 
-            error: { 
-              message: `AI model is loading. Please try again in ${estimatedTime} seconds.`,
-              code: 'MODEL_LOADING',
-              retryAfter: parseInt(estimatedTime),
-            } 
-          },
-          { status: 503 }
-        );
-      }
-
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('HuggingFace API error:', response.status, errorText);
+        console.error('StreamElements API error:', response.status);
         return NextResponse.json(
           { error: { message: `Speech generation failed: ${response.status}` } },
           { status: response.status }
@@ -85,17 +74,16 @@ export async function POST(request: NextRequest) {
 
       // Get audio blob
       const audioBuffer = await response.arrayBuffer();
-      
-      // Return audio as base64 for easy client handling
       const base64Audio = Buffer.from(audioBuffer).toString('base64');
       
       return NextResponse.json({
         data: {
           id: `speech-${Date.now()}`,
           audio: base64Audio,
-          format: 'wav',
-          model: model,
-          provider: 'huggingface',
+          format: 'mp3',
+          model: model || 'streamelements',
+          provider: 'streamelements',
+          voice: seVoice,
           credits: 0,
         }
       });
@@ -111,7 +99,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const { voice = 'alloy', speed = 1.0, format = 'mp3' } = body;
+      const { speed = 1.0, format = 'mp3' } = body;
 
       const response = await fetch('https://api.openai.com/v1/audio/speech', {
         method: 'POST',
@@ -122,7 +110,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           model: model || 'tts-1',
           input: text,
-          voice,
+          voice: voice || 'alloy',
           speed,
           response_format: format,
         }),
@@ -146,15 +134,39 @@ export async function POST(request: NextRequest) {
           format,
           model: model || 'tts-1',
           provider: 'openai',
-          credits: Math.ceil(text.length / 100), // Rough credit calculation
+          credits: Math.ceil(text.length / 100),
         }
       });
     }
 
-    return NextResponse.json(
-      { error: { message: 'Invalid provider' } },
-      { status: 400 }
+    // Default to StreamElements
+    const encodedText = encodeURIComponent(text);
+    const response = await fetch(
+      `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodedText}`,
+      { method: 'GET' }
     );
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: { message: 'Speech generation failed' } },
+        { status: 500 }
+      );
+    }
+
+    const audioBuffer = await response.arrayBuffer();
+    const base64Audio = Buffer.from(audioBuffer).toString('base64');
+    
+    return NextResponse.json({
+      data: {
+        id: `speech-${Date.now()}`,
+        audio: base64Audio,
+        format: 'mp3',
+        model: 'streamelements',
+        provider: 'streamelements',
+        voice: 'Brian',
+        credits: 0,
+      }
+    });
 
   } catch (error) {
     console.error('Speech API error:', error);
