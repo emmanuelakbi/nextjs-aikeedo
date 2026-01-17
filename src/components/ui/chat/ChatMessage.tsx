@@ -47,7 +47,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         )}
 
         {/* Message content with markdown support */}
-        <div className="prose prose-sm max-w-none dark:prose-invert">
+        <div className="prose prose-sm max-w-none dark:prose-invert text-inherit">
           {isUser ? (
             <p className="whitespace-pre-wrap break-words m-0">{content}</p>
           ) : (

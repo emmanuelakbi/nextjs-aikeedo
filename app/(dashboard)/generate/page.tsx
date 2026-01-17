@@ -48,6 +48,7 @@ const GeneratePage: React.FC = () => {
   const [history, setHistory] = useState<GenerationHistory[]>([]);
   const [isLoadingModels, setIsLoadingModels] = useState(true);
   const [isLoadingPresets, setIsLoadingPresets] = useState(true);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showParameters, setShowParameters] = useState(false);
@@ -58,6 +59,7 @@ const GeneratePage: React.FC = () => {
     credits?: number;
     duration?: number;
   } | null>(null);
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
 
   // Load models on mount
   useEffect(() => {
@@ -68,6 +70,49 @@ const GeneratePage: React.FC = () => {
   useEffect(() => {
     loadPresets();
   }, []);
+
+  // Load workspace ID and history on mount
+  useEffect(() => {
+    loadWorkspaceAndHistory();
+  }, []);
+
+  // Load workspace ID and generation history from database
+  const loadWorkspaceAndHistory = async () => {
+    try {
+      setIsLoadingHistory(true);
+      
+      // Get workspace ID from session
+      const sessionResponse = await fetch('/api/auth/session');
+      const sessionData = await sessionResponse.json();
+      
+      if (sessionData?.user?.currentWorkspaceId) {
+        setWorkspaceId(sessionData.user.currentWorkspaceId);
+        
+        // Load history from database
+        const historyResponse = await fetch(
+          `/api/generations?workspaceId=${sessionData.user.currentWorkspaceId}&type=TEXT&limit=50`
+        );
+        
+        if (historyResponse.ok) {
+          const historyData = await historyResponse.json();
+          const loadedHistory: GenerationHistory[] = historyData.data.map((gen: any) => ({
+            id: gen.id,
+            prompt: gen.prompt,
+            result: gen.result || '',
+            model: gen.model,
+            timestamp: new Date(gen.createdAt),
+            tokens: gen.tokens,
+            credits: gen.credits,
+          }));
+          setHistory(loadedHistory);
+        }
+      }
+    } catch (err) {
+      console.error('Error loading history:', err);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
 
   // Load models from API
   const loadModels = async () => {
@@ -84,10 +129,11 @@ const GeneratePage: React.FC = () => {
       const data = await response.json();
       setModels(data.data);
 
-      // Select first available model by default
-      const firstAvailable = data.data.find((m: AIModel) => m.available);
-      if (firstAvailable && !selectedModelId) {
-        setSelectedModelId(firstAvailable.id);
+      // Select gemini-2.5-flash by default, or first available model
+      if (!selectedModelId) {
+        const gemini25 = data.data.find((m: AIModel) => m.id === 'gemini-2.5-flash' && m.available);
+        const firstAvailable = data.data.find((m: AIModel) => m.available);
+        setSelectedModelId(gemini25?.id || firstAvailable?.id || null);
       }
     } catch (err) {
       console.error('Error loading models:', err);
@@ -170,6 +216,23 @@ const GeneratePage: React.FC = () => {
       setResult('');
       setMetadata(null);
 
+      // Get workspace ID from session if not already loaded
+      let currentWorkspaceId = workspaceId;
+      if (!currentWorkspaceId) {
+        const sessionResponse = await fetch('/api/auth/session');
+        const sessionData = await sessionResponse.json();
+        currentWorkspaceId = sessionData?.user?.currentWorkspaceId;
+        if (currentWorkspaceId) {
+          setWorkspaceId(currentWorkspaceId);
+        }
+      }
+
+      if (!currentWorkspaceId) {
+        setError('No workspace selected. Please select a workspace first.');
+        setIsGenerating(false);
+        return;
+      }
+
       const selectedModel = models.find((m) => m.id === selectedModelId);
       const startTime = Date.now();
 
@@ -179,6 +242,7 @@ const GeneratePage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          workspaceId: currentWorkspaceId,
           prompt: promptText,
           model: selectedModelId,
           provider: selectedModel?.provider,
@@ -201,25 +265,76 @@ const GeneratePage: React.FC = () => {
       const endTime = Date.now();
       const duration = (endTime - startTime) / 1000;
 
-      setResult(data.data.result);
+      const generatedContent = data.data.content;
+      const tokensUsed = data.data.tokens?.total || data.data.tokens || 0;
+      const creditsUsed = data.data.credits || 0;
+
+      setResult(generatedContent);
       setMetadata({
         model: selectedModel?.name,
-        tokens: data.data.tokens,
-        credits: data.data.credits,
+        tokens: tokensUsed,
+        credits: creditsUsed,
         duration,
       });
 
-      // Add to history
-      const historyItem: GenerationHistory = {
-        id: data.data.id,
-        prompt: promptText,
-        result: data.data.result,
-        model: selectedModel?.name || selectedModelId,
-        timestamp: new Date(),
-        tokens: data.data.tokens,
-        credits: data.data.credits,
-      };
-      setHistory([historyItem, ...history]);
+      // Save to database
+      try {
+        const saveResponse = await fetch('/api/generations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            workspaceId: currentWorkspaceId,
+            prompt: promptText,
+            result: generatedContent,
+            model: selectedModelId,
+            provider: selectedModel?.provider || 'unknown',
+            tokens: tokensUsed,
+            credits: creditsUsed,
+          }),
+        });
+
+        if (saveResponse.ok) {
+          const savedData = await saveResponse.json();
+          // Add to history with the database ID
+          const historyItem: GenerationHistory = {
+            id: savedData.data.id,
+            prompt: promptText,
+            result: generatedContent,
+            model: selectedModel?.name || selectedModelId,
+            timestamp: new Date(savedData.data.createdAt),
+            tokens: tokensUsed,
+            credits: creditsUsed,
+          };
+          setHistory([historyItem, ...history]);
+        } else {
+          // Still add to local history even if save fails
+          const historyItem: GenerationHistory = {
+            id: crypto.randomUUID(),
+            prompt: promptText,
+            result: generatedContent,
+            model: selectedModel?.name || selectedModelId,
+            timestamp: new Date(),
+            tokens: tokensUsed,
+            credits: creditsUsed,
+          };
+          setHistory([historyItem, ...history]);
+        }
+      } catch (saveErr) {
+        console.error('Error saving generation to database:', saveErr);
+        // Still add to local history
+        const historyItem: GenerationHistory = {
+          id: crypto.randomUUID(),
+          prompt: promptText,
+          result: generatedContent,
+          model: selectedModel?.name || selectedModelId,
+          timestamp: new Date(),
+          tokens: tokensUsed,
+          credits: creditsUsed,
+        };
+        setHistory([historyItem, ...history]);
+      }
     } catch (err) {
       console.error('Error generating completion:', err);
       setError(
@@ -287,13 +402,13 @@ const GeneratePage: React.FC = () => {
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-900">Result</h2>
-                {result && (
+                {history.length > 0 && (
                   <Button
                     onClick={() => setShowHistory(!showHistory)}
                     variant="outline"
                     size="sm"
                   >
-                    {showHistory ? 'Hide' : 'Show'} History
+                    {showHistory ? 'Hide' : 'Show'} History ({history.length})
                   </Button>
                 )}
               </div>

@@ -131,7 +131,7 @@ const GenerationResult: React.FC<GenerationResultProps> = ({
       {/* Content area */}
       <div className="p-6">
         <div
-          className="prose prose-sm max-w-none whitespace-pre-wrap break-words"
+          className="prose prose-sm max-w-none whitespace-pre-wrap break-words text-gray-900"
           aria-label="Generated content"
         >
           {content}

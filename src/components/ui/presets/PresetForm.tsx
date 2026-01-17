@@ -155,7 +155,7 @@ const PresetForm: React.FC<PresetFormProps> = ({
                   w-full px-3 py-2 border rounded-md shadow-sm
                   focus:outline-none focus:ring-2 focus:ring-offset-0
                   disabled:bg-gray-100 disabled:cursor-not-allowed
-                  transition-colors duration-200
+                  transition-colors duration-200 text-gray-900 placeholder-gray-400
                   ${
                     errors.description
                       ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
@@ -198,7 +198,7 @@ const PresetForm: React.FC<PresetFormProps> = ({
                 w-full px-3 py-2 border rounded-md shadow-sm font-mono text-sm
                 focus:outline-none focus:ring-2 focus:ring-offset-0
                 disabled:bg-gray-100 disabled:cursor-not-allowed
-                transition-colors duration-200
+                transition-colors duration-200 text-gray-900 placeholder-gray-400
                 ${
                   errors.template
                     ? 'border-red-500 focus:ring-red-500 focus:border-red-500'

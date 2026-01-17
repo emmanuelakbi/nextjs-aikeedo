@@ -303,7 +303,7 @@ export function SystemSettingsClient() {
                     setFormData({ ...formData, value: e.target.value })
                   }
                   rows={6}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-sm text-gray-900 placeholder-gray-400"
                   required
                   placeholder='String value or JSON: {"key": "value"}'
                 />
@@ -322,7 +322,7 @@ export function SystemSettingsClient() {
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-400"
                   placeholder="Brief description of this setting"
                 />
               </div>

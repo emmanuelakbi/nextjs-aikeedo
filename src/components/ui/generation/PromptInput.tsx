@@ -98,8 +98,9 @@ const PromptInput: React.FC<PromptInputProps> = ({
           className={`
             w-full px-4 py-3 border border-gray-300 rounded-lg
             resize-none overflow-hidden
+            text-gray-900 placeholder-gray-400 bg-white
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-            disabled:bg-gray-100 disabled:cursor-not-allowed
+            disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500
             transition-colors duration-200
             min-h-[120px] max-h-[400px]
           `}

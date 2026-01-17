@@ -204,7 +204,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Start writing your document..."
-          className="w-full h-96 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none font-mono text-sm"
+          className="w-full h-96 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none font-mono text-sm text-gray-900 placeholder-gray-400"
         />
 
         {/* Character Count */}
