@@ -23,22 +23,42 @@ import type {
 import { getEnv } from '@/lib/env';
 
 export class GoogleTextGenerationService implements TextGenerationService {
-  private client: GoogleGenerativeAI;
+  private client: GoogleGenerativeAI | null = null;
   private model: string;
   private maxRetries: number;
   private retryDelay: number;
+  private initialized: boolean = false;
 
   constructor(model: string = 'gemini-1.5-flash', maxRetries: number = 3) {
-    const env = getEnv();
-
-    if (!env.GOOGLE_AI_API_KEY) {
-      throw new Error('GOOGLE_AI_API_KEY is not configured');
-    }
-
-    this.client = new GoogleGenerativeAI(env.GOOGLE_AI_API_KEY);
     this.model = model;
     this.maxRetries = maxRetries;
     this.retryDelay = 1000; // Start with 1 second
+    
+    // Lazy initialization to prevent crashes on import
+    this.initializeClient();
+  }
+  
+  private initializeClient(): void {
+    if (this.initialized) return;
+    
+    try {
+      const env = getEnv();
+      if (!env.GOOGLE_AI_API_KEY) {
+        console.warn('GOOGLE_AI_API_KEY is not configured - Google AI provider will not be available');
+        return;
+      }
+      this.client = new GoogleGenerativeAI(env.GOOGLE_AI_API_KEY);
+      this.initialized = true;
+    } catch (error) {
+      console.error('Failed to initialize Google AI client:', error);
+    }
+  }
+  
+  private ensureClient(): GoogleGenerativeAI {
+    if (!this.client) {
+      throw new Error('Google AI provider is not available. Please configure GOOGLE_AI_API_KEY.');
+    }
+    return this.client;
   }
 
   async generateCompletion(
@@ -46,7 +66,8 @@ export class GoogleTextGenerationService implements TextGenerationService {
     options?: TextGenerationOptions
   ): Promise<TextGenerationResponse> {
     return this.executeWithRetry(async () => {
-      const model = this.client.getGenerativeModel({
+      const client = this.ensureClient();
+      const model = client.getGenerativeModel({
         model: this.model,
         generationConfig: {
           maxOutputTokens: options?.maxTokens,
@@ -93,7 +114,8 @@ export class GoogleTextGenerationService implements TextGenerationService {
     options?: TextGenerationOptions
   ): Promise<TextGenerationResponse> {
     return this.executeWithRetry(async () => {
-      const model = this.client.getGenerativeModel({
+      const client = this.ensureClient();
+      const model = client.getGenerativeModel({
         model: this.model,
         generationConfig: {
           maxOutputTokens: options?.maxTokens,
@@ -171,7 +193,8 @@ export class GoogleTextGenerationService implements TextGenerationService {
     prompt: string,
     options?: TextGenerationOptions
   ): AsyncIterable<TextStreamChunk> {
-    const model = this.client.getGenerativeModel({
+    const client = this.ensureClient();
+    const model = client.getGenerativeModel({
       model: this.model,
       generationConfig: {
         maxOutputTokens: options?.maxTokens,
@@ -231,7 +254,8 @@ export class GoogleTextGenerationService implements TextGenerationService {
     messages: ChatMessage[],
     options?: TextGenerationOptions
   ): AsyncIterable<TextStreamChunk> {
-    const model = this.client.getGenerativeModel({
+    const client = this.ensureClient();
+    const model = client.getGenerativeModel({
       model: this.model,
       generationConfig: {
         maxOutputTokens: options?.maxTokens,
