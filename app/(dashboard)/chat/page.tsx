@@ -184,13 +184,15 @@ const ChatPage: React.FC = () => {
 
       const data = await response.json();
 
-      // Transform API response to Message format
-      const messagesData: Message[] = data.data.map((msg: any) => ({
-        id: msg.id,
-        role: msg.role,
-        content: msg.content,
-        timestamp: new Date(msg.createdAt),
-      }));
+      // Transform API response to Message format and filter out empty messages
+      const messagesData: Message[] = data.data
+        .filter((msg: any) => msg.content && msg.content.trim().length > 0)
+        .map((msg: any) => ({
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          timestamp: new Date(msg.createdAt),
+        }));
 
       setMessages(messagesData);
     } catch (err) {
