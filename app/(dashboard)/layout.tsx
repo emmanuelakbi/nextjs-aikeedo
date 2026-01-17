@@ -30,11 +30,21 @@ export default async function DashboardLayout({
   const workspaceRepository = new WorkspaceRepository();
   const workspaces = await workspaceRepository.findByUserId(session.user.id);
 
-  // Get current workspace
-  const currentWorkspaceId = user.getCurrentWorkspaceId();
-  const currentWorkspace = workspaces.find(
+  // Get current workspace - auto-assign first workspace if none set
+  let currentWorkspaceId = user.getCurrentWorkspaceId();
+  let currentWorkspace = workspaces.find(
     (ws) => ws.getId().getValue() === currentWorkspaceId
   );
+
+  // If no current workspace but user has workspaces, auto-assign the first one
+  if (!currentWorkspace && workspaces.length > 0) {
+    currentWorkspace = workspaces[0];
+    currentWorkspaceId = currentWorkspace.getId().getValue();
+    
+    // Update user's current workspace in database
+    user.setCurrentWorkspace(currentWorkspaceId);
+    await userRepository.update(user);
+  }
 
   // Prepare user data for layout
   const userData = {

@@ -38,18 +38,45 @@ const DocumentsPage: React.FC = () => {
     'TEXT' | 'IMAGE' | 'AUDIO' | 'ALL'
   >('ALL');
   const [isCreating, setIsCreating] = useState(false);
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
 
-  // Load documents on mount
+  // Load workspace ID from session on mount
   useEffect(() => {
-    loadDocuments();
-  }, [searchQuery, filterType]);
+    const loadWorkspace = async () => {
+      try {
+        const response = await fetch('/api/auth/session');
+        const data = await response.json();
+        if (data?.user?.currentWorkspaceId) {
+          setWorkspaceId(data.user.currentWorkspaceId);
+        } else {
+          setError('No workspace selected. Please select a workspace first.');
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.error('Error loading workspace:', err);
+        setError('Failed to load workspace');
+        setIsLoading(false);
+      }
+    };
+    loadWorkspace();
+  }, []);
+
+  // Load documents when workspace ID is available
+  useEffect(() => {
+    if (workspaceId) {
+      loadDocuments();
+    }
+  }, [workspaceId, searchQuery, filterType]);
 
   const loadDocuments = async () => {
+    if (!workspaceId) return;
+    
     try {
       setIsLoading(true);
       setError(null);
 
       const params = new URLSearchParams();
+      params.append('workspaceId', workspaceId);
       if (searchQuery) {
         params.append('search', searchQuery);
       }
@@ -90,6 +117,10 @@ const DocumentsPage: React.FC = () => {
   };
 
   const handleSaveDocument = async (document: Partial<Document>) => {
+    if (!workspaceId) {
+      throw new Error('No workspace selected');
+    }
+    
     try {
       if (selectedDocument) {
         // Update existing document
@@ -97,6 +128,7 @@ const DocumentsPage: React.FC = () => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'x-workspace-id': workspaceId,
           },
           body: JSON.stringify({
             title: document.title,
@@ -125,6 +157,7 @@ const DocumentsPage: React.FC = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-workspace-id': workspaceId,
           },
           body: JSON.stringify({
             title: document.title || 'Untitled Document',
@@ -155,9 +188,16 @@ const DocumentsPage: React.FC = () => {
   };
 
   const handleDeleteDocument = async (documentId: string) => {
+    if (!workspaceId) {
+      throw new Error('No workspace selected');
+    }
+    
     try {
       const response = await fetch(`/api/documents/${documentId}`, {
         method: 'DELETE',
+        headers: {
+          'x-workspace-id': workspaceId,
+        },
       });
 
       if (!response.ok) {

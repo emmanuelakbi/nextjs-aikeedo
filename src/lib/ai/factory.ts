@@ -26,7 +26,6 @@ import {
   OpenRouterTextGenerationService,
   PollinationsImageGenerationService,
   BrowserSpeechSynthesisService,
-  HuggingFaceSpeechSynthesisService,
 } from './providers';
 import { getEnv } from '@/lib/env';
 import { getModelCacheService } from './model-cache';
@@ -183,15 +182,7 @@ export class AIServiceFactory {
     provider: AIProvider,
     model: string
   ): SpeechSynthesisService {
-    // Use HuggingFace as default for high-quality free TTS
-    if (provider === 'huggingface' || model === 'speecht5' || model === 'mms-tts-eng' || model === 'bark-small') {
-      const hfModel = model === 'speecht5' || model === 'mms-tts-eng' || model === 'bark-small' 
-        ? model as 'speecht5' | 'mms-tts-eng' | 'bark-small'
-        : 'speecht5';
-      return new HuggingFaceSpeechSynthesisService(hfModel, this.maxRetries);
-    }
-
-    // Browser TTS as fallback
+    // Browser TTS (free, instant)
     if (provider === 'browser' || model === 'browser-tts' || model === 'browser') {
       return new BrowserSpeechSynthesisService(model);
     }
@@ -202,8 +193,8 @@ export class AIServiceFactory {
       return new OpenAISpeechSynthesisService(model, this.maxRetries);
     }
 
-    // Default to HuggingFace (free, high-quality AI voices)
-    return new HuggingFaceSpeechSynthesisService('speecht5', this.maxRetries);
+    // Default to Browser TTS (free)
+    return new BrowserSpeechSynthesisService('browser-tts');
   }
 
   /**
@@ -350,8 +341,8 @@ export class AIServiceFactory {
    * @returns True if provider is configured and enabled
    */
   async isProviderAvailable(provider: AIProvider): Promise<boolean> {
-    // Pollinations, Browser, and HuggingFace are always available (no API key needed)
-    if (provider === 'pollinations' || provider === 'browser' || provider === 'huggingface') {
+    // Pollinations and Browser are always available (no API key needed)
+    if (provider === 'pollinations' || provider === 'browser') {
       return true;
     }
 
@@ -390,8 +381,8 @@ export class AIServiceFactory {
       return false;
     }
 
-    // Pollinations, Browser, and HuggingFace are always available (no API key needed)
-    if (provider === 'pollinations' || provider === 'browser' || provider === 'huggingface') {
+    // Pollinations and Browser are always available (no API key needed)
+    if (provider === 'pollinations' || provider === 'browser') {
       return true;
     }
 
@@ -501,31 +492,6 @@ export class AIServiceFactory {
       provider: 'browser',
       capabilities: ['speech-synthesis'],
       description: 'Free text-to-speech using browser Web Speech API',
-    });
-
-    // HuggingFace TTS (Free AI voices)
-    this.registerModel({
-      id: 'speecht5',
-      name: 'SpeechT5 (Free AI)',
-      provider: 'huggingface',
-      capabilities: ['speech-synthesis'],
-      description: 'High-quality AI voice by Microsoft via HuggingFace',
-    });
-
-    this.registerModel({
-      id: 'mms-tts-eng',
-      name: 'MMS-TTS English (Free AI)',
-      provider: 'huggingface',
-      capabilities: ['speech-synthesis'],
-      description: 'Facebook multilingual TTS - natural English voice',
-    });
-
-    this.registerModel({
-      id: 'bark-small',
-      name: 'Bark Small (Free AI)',
-      provider: 'huggingface',
-      capabilities: ['speech-synthesis'],
-      description: 'Expressive AI voice by Suno - very natural sounding',
     });
 
     // Anthropic models
@@ -835,8 +801,7 @@ export class AIServiceFactory {
       { provider: 'mistral', enabled: true, priority: 4 },
       { provider: 'openrouter', enabled: true, priority: 5 },
       { provider: 'pollinations', enabled: true, priority: 6 },
-      { provider: 'huggingface', enabled: true, priority: 7 },
-      { provider: 'browser', enabled: true, priority: 8 },
+      { provider: 'browser', enabled: true, priority: 7 },
     ];
 
     const configs = customConfigs || defaults;

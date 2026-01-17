@@ -22,27 +22,88 @@ interface GeneratedSpeech {
   credits: number;
   timestamp: Date;
   isBrowser: boolean;
-  isHuggingFace?: boolean;
-  audioUrl?: string; // For HuggingFace blob URLs
+  audioUrl?: string;
 }
 
 type OpenAIVoice = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+type ElevenLabsVoice = 'Rachel' | 'Domi' | 'Bella' | 'Antoni' | 'Elli' | 'Josh' | 'Arnold' | 'Adam' | 'Sam';
+type ElevenLabsModel = 'eleven_multilingual_v3' | 'eleven_multilingual_v2' | 'eleven_flash_v2_5' | 'eleven_turbo_v2_5' | 'eleven_turbo_v2' | 'eleven_flash_v2' | 'eleven_monolingual_v1' | 'eleven_multilingual_v1';
 
-// StreamElements voice options (free AI voices)
-const SE_VOICES = [
-  { id: 'brian', name: 'Brian', description: 'British male - clear and professional' },
-  { id: 'amy', name: 'Amy', description: 'British female - warm and friendly' },
-  { id: 'emma', name: 'Emma', description: 'British female - natural tone' },
-  { id: 'joanna', name: 'Joanna', description: 'American female - conversational' },
-  { id: 'kendra', name: 'Kendra', description: 'American female - professional' },
-  { id: 'kimberly', name: 'Kimberly', description: 'American female - energetic' },
-  { id: 'salli', name: 'Salli', description: 'American female - soft tone' },
-  { id: 'joey', name: 'Joey', description: 'American male - casual' },
-  { id: 'justin', name: 'Justin', description: 'American male - young voice' },
-  { id: 'matthew', name: 'Matthew', description: 'American male - deep voice' },
+// ElevenLabs model options
+const ELEVENLABS_MODELS = [
+  { 
+    id: 'eleven_multilingual_v3', 
+    name: 'Eleven Multilingual v3 (Alpha)', 
+    description: 'Most expressive model. 70+ languages. Requires more prompt engineering.',
+    badge: 'Alpha',
+    languages: '70+',
+  },
+  { 
+    id: 'eleven_multilingual_v2', 
+    name: 'Eleven Multilingual v2', 
+    description: 'Most life-like, emotionally rich. Best for voice overs, audiobooks.',
+    badge: 'High Quality',
+    languages: '29',
+    recommended: true,
+  },
+  { 
+    id: 'eleven_flash_v2_5', 
+    name: 'Eleven Flash v2.5', 
+    description: 'Ultra low latency. Ideal for conversational use cases.',
+    badge: '50% cheaper',
+    languages: '32',
+  },
+  { 
+    id: 'eleven_turbo_v2_5', 
+    name: 'Eleven Turbo v2.5', 
+    description: 'High quality, low latency. Best for developer use cases.',
+    badge: '50% cheaper',
+    languages: '32',
+  },
+  { 
+    id: 'eleven_turbo_v2', 
+    name: 'Eleven Turbo v2', 
+    description: 'English-only, low latency. Best when speed matters.',
+    badge: '50% cheaper',
+    languages: '1 (English)',
+  },
+  { 
+    id: 'eleven_flash_v2', 
+    name: 'Eleven Flash v2', 
+    description: 'Ultra low latency in English. Ideal for conversational use.',
+    badge: '50% cheaper',
+    languages: '1 (English)',
+  },
+  { 
+    id: 'eleven_monolingual_v1', 
+    name: 'Eleven English v1', 
+    description: 'First TTS model. Now outclassed by newer models.',
+    badge: 'Legacy',
+    languages: '1 (English)',
+  },
+  { 
+    id: 'eleven_multilingual_v1', 
+    name: 'Eleven Multilingual v1', 
+    description: 'First multilingual model. 10 languages. Now outclassed.',
+    badge: 'Legacy',
+    languages: '10',
+  },
 ];
 
-// Browser voice options
+// ElevenLabs voice options (free tier: 10,000 chars/month)
+const ELEVENLABS_VOICES = [
+  { id: 'Rachel', name: 'Rachel', description: 'Young female - calm and clear' },
+  { id: 'Domi', name: 'Domi', description: 'Young female - strong and confident' },
+  { id: 'Bella', name: 'Bella', description: 'Young female - soft and gentle' },
+  { id: 'Antoni', name: 'Antoni', description: 'Young male - well-rounded' },
+  { id: 'Elli', name: 'Elli', description: 'Young female - emotional range' },
+  { id: 'Josh', name: 'Josh', description: 'Young male - deep and narrative' },
+  { id: 'Arnold', name: 'Arnold', description: 'Middle-aged male - crisp' },
+  { id: 'Adam', name: 'Adam', description: 'Middle-aged male - deep' },
+  { id: 'Sam', name: 'Sam', description: 'Young male - raspy' },
+];
+
+// Browser voice options (free, instant)
 const BROWSER_VOICES = [
   { id: 'default', name: 'Default', description: 'System default voice' },
   { id: 'en-US', name: 'English (US)', description: 'American English' },
@@ -79,11 +140,12 @@ const SpeechSynthesisPage: React.FC = () => {
   };
 
   const [models, setModels] = useState<AIModel[]>([]);
-  const [selectedModelId, setSelectedModelId] = useState<string | null>('streamelements');
+  const [selectedModelId, setSelectedModelId] = useState<string | null>('elevenlabs');
   const [text, setText] = useState('');
   const [openaiVoice, setOpenaiVoice] = useState<OpenAIVoice>('alloy');
-  const [browserVoice, setBrowserVoice] = useState('default');
-  const [seVoice, setSeVoice] = useState('brian');
+  const [elevenLabsVoice, setElevenLabsVoice] = useState<ElevenLabsVoice>('Rachel');
+  const [elevenLabsModel, setElevenLabsModel] = useState<ElevenLabsModel>('eleven_multilingual_v2');
+  const [browserVoice, setBrowserVoice] = useState('en-US');
   const [speed, setSpeed] = useState(1.0);
   const [generatedSpeech, setGeneratedSpeech] = useState<GeneratedSpeech[]>([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
@@ -94,7 +156,7 @@ const SpeechSynthesisPage: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const isBrowserTTS = selectedModelId === 'browser-tts' || selectedModelId === 'browser';
-  const isStreamElementsTTS = selectedModelId === 'streamelements';
+  const isElevenLabs = selectedModelId === 'elevenlabs';
   const isOpenAITTS = selectedModelId === 'tts-1' || selectedModelId === 'tts-1-hd';
 
   useEffect(() => {
@@ -120,48 +182,48 @@ const SpeechSynthesisPage: React.FC = () => {
       if (!response.ok) throw new Error('Failed to load models');
       const data = await response.json();
       
-      // StreamElements AI model (free, high quality)
-      const seModel: AIModel = {
-        id: 'streamelements',
-        name: 'AI Voice (Free)',
-        provider: 'streamelements',
+      // ElevenLabs (free tier: 10,000 chars/month)
+      const elevenLabsModel: AIModel = {
+        id: 'elevenlabs',
+        name: 'ElevenLabs (Free Tier)',
+        provider: 'elevenlabs',
         capabilities: ['speech-synthesis'],
         available: true,
-        description: 'High-quality AI voices - instant generation',
+        description: 'High-quality AI voices - 10,000 chars/month free',
       };
       
-      // Browser TTS (instant, offline)
+      // Browser TTS (free, instant, works offline)
       const browserModel: AIModel = {
         id: 'browser-tts',
         name: 'Browser TTS (Instant)',
         provider: 'browser',
         capabilities: ['speech-synthesis'],
         available: true,
-        description: 'Instant playback using browser voices',
+        description: 'Free instant playback using your browser voices',
       };
       
       // Ensure all API models have capabilities array
       const apiModels = (data.data || []).map((m: AIModel) => ({
         ...m,
         capabilities: m.capabilities || [],
-      })).filter((m: AIModel) => !['browser-tts', 'streamelements'].includes(m.id));
+      })).filter((m: AIModel) => !['browser-tts', 'elevenlabs'].includes(m.id));
       
-      const allModels = [seModel, browserModel, ...apiModels];
+      const allModels = [elevenLabsModel, browserModel, ...apiModels];
       setModels(allModels);
 
-      // Select StreamElements by default (free AI voice)
-      if (!selectedModelId) setSelectedModelId('streamelements');
+      // Select ElevenLabs by default (free tier with great quality)
+      if (!selectedModelId) setSelectedModelId('elevenlabs');
     } catch (err) {
       console.error('Error loading models:', err);
       // Fallback models
       setModels([
         {
-          id: 'streamelements',
-          name: 'AI Voice (Free)',
-          provider: 'streamelements',
+          id: 'elevenlabs',
+          name: 'ElevenLabs (Free Tier)',
+          provider: 'elevenlabs',
           capabilities: ['speech-synthesis'],
           available: true,
-          description: 'High-quality AI voices - instant generation',
+          description: 'High-quality AI voices - 10,000 chars/month free',
         },
         {
           id: 'browser-tts',
@@ -169,10 +231,10 @@ const SpeechSynthesisPage: React.FC = () => {
           provider: 'browser',
           capabilities: ['speech-synthesis'],
           available: true,
-          description: 'Instant playback using browser voices',
+          description: 'Free instant playback using your browser voices',
         },
       ]);
-      setSelectedModelId('streamelements');
+      setSelectedModelId('elevenlabs');
     } finally {
       setIsLoadingModels(false);
     }
@@ -215,18 +277,16 @@ const SpeechSynthesisPage: React.FC = () => {
           isBrowser: true,
         };
         setGeneratedSpeech([newSpeech, ...generatedSpeech]);
-      } else if (isStreamElementsTTS) {
-        // StreamElements TTS - free AI voice via our API
-        setError(null);
-        
+      } else if (isElevenLabs) {
+        // ElevenLabs TTS - free tier
         const response = await fetch('/api/ai/speech', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             text: text.trim(),
-            model: 'streamelements',
-            provider: 'streamelements',
-            voice: seVoice,
+            model: elevenLabsModel,
+            provider: 'elevenlabs',
+            voice: elevenLabsVoice,
           }),
         });
 
@@ -244,14 +304,13 @@ const SpeechSynthesisPage: React.FC = () => {
         const newSpeech: GeneratedSpeech = {
           id: data.data.id,
           text,
-          model: selectedModel?.name || 'AI Voice',
-          voice: data.data.voice || seVoice,
+          model: selectedModel?.name || 'ElevenLabs',
+          voice: data.data.voice || elevenLabsVoice,
           speed,
           format: 'mp3',
           credits: 0,
           timestamp: new Date(),
           isBrowser: false,
-          isHuggingFace: false,
           audioUrl,
         };
         setGeneratedSpeech([newSpeech, ...generatedSpeech]);
@@ -449,18 +508,18 @@ const SpeechSynthesisPage: React.FC = () => {
             {/* Dynamic Voice Selector based on model */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Voice</h2>
-              {isStreamElementsTTS ? (
+              {isElevenLabs ? (
                 <div className="space-y-2 max-h-80 overflow-y-auto">
-                  {SE_VOICES.map((option) => (
-                    <button key={option.id} onClick={() => setSeVoice(option.id)} disabled={isGenerating}
-                      className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${seVoice === option.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  {ELEVENLABS_VOICES.map((option) => (
+                    <button key={option.id} onClick={() => setElevenLabsVoice(option.id as ElevenLabsVoice)} disabled={isGenerating}
+                      className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${elevenLabsVoice === option.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       <div className="font-medium">{option.name}</div>
                       <div className="text-xs text-gray-500 mt-1">{option.description}</div>
                     </button>
                   ))}
                 </div>
               ) : isBrowserTTS ? (
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-80 overflow-y-auto">
                   {BROWSER_VOICES.map((option) => (
                     <button key={option.id} onClick={() => setBrowserVoice(option.id)} disabled={isGenerating}
                       className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${browserVoice === option.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}>
@@ -482,6 +541,42 @@ const SpeechSynthesisPage: React.FC = () => {
               )}
             </div>
 
+            {/* ElevenLabs Model Selector */}
+            {isElevenLabs && (
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">ElevenLabs Model</h2>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {ELEVENLABS_MODELS.map((model) => (
+                    <button 
+                      key={model.id} 
+                      onClick={() => setElevenLabsModel(model.id as ElevenLabsModel)} 
+                      disabled={isGenerating}
+                      className={`w-full px-4 py-3 text-left rounded-lg border transition-colors ${elevenLabsModel === model.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'} ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{model.name}</span>
+                        <div className="flex items-center gap-1">
+                          {model.recommended && (
+                            <span className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">Recommended</span>
+                          )}
+                          {model.badge && !model.recommended && (
+                            <span className={`px-2 py-0.5 text-xs rounded-full ${
+                              model.badge === 'Alpha' ? 'bg-purple-100 text-purple-700' :
+                              model.badge === 'High Quality' ? 'bg-blue-100 text-blue-700' :
+                              model.badge === '50% cheaper' ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-gray-100 text-gray-600'
+                            }`}>{model.badge}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{model.description}</div>
+                      <div className="text-xs text-gray-400 mt-1">Languages: {model.languages}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Speed: {speed.toFixed(2)}x</h2>
               <input type="range" min="0.5" max="2.0" step="0.1" value={speed} onChange={(e) => setSpeed(parseFloat(e.target.value))} disabled={isGenerating} className="w-full" />
@@ -492,23 +587,27 @@ const SpeechSynthesisPage: React.FC = () => {
             {/* Tips section - dynamic based on model */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                {isStreamElementsTTS ? '💡 AI Voice Tips' : isBrowserTTS ? '💡 Browser TTS Tips' : '💡 OpenAI TTS Tips'}
+                {isElevenLabs ? '💡 ElevenLabs Tips' : 
+                 isBrowserTTS ? '💡 Browser TTS Tips' : '💡 OpenAI TTS Tips'}
               </h2>
-              {isStreamElementsTTS ? (
+              {isElevenLabs ? (
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Free high-quality AI voices</li>
-                  <li>• 10 different voice options</li>
-                  <li>• Fast generation (2-5 seconds)</li>
-                  <li>• Natural sounding speech</li>
-                  <li>• No API key required</li>
+                  <li>• Free tier: 10,000 chars/month</li>
+                  <li>• 8 models: v3 (alpha), v2, Flash, Turbo</li>
+                  <li>• Up to 70+ languages supported</li>
+                  <li>• v2.5 models are 50% cheaper</li>
+                  <li>• Flash models: ultra low latency</li>
+                  <li>• Turbo models: speed optimized</li>
+                  <li>• Requires ELEVENLABS_API_KEY</li>
                 </ul>
               ) : isBrowserTTS ? (
                 <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• 100% free - no API key needed</li>
                   <li>• Instant playback - no waiting</li>
-                  <li>• Uses your browser&apos;s built-in voices</li>
-                  <li>• Voice quality varies by browser/OS</li>
+                  <li>• 10+ language options</li>
                   <li>• Works offline after page loads</li>
-                  <li>• Best for quick previews</li>
+                  <li>• Voice quality varies by browser/OS</li>
+                  <li>• Best on Chrome, Edge, Safari</li>
                 </ul>
               ) : (
                 <ul className="text-sm text-gray-600 space-y-2">
@@ -516,7 +615,7 @@ const SpeechSynthesisPage: React.FC = () => {
                   <li>• Consistent quality across devices</li>
                   <li>• Supports longer text passages</li>
                   <li>• Multiple audio format options</li>
-                  <li>• Requires OpenAI API key</li>
+                  <li>• Requires OPENAI_API_KEY</li>
                 </ul>
               )}
             </div>
