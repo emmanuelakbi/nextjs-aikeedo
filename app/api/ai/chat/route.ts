@@ -101,10 +101,17 @@ export async function POST(request: NextRequest) {
     let command;
     try {
       const { conversationId, ...chatParams } = body; // Remove conversationId as it's not part of the AI request
+      
+      // Filter out empty messages from the request (fixes corrupted conversation state)
+      const filteredMessages = Array.isArray(chatParams.messages) 
+        ? chatParams.messages.filter((m: { content?: string }) => m.content && m.content.trim().length > 0)
+        : chatParams.messages;
+      
       command = GenerateChatCompletionCommandSchema.parse({
         userId: currentUser.id,
         workspaceId,
         ...chatParams,
+        messages: filteredMessages,
       });
     } catch (validationError) {
       if (validationError instanceof ZodError) {
