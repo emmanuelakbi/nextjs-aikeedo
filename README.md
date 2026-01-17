@@ -2,6 +2,21 @@
 
 A modern, enterprise-grade AI services platform built with Next.js 14, featuring multi-tenant workspaces, integrated AI providers, and a comprehensive billing system.
 
+## 🌐 Live Demo
+
+**URL**: https://nextjs-aikeedo.vercel.app
+
+**Test Credentials**:
+- **Admin**: admin@aikeedo.com / password123
+- **User**: user@example.com / password123
+
+### Features You Can Test:
+- ✅ **Chat** - AI conversations with Google Gemini 2.5 Flash (free)
+- ✅ **Text Generation** - Generate content with persistent history
+- ✅ **Image Generation** - Create images with Flux model (free, no API key!)
+- ✅ **Multi-workspace** - Create and switch between workspaces
+- ✅ **Admin Dashboard** - User management, audit logs, analytics
+
 ## 🚀 Quick Setup (5 Minutes)
 
 ### Prerequisites
@@ -55,12 +70,13 @@ npm run dev
 
 ## ✨ Key Features
 
-- **Multi-AI Provider Integration** - OpenAI, Anthropic, Google, Mistral via unified interface
+- **Multi-AI Provider Integration** - OpenAI, Anthropic, Google, Mistral, Pollinations via unified interface
+- **Free AI Services** - Google Gemini (text) and Pollinations/Flux (images) work without paid API keys!
 - **Multi-Tenant Workspaces** - Isolated resources and credit allocations
 - **Credit-Based Billing** - Flexible subscription plans with Stripe integration
 - **Enterprise Features** - Affiliate program, admin dashboard, audit logging
 - **Clean Architecture** - Domain-Driven Design with clear layer separation
-- **Free AI Models** - Test with 100% free models via OpenRouter (no credit card)
+- **Model-Specific UI** - Interface adapts based on selected AI model
 
 ## 📚 Documentation
 
